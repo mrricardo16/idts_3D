@@ -1,108 +1,119 @@
 # IDTS 数字孪生 MVP 任务卡索引
 
-> 本目录只用于保存 MVP 开发任务的二次拆分任务卡。当前阶段严禁执行代码开发，严禁创建后端项目，严禁新增依赖，严禁修改前端源码。
+> 本目录保存后续可由 Codex 串行执行的 MVP 任务卡。文档设计阶段只维护任务卡；MVP 开发阶段必须由用户明确指定单个任务后才能执行。
 
-## 1. 任务卡列表
+## 1. 阶段规则
 
-| 任务编号 | 任务名称 | 文档 |
-|---|---|---|
-| MVP-01 | 后端解决方案骨架 | [MVP-01-backend-solution-skeleton.md](./MVP-01-backend-solution-skeleton.md) |
-| MVP-02 | 数据库核心实体与 Migration | [MVP-02-database-core-schema.md](./MVP-02-database-core-schema.md) |
-| MVP-03 | 文件存储与 GLB 上传 | [MVP-03-glb-upload-file-storage.md](./MVP-03-glb-upload-file-storage.md) |
-| MVP-04 | Manifest 查询接口 | [MVP-04-model-manifest-api.md](./MVP-04-model-manifest-api.md) |
-| MVP-05 | Object-tree / Model-stats | [MVP-05-object-tree-model-stats.md](./MVP-05-object-tree-model-stats.md) |
-| MVP-06 | 资产版本状态与发布基线 | [MVP-06-asset-version-publish-baseline.md](./MVP-06-asset-version-publish-baseline.md) |
-| MVP-07 | 可动部件配置 API | [MVP-07-movable-part-api.md](./MVP-07-movable-part-api.md) |
-| MVP-08 | Motion Target API | [MVP-08-motion-target-api.md](./MVP-08-motion-target-api.md) |
-| MVP-09 | 场景 / 设备实例 / 设备模型绑定 | [MVP-09-scene-device-binding.md](./MVP-09-scene-device-binding.md) |
-| MVP-10 | Scene Manifest | [MVP-10-scene-manifest.md](./MVP-10-scene-manifest.md) |
-| MVP-11 | 前端接后端 Manifest / Object-tree | [MVP-11-frontend-manifest-object-tree.md](./MVP-11-frontend-manifest-object-tree.md) |
-| MVP-12 | 前端 Edit 模式保存配置 | [MVP-12-frontend-edit-mode-save.md](./MVP-12-frontend-edit-mode-save.md) |
-| MVP-13 | Monitor 模式只读配置并驱动动画 | [MVP-13-monitor-mode-runtime-animation.md](./MVP-13-monitor-mode-runtime-animation.md) |
-| MVP-14 | 转换任务状态与基础日志 | [MVP-14-conversion-job-status-log.md](./MVP-14-conversion-job-status-log.md) |
-| POC-3DT-01 | Three.js + 3DTilesRendererJS 最小验证 | [POC-3DT-01-threejs-3dtiles-renderer.md](./POC-3DT-01-threejs-3dtiles-renderer.md) |
+| 阶段 | 规则 |
+|---|---|
+| 文档设计阶段 | 禁止写业务代码，禁止创建真实后端工程，禁止 migration，禁止修改 `idts3D_ui/src/**` |
+| MVP 开发阶段 | 允许严格按当前任务卡创建后端、写 C#、写 Vue/TS、执行 migration |
+| 所有阶段 | 每个任务先输出影响范围，等待确认后再改；禁止跨任务扩展；禁止一次性实现多个 MVP；禁止 commit / push，除非用户明确要求 |
 
-## 2. 推荐执行顺序
+详细规则见 `../development-rules.md`。
 
-1. MVP-01 后端解决方案骨架。
-2. MVP-02 数据库核心实体与 Migration。
-3. MVP-03 文件存储与 GLB 上传。
-4. MVP-04 Manifest 查询接口。
-5. MVP-05 Object-tree / Model-stats。
-6. MVP-06 资产版本状态与发布基线。
-7. MVP-07 可动部件配置 API。
-8. MVP-08 Motion Target API。
-9. MVP-09 场景 / 设备实例 / 设备模型绑定。
-10. MVP-10 Scene Manifest。
-11. MVP-11 前端接后端 Manifest / Object-tree。
-12. MVP-12 前端 Edit 模式保存可动部件和目标点位。
-13. MVP-13 Monitor 模式只读配置并驱动 worldZ 动画。
-14. MVP-14 转换任务状态与基础日志。
+## 2. 任务卡列表
 
-POC-3DT-01 可在 MVP 主线之外并行验证，但不得并入 MVP 主功能闭环。
+| 顺序 | 任务编号 | 任务名称 | 文档 |
+|---:|---|---|---|
+| 0 | MVP-00 | 开发规则切换与文档基线 | [MVP-00-development-rules-doc-baseline.md](./MVP-00-development-rules-doc-baseline.md) |
+| 1 | MVP-01 | 后端解决方案骨架 | [MVP-01-backend-solution-skeleton.md](./MVP-01-backend-solution-skeleton.md) |
+| 2 | MVP-02 | 数据库核心实体与 Migration | [MVP-02-database-core-schema.md](./MVP-02-database-core-schema.md) |
+| 3 | MVP-03 | 文件存储与 GLB 上传 | [MVP-03-glb-upload-file-storage.md](./MVP-03-glb-upload-file-storage.md) |
+| 4 | MVP-04 | Model Manifest 查询接口 | [MVP-04-model-manifest-api.md](./MVP-04-model-manifest-api.md) |
+| 5 | MVP-05 | Object-tree / Model-stats | [MVP-05-object-tree-model-stats.md](./MVP-05-object-tree-model-stats.md) |
+| 6 | MVP-06 | 资产版本状态与发布基线 | [MVP-06-asset-version-publish-baseline.md](./MVP-06-asset-version-publish-baseline.md) |
+| 7 | MVP-07 | 可动部件配置 API | [MVP-07-movable-part-api.md](./MVP-07-movable-part-api.md) |
+| 8 | MVP-08 | Motion Target API | [MVP-08-motion-target-api.md](./MVP-08-motion-target-api.md) |
+| 9 | MVP-09 | 场景 / 设备实例 / 设备模型绑定 | [MVP-09-scene-device-binding.md](./MVP-09-scene-device-binding.md) |
+| 10 | MVP-10 | Scene Manifest | [MVP-10-scene-manifest.md](./MVP-10-scene-manifest.md) |
+| 11 | MVP-11 | 前端 API Client 与契约类型 | [MVP-11-frontend-api-client-contract-types.md](./MVP-11-frontend-api-client-contract-types.md) |
+| 12 | MVP-12 | 前端接后端 Manifest / Object-tree | [MVP-12-frontend-manifest-object-tree.md](./MVP-12-frontend-manifest-object-tree.md) |
+| 13 | MVP-13 | 前端 Edit 模式保存可动部件与目标点位 | [MVP-13-frontend-edit-mode-save.md](./MVP-13-frontend-edit-mode-save.md) |
+| 14 | MVP-14 | Monitor 模式只读配置并驱动 worldZ 动画 | [MVP-14-monitor-mode-runtime-animation.md](./MVP-14-monitor-mode-runtime-animation.md) |
+| 15 | MVP-15 | 转换任务状态与基础日志 | [MVP-15-conversion-job-status-log.md](./MVP-15-conversion-job-status-log.md) |
+| 16 | MVP-16 | 端到端联调与验收 | [MVP-16-e2e-acceptance.md](./MVP-16-e2e-acceptance.md) |
+| POC | POC-3DT-01 | Three.js + 3DTilesRendererJS 最小验证 | [POC-3DT-01-threejs-3dtiles-renderer.md](./POC-3DT-01-threejs-3dtiles-renderer.md) |
 
-## 3. 可并行任务
+## 3. 必须串行任务
 
-- POC-3DT-01 可与 MVP-01 到 MVP-10 并行，但必须单独分支或独立页面验证。
-- MVP-04 可在 MVP-03 的上传返回结构稳定后提前设计契约，但不能先于 MVP-03 落地完整闭环。
-- MVP-07 与 MVP-08 可连续执行，但建议分别验收。
-- MVP-09 与 MVP-10 可连续执行，但建议分别验收。
+MVP 主线必须按 MVP-00 到 MVP-16 顺序执行。每次只执行一个任务。
 
-## 4. 必须串行任务
+关键依赖：
 
-- MVP-02 必须在 MVP-01 完成后执行。
-- MVP-03 必须在 MVP-01、MVP-02 完成后执行。
-- MVP-04 必须在 MVP-03 至少能产生 asset/version/file 记录后执行。
-- MVP-05 必须在 MVP-02 表结构可用后执行。
-- MVP-06 必须在 MVP-04、MVP-05 有可用数据后执行。
-- MVP-07 必须在 MVP-05 object-tree 可用后执行。
-- MVP-08 必须在 MVP-07 可动部件配置可用后执行。
-- MVP-09 必须在 MVP-06 Published 版本机制可用后执行。
-- MVP-10 必须在 MVP-09 active 设备绑定可用后执行。
-- MVP-11 必须在 MVP-03、MVP-04、MVP-05、MVP-09、MVP-10 至少有可用接口后执行。
-- MVP-12 必须在 MVP-07、MVP-08 可用后执行。
-- MVP-13 必须在 MVP-10、MVP-12 可用后执行。
-- MVP-14 必须在 MVP-03 的转换任务记录可用后执行。
+- MVP-02 依赖 MVP-01。
+- MVP-03 依赖 MVP-02。
+- MVP-04 依赖 MVP-03。
+- MVP-05 依赖 MVP-02 和 MVP-03。
+- MVP-06 依赖 MVP-04 和 MVP-05。
+- MVP-07 依赖 MVP-05 和 MVP-06。
+- MVP-08 依赖 MVP-07。
+- MVP-09 依赖 MVP-06。
+- MVP-10 依赖 MVP-09。
+- MVP-11 依赖后端契约稳定。
+- MVP-12 依赖 MVP-10 和 MVP-11。
+- MVP-13 依赖 MVP-07、MVP-08、MVP-12。
+- MVP-14 依赖 MVP-13。
+- MVP-15 依赖 MVP-03。
+- MVP-16 依赖 MVP-01 到 MVP-15。
 
-## 5. 后端任务
+## 4. 后端任务
 
 - MVP-01 后端解决方案骨架。
 - MVP-02 数据库核心实体与 Migration。
 - MVP-03 文件存储与 GLB 上传。
-- MVP-04 Manifest 查询接口。
+- MVP-04 Model Manifest 查询接口。
 - MVP-05 Object-tree / Model-stats。
 - MVP-06 资产版本状态与发布基线。
 - MVP-07 可动部件配置 API。
 - MVP-08 Motion Target API。
 - MVP-09 场景 / 设备实例 / 设备模型绑定。
 - MVP-10 Scene Manifest。
-- MVP-14 转换任务状态与基础日志。
+- MVP-15 转换任务状态与基础日志。
 
-## 6. 前端任务
+## 5. 前端任务
 
-- MVP-11 前端接后端 Manifest / Object-tree。
-- MVP-12 前端 Edit 模式保存可动部件和目标点位。
-- MVP-13 Monitor 模式只读配置并驱动 worldZ 动画。
+- MVP-11 前端 API Client 与契约类型。
+- MVP-12 前端接后端 Manifest / Object-tree。
+- MVP-13 前端 Edit 模式保存可动部件与目标点位。
+- MVP-14 Monitor 模式只读配置并驱动 worldZ 动画。
+
+## 6. 联调任务
+
+- MVP-16 端到端联调与验收。
 
 ## 7. 技术验证任务
 
-- POC-3DT-01 Three.js + 3DTilesRendererJS 最小验证。
+- POC-3DT-01 可独立验证 Three.js + 3D Tiles，不并入 MVP 主线。
+- POC 不得阻塞 MVP-00 到 MVP-16。
+- POC 不得修改 MVP 主流程，除非用户明确要求合并验证结果。
 
-## 8. 当前禁止执行代码开发
+## 8. 统一任务卡结构
 
-当前只允许维护本目录下的任务卡文档。禁止执行以下事项：
+所有 MVP 任务卡必须包含：
 
-- 创建 `idts3D_api/`。
-- 创建 .NET solution。
-- 写 C# 代码。
-- 写 Vue / TypeScript 代码。
-- 修改 `idts3D_ui/src/**`。
-- 修改 `idts3D_ui/public/models/lifter.glb`。
-- 新增 package 依赖。
-- 新增 NuGet 依赖。
-- 执行 `dotnet new`。
-- 执行 `npm install`。
-- 执行数据库 migration。
-- 执行任何 MVP 开发任务。
-- commit。
-- push。
+1. 任务目标
+2. 前置条件
+3. 影响范围
+4. 禁止修改范围
+5. 后端变更
+6. 前端变更
+7. 数据库变更
+8. API 契约
+9. 前后端对应关系
+10. 执行步骤
+11. 验收标准
+12. 回归测试
+13. 风险点
+14. 回滚策略
+15. Codex 执行提示词
+
+## 9. 后续执行入口
+
+当前文档基线完成后，后续真正开发应从：
+
+```text
+MVP-01：后端解决方案骨架
+```
+
+开始，不要跳过 MVP 顺序。

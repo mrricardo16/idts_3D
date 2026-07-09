@@ -2,223 +2,126 @@
 
 ## 1. 任务目标
 
-建立后端保存和查询 object-tree / model-stats 的能力。MVP 推荐先由前端或脚本提取后上传，后端负责校验、保存、查询和供发布门禁使用，不在本任务中实现 Worker 自动解析 GLB。
+实现 object tree 与 model stats 的保存和查询能力，为发布门禁、对象树 UI 和可动部件绑定提供数据基础。
 
 ## 2. 前置条件
 
-- MVP-01 后端解决方案骨架已完成。
-- MVP-02 数据库核心实体与 Migration 已完成。
-- MVP-03 至少已有可用模型资产和资产版本。
-- `model_object_index` 和 `asset_manifest` 表可用。
+- MVP-02 已完成。
+- MVP-03 已有 asset/version 数据。
+- 已读取 `api-contracts/object-tree-model-stats.md`。
 
 ## 3. 影响范围
-
-预计影响范围：
 
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Api/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Application/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Contracts/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Domain/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Infrastructure/**`
-- `idts3D_docs/**`
 
 ## 4. 禁止修改范围
 
-- 不允许修改与本任务无关的 `src` 文件。
-- 不允许修改 `idts3D_ui/public/models/lifter.glb`。
-- 不允许格式化全仓库。
-- 不允许引入非必要依赖。
-- 不允许跨任务实现后续功能。
-- 不允许实现 Worker 自动解析 GLB。
-- 不允许实现 glTF Transform。
-- 不允许实现 LOD。
-- 不允许实现可动部件 API。
-- 不允许修改前端源码。
+- 禁止要求 Worker 自动解析 GLB。
+- 禁止修改前端源码。
+- 禁止实现发布状态流转。
+- 禁止实现 movable part。
 
-## 5. 详细执行步骤
+## 5. 后端变更
 
-1. 输出本任务影响范围并等待确认。
-2. 检查模型资产和资产版本数据是否可用。
-3. 检查当前 git 状态，记录已有变更。
-4. 定义 object-tree 保存请求 DTO。
-5. 定义 object-tree 查询响应 DTO。
-6. 定义 model-stats 保存请求 DTO。
-7. 定义 model-stats 查询响应 DTO。
-8. 校验 `assetId` 和 `versionId` 存在。
-9. 校验版本属于指定资产。
-10. 实现保存 object-tree 前删除同版本旧索引的策略。
-11. 将 object-tree 节点写入 `model_object_index`。
-12. 为 `object_uuid` 和 `object_path` 保持可查性。
-13. 实现查询 object-tree。
-14. 校验 model-stats 必需字段。
-15. 将 model-stats 写入 manifest 快照或独立 JSON 字段。
-16. 实现查询 model-stats。
-17. 标记 model-stats 是否超预算。
-18. 在 Swagger 验证保存 object-tree。
-19. 在 Swagger 验证查询 object-tree。
-20. 在 Swagger 验证保存 model-stats。
-21. 在 Swagger 验证查询 model-stats。
-22. 验证 object-tree 不存在时返回 404。
-23. 验证字段缺失时返回 400。
-24. 运行 `dotnet build`。
-25. 输出 API 响应样例、数据库记录、构建结果和 git diff 摘要。
+- Entity：`ModelObjectIndex`, `AssetManifest`, `ModelAsset`, `AssetVersion`。
+- DbContext：无结构变更。
+- Migration：无，缺字段则停止并回报。
+- Controller：新增 object tree / model stats endpoints。
+- Application Service：保存、查询、覆盖策略。
+- Infrastructure Repository / EF 查询：批量写入 object tree，更新 stats json。
+- Request DTO：`SaveObjectTreeRequest`, `SaveModelStatsRequest`。
+- Response DTO：`ObjectTreeResponse`, `ModelStatsResponse`。
+- 校验规则：nodes 非空、version 存在、Published 不可直接覆盖。
+- 错误码：`VALIDATION_FAILED`, `VERSION_NOT_FOUND`, `VERSION_STATUS_INVALID`。
 
-## 6. 数据库变更
+## 6. 前端变更
 
-本任务不新增表。
+- TypeScript 类型：无。
+- API Client：无。
+- Vue 页面：无。
+- Engine 层：无。
+- fallback：无。
+- 状态字段：无。
+- UI 提示：无。
 
-写入表：
+## 7. 数据库变更
 
-- `model_object_index`
-- `asset_manifest`，用于保存或更新 `model_stats_json`
+- 新增表：无。
+- 修改表：无。
+- 读取表：`model_asset`, `asset_version`, `model_object_index`, `asset_manifest`。
+- 写入表：`model_object_index`, `asset_manifest`, `operation_audit`。
+- 约束：object tree 以 `asset_version_id` 为边界。
+- 索引：`asset_version_id + object_uuid`, `asset_version_id + object_path`。
 
-读取表：
+## 8. API 契约
 
-- `model_asset`
-- `asset_version`
-- `model_object_index`
-- `asset_manifest`
+完整契约见 `idts3D_docs/api-contracts/object-tree-model-stats.md`。
 
-关键字段：
+## 9. 前后端对应关系
 
-- `object_uuid`
-- `object_name`
-- `object_path`
-- `parent_uuid`
-- `parent_path`
-- `object_type`
-- `bounding_box_min_x/y/z`
-- `bounding_box_max_x/y/z`
-- `mesh_fingerprint`
-- `model_stats_json`
+| 后端 Entity | DTO | API | 前端 TypeScript interface | 前端调用文件 | Vue / engine 消费位置 |
+|---|---|---|---|---|---|
+| `ModelObjectIndex` | `SaveObjectTreeRequest`, `ObjectTreeResponse` | `PUT/GET object-tree` | MVP-11 `ModelObjectNodeDto` | MVP-11 `src/api/objectTree.ts` | MVP-12 对象树 UI |
+| `AssetManifest` | `SaveModelStatsRequest`, `ModelStatsResponse` | `PUT/GET model-stats` | MVP-11 `ModelStatsDto` | MVP-11 `src/api/objectTree.ts` | 性能面板 / 发布门禁 |
 
-约束：
+## 10. 执行步骤
 
-- 同一 `asset_version_id` 下 `object_uuid` 建议可重复容忍但应可查询。
-- 同一 `asset_version_id` 下 `object_path` 应尽量唯一；若实际 GLB 产生重复路径，应返回警告。
-- object-tree 保存应以 `asset_version_id` 为边界。
+1. 输出影响范围并等待确认。
+2. 创建 object tree DTO。
+3. 创建 model stats DTO。
+4. 实现保存 object tree：先清同版本旧节点，再批量写入。
+5. 实现查询 object tree。
+6. 实现保存 model stats 到 `asset_manifest.model_stats_json`。
+7. 实现查询 model stats。
+8. 实现 Published 版本覆盖 guard。
+9. Swagger 验证 200 / 400 / 404 / 409。
+10. 运行 `dotnet build`。
 
-索引：
+## 11. 验收标准
 
-- 使用 MVP-02 已建立的 `asset_version_id + object_uuid`。
-- 使用 MVP-02 已建立的 `asset_version_id + object_path`。
-
-Migration 名称建议：
-
-- 本任务不建议创建 Migration；如发现缺字段，应停止并回到 MVP-02 修正。
-
-## 7. API 变更
-
-新增 API：
-
-| Method | Route |
-|---|---|
-| PUT | `/api/model-assets/{assetId}/versions/{versionId}/object-tree` |
-| GET | `/api/model-assets/{assetId}/object-tree` |
-| PUT | `/api/model-assets/{assetId}/versions/{versionId}/model-stats` |
-| GET | `/api/model-assets/{assetId}/versions/{versionId}/model-stats` |
-
-Object-tree Request:
-
-- `nodes[]`
-- `objectUuid`
-- `objectName`
-- `objectPath`
-- `parentUuid`
-- `parentPath`
-- `objectType`
-- `boundingBox`
-- `meshFingerprint`
-
-Model-stats Request:
-
-- `fileSizeMb`
-- `meshCount`
-- `materialCount`
-- `textureCount`
-- `vertexCount`
-- `triangleCount`
-- `drawCallEstimate`
-- `maxTextureSize`
-- `hasMovableCandidates`
-- `hasDuplicatedNames`
-- `hasInvalidMaterials`
-- `isOverBudget`
-- `budgetMessages`
-
-校验规则：
-
-- 资产和版本必须存在。
-- 版本必须属于资产。
-- object-tree 节点必须包含 `objectPath` 或 `objectUuid`。
-- model-stats 数值字段不能为负数。
-- Published 版本是否允许覆盖 object-tree 需要明确策略，建议禁止直接覆盖。
-
-错误码：
-
-- `400`: 请求结构无效或字段缺失。
-- `404`: 资产、版本、object-tree 或 model-stats 不存在。
-- `409`: 版本状态不允许覆盖。
-
-## 8. 前端变更
-
-本任务不涉及前端变更。
-
-后续 MVP-11 才允许前端读取 object-tree；后续工具或脚本可调用保存接口，但本任务不修改前端源码。
-
-## 9. 验收标准
-
-- 能保存 object-tree。
-- 能查询 object-tree。
-- `object_uuid` 可查。
-- `object_path` 可查。
-- 能保存 model-stats。
-- 能查询 model-stats。
-- model-stats 可用于发布门禁。
-- object-tree 不存在时返回 404。
-- 字段无效时返回 400。
+- 能保存 object tree。
+- 能查询 object tree。
+- 能保存 model stats。
+- 能查询 model stats。
+- Published 版本直接覆盖返回 409。
 - `dotnet build` 通过。
-- 无前端源码改动。
+- 不需要 `npm run build`。
 
-## 10. 回归测试
+## 12. 回归测试
 
-本任务不修改前端运行逻辑，但完成后仍需确认以下能力未被触碰：
+- GLB 加载：后续 MVP-12 验证。
+- 对象树：Swagger 验证数据可保存/查询，页面后续验证。
+- 对象点击：后续 MVP-12 验证。
+- 查看子级 / 父级：后续 MVP-12 验证。
+- 异常高亮：不执行。
+- 异常 callout：不执行。
+- WASD / 鼠标视角：不执行。
+- monitor / edit guard：验证 Published 不可覆盖。
+- localStorage fallback：不执行。
+- worldZ 任务移动：不执行。
+- 后端不可用时 fallback：后续 MVP-12 验证。
+- 后端可用时优先走后端：后续 MVP-12 验证。
 
-- GLB 加载。
-- 对象树。
-- 查看子级 / 父级。
-- 异常高亮。
-- 异常 callout。
-- WASD / 鼠标视角。
-- monitor / edit guard。
-- localStorage fallback。
-- worldZ 任务移动。
+## 13. 风险点
 
-## 11. 风险点
+- 大型 object tree 批量写入性能。
+- object uuid 可能不稳定，需要保留 object path。
+- model stats JSON 与发布门禁字段不一致。
 
-- object-tree 覆盖策略不清导致丢失人工绑定依据。
-- `objectUuid` 在模型重新导出后变化，不能作为唯一可靠绑定依据。
-- `objectPath` 重复导致可动部件绑定歧义。
-- model-stats 保存位置不清，影响 MVP-06 发布门禁。
-- 在本任务中过早引入 Worker 自动解析，扩大范围。
+## 14. 回滚策略
 
-## 12. 回滚策略
+删除新增 endpoints、DTO、Service；删除测试写入的 object tree 和 stats 数据。
 
-- 删除本任务新增的 object-tree 和 model-stats Controller、Service、DTO。
-- 删除测试写入的 `model_object_index` 数据。
-- 删除测试写入的 `model_stats_json`。
-- 保留模型资产、文件上传和基础表结构。
-- 不回滚用户已有前端或文档变更。
-
-## 13. Codex 执行提示词
+## 15. Codex 执行提示词
 
 ```text
 请执行 MVP-05：Object-tree / Model-stats。
-
-当前只执行本任务，不执行 MVP-06 或任何后续任务。
-请先读取 AGENTS.md、idts3D_docs/idts-digital-twin-project-technical-plan.md、idts3D_docs/idts-mvp-task-breakdown.md，以及 idts3D_docs/mvp-tasks/MVP-05-object-tree-model-stats.md。
-先输出影响范围，等待我确认后再修改文件。
-禁止跨任务扩展，禁止实现 Worker 自动解析 GLB、glTF Transform、LOD、可动部件、motion target、发布流程或前端接入，禁止修改 idts3D_ui/public/models/lifter.glb。
-完成后输出修改文件路径、新增文件路径、是否有代码改动、是否有新增依赖、API 验证结果、数据库记录验证、dotnet build 结果、验收情况、git status 摘要和 git diff --stat 摘要。
+先读取 AGENTS.md、idts3D_docs/idts-mvp-task-breakdown.md、idts3D_docs/api-contracts/object-tree-model-stats.md、idts3D_docs/domain-entity-dto-map.md 和本任务卡。
+先输出影响范围，等待我确认后再改。
+只实现 object-tree 和 model-stats 保存/查询，不修改前端源码，不实现发布或可动部件。
+完成后运行 dotnet build，并用 Swagger 验证接口。
 不要 commit，不要 push。
 ```

@@ -2,193 +2,126 @@
 
 ## 1. 任务目标
 
-提供场景加载清单接口，让前端后续可以按场景加载设备，而不是只加载单个 lifter。MVP 阶段只返回 active 设备绑定和 Published GLB 设备，`tilesets` 先返回空数组。
+实现 `GET /api/scenes/{sceneId}/manifest`，让前端按场景加载设备和 model manifest。
 
 ## 2. 前置条件
 
-- MVP-01 后端解决方案骨架已完成。
-- MVP-02 数据库核心实体与 Migration 已完成。
-- MVP-04 Manifest 查询接口已完成。
-- MVP-06 资产版本状态与发布基线已完成。
-- MVP-09 场景、设备实例、设备模型绑定已完成。
-- 至少存在一个 active 设备模型绑定。
+- MVP-09 已完成。
+- 存在 active device model binding。
+- active binding 指向 Published asset version。
+- 已读取 `api-contracts/scenes.md`。
 
 ## 3. 影响范围
-
-预计影响范围：
 
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Api/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Application/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Contracts/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Domain/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Infrastructure/**`
-- `idts3D_docs/**`
 
 ## 4. 禁止修改范围
 
-- 不允许修改与本任务无关的 `src` 文件。
-- 不允许修改 `idts3D_ui/public/models/lifter.glb`。
-- 不允许格式化全仓库。
-- 不允许引入非必要依赖。
-- 不允许跨任务实现后续功能。
-- 不允许实现前端按场景加载。
-- 不允许实现 3D Tiles 生产化。
-- 不允许实现设备状态或任务系统。
-- 不允许修改前端源码。
+- 禁止修改前端源码。
+- 禁止做 3D Tiles 生产化。
+- 禁止返回非 Published 版本给 monitor。
+- 禁止实现完整场景编辑后台。
 
-## 5. 详细执行步骤
+## 5. 后端变更
 
-1. 输出本任务影响范围并等待确认。
-2. 检查默认场景和设备绑定是否可用。
-3. 检查当前 git 状态，记录已有变更。
-4. 定义 scene manifest 响应 DTO。
-5. 定义 scene node 摘要结构。
-6. 定义 device manifest item 结构。
-7. 定义 tileset item 结构，MVP 返回空数组。
-8. 实现按 `sceneId` 查询场景。
-9. 查询 enabled 场景节点。
-10. 查询场景下 enabled 设备实例。
-11. 查询每个设备的 active 模型绑定。
-12. 校验 active 绑定指向 Published asset_version。
-13. 为每个设备生成 `manifestUrl`。
-14. 返回设备 position。
-15. 返回设备 rotation。
-16. 返回设备 scale。
-17. 对无效绑定选择返回 409 或跳过并记录 warning，策略必须固定。
-18. 在 Swagger 验证 scene manifest。
-19. 验证只返回 active 设备绑定。
-20. 验证只返回 Published 版本。
-21. 验证无效绑定处理。
-22. 运行 `dotnet build`。
-23. 输出 API 响应样例、构建结果和 git diff 摘要。
+- Entity：`SceneNode`, `DeviceInstance`, `DeviceModelBinding`, `ModelAsset`, `AssetVersion`, `AssetManifest`。
+- DbContext：无结构变更。
+- Migration：无。
+- Controller：`ScenesController.GetManifest`。
+- Application Service：`SceneManifestService`。
+- Infrastructure Repository / EF 查询：查询 scene、device、active binding。
+- Request DTO：`GetSceneManifestRequest`。
+- Response DTO：`SceneManifestResponse`, `SceneDeviceManifestResponse`。
+- 校验规则：monitor 只返回 active + Published。
+- 错误码：`NOT_FOUND`, `VERSION_STATUS_INVALID`。
 
-## 6. 数据库变更
+## 6. 前端变更
 
-本任务不新增表。
+- TypeScript 类型：无。
+- API Client：无。
+- Vue 页面：无。
+- Engine 层：无。
+- fallback：无。
+- 状态字段：无。
+- UI 提示：无。
 
-读取表：
+## 7. 数据库变更
 
-- `scene_node`
-- `device_instance`
-- `device_model_binding`
-- `model_asset`
-- `asset_version`
+- 新增表：无。
+- 修改表：无。
+- 读取表：`scene_node`, `device_instance`, `device_model_binding`, `model_asset`, `asset_version`, `asset_manifest`。
+- 写入表：无。
+- 约束：只读取 active binding。
+- 索引：使用 scene、device、binding 索引。
 
-写入表：
+## 8. API 契约
 
-- 原则上不写入表。
-- 如需要测试数据，应通过 MVP-09 Seed 数据提供，不在本任务新增业务写入。
+完整契约见 `idts3D_docs/api-contracts/scenes.md`。
 
-约束：
+## 9. 前后端对应关系
 
-- 只返回 enabled 场景节点。
-- 只返回 enabled 设备。
-- 只返回 active 设备模型绑定。
-- 只返回 Published 模型版本。
+| 后端 Entity | DTO | API | 前端 TypeScript interface | 前端调用文件 | Vue / engine 消费位置 |
+|---|---|---|---|---|---|
+| `SceneNode`, `DeviceInstance`, `DeviceModelBinding` | `GetSceneManifestRequest`, `SceneManifestResponse` | `GET /api/scenes/{sceneId}/manifest` | MVP-11 `SceneManifestResponse` | MVP-11 `src/api/scenes.ts` | MVP-12 `TwinDemo.vue`, `TwinScene.ts` |
 
-Migration 名称建议：
+## 10. 执行步骤
 
-- 本任务不建议创建 Migration；如缺字段，应停止并回到 MVP-02 修正。
+1. 输出影响范围并等待确认。
+2. 创建 scene manifest DTO。
+3. 查询 scene node。
+4. 查询 enabled device instances。
+5. 查询 active device model bindings。
+6. 校验绑定版本 Published。
+7. 生成 model manifest URL。
+8. `tilesets` 返回空数组。
+9. Swagger 验证 200 / 404 / 409。
+10. 运行 `dotnet build`。
 
-## 7. API 变更
-
-新增 API：
-
-| Method | Route |
-|---|---|
-| GET | `/api/scenes/{sceneId}/manifest` |
-
-Request:
-
-- `sceneId`: 路径参数。
-
-Response:
-
-- `sceneId`
-- `sceneName`
-- `sceneNodes`
-- `devices[]`
-- `devices[].deviceId`
-- `devices[].deviceCode`
-- `devices[].deviceName`
-- `devices[].modelAssetId`
-- `devices[].assetVersionId`
-- `devices[].manifestUrl`
-- `devices[].position`
-- `devices[].rotation`
-- `devices[].scale`
-- `tilesets`
-- `warnings`
-
-校验规则：
-
-- 场景必须存在。
-- 只返回 active 设备绑定。
-- 只返回 Published 版本。
-- MVP 阶段 `tilesets` 返回空数组。
-- 无效绑定返回 409，或跳过并记录 warning；实现前必须固定策略。
-
-错误码：
-
-- `404`: 场景不存在。
-- `409`: 存在未发布或无效模型绑定。
-
-## 8. 前端变更
-
-本任务不涉及前端变更。
-
-后续 MVP-11 才允许前端读取 scene manifest 并按场景加载 GLB。
-
-## 9. 验收标准
+## 11. 验收标准
 
 - GET scene manifest 返回设备列表。
-- 只返回 active 设备绑定。
-- 只返回 Published 版本。
-- `tilesets` 返回空数组。
-- 每个设备包含 `manifestUrl`。
-- 每个设备包含 position / rotation / scale。
-- 无效绑定返回 409 或记录 warning，行为一致。
+- 只返回 active binding。
+- 只返回 Published asset version。
+- manifestUrl 由后端生成。
+- `tilesets` MVP 返回空数组。
 - `dotnet build` 通过。
-- 无前端源码改动。
+- 不需要 `npm run build`。
 
-## 10. 回归测试
+## 12. 回归测试
 
-本任务不修改前端运行逻辑，但完成后仍需确认以下能力未被触碰：
+- GLB 加载：后续 MVP-12 验证。
+- 对象树：不执行。
+- 对象点击：不执行。
+- 查看子级 / 父级：不执行。
+- 异常高亮：不执行。
+- 异常 callout：不执行。
+- WASD / 鼠标视角：不执行。
+- monitor / edit guard：Swagger 验证 monitor 只拿 Published。
+- localStorage fallback：不执行。
+- worldZ 任务移动：不执行。
+- 后端不可用时 fallback：后续 MVP-12 验证。
+- 后端可用时优先走后端：后续 MVP-12 验证。
 
-- GLB 加载。
-- 对象树。
-- 查看子级 / 父级。
-- 异常高亮。
-- 异常 callout。
-- WASD / 鼠标视角。
-- monitor / edit guard。
-- localStorage fallback。
-- worldZ 任务移动。
+## 13. 风险点
 
-## 11. 风险点
+- 场景 manifest 和 model manifest 字段重复。
+- 无效绑定处理策略需要固定为 409 或跳过并 warning。
+- 前端后续如果直接请求 model manifest 会绕过 scene 设备 transform。
 
-- scene manifest 返回 Draft 版本，破坏 monitor 只读边界。
-- 无效绑定被静默忽略，现场难以排查。
-- `manifestUrl` 与 MVP-04 路由不一致。
-- transform 坐标单位与前端解释不一致。
-- 提前引入 3D Tiles 生产化字段，扩大 MVP 范围。
+## 14. 回滚策略
 
-## 12. 回滚策略
+删除 scene manifest Controller、Service、DTO，不改数据库结构和 seed 数据。
 
-- 删除本任务新增的 scene manifest Controller、Service、DTO。
-- 保留 MVP-09 场景和设备绑定数据。
-- 不删除模型资产和发布数据。
-- 不回滚用户已有前端或文档变更。
-
-## 13. Codex 执行提示词
+## 15. Codex 执行提示词
 
 ```text
 请执行 MVP-10：Scene Manifest。
-
-当前只执行本任务，不执行 MVP-11 或任何后续任务。
-请先读取 AGENTS.md、idts3D_docs/idts-digital-twin-project-technical-plan.md、idts3D_docs/idts-mvp-task-breakdown.md，以及 idts3D_docs/mvp-tasks/MVP-10-scene-manifest.md。
-先输出影响范围，等待我确认后再修改文件。
-禁止跨任务扩展，禁止实现前端按场景加载、3D Tiles 生产化、设备状态或任务系统，禁止修改 idts3D_ui/public/models/lifter.glb。
-完成后输出修改文件路径、新增文件路径、是否有代码改动、是否有新增依赖、API 验证结果、dotnet build 结果、验收情况、git status 摘要和 git diff --stat 摘要。
+先读取 AGENTS.md、idts3D_docs/idts-mvp-task-breakdown.md、idts3D_docs/api-contracts/scenes.md、idts3D_docs/domain-entity-dto-map.md 和本任务卡。
+先输出影响范围，等待我确认后再改。
+只实现 GET /api/scenes/{sceneId}/manifest，不修改前端源码，不做 3D Tiles 生产化。
+完成后运行 dotnet build，并用 Swagger 验证 200、404、409。
 不要 commit，不要 push。
 ```

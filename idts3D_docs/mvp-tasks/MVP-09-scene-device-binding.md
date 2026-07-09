@@ -2,215 +2,125 @@
 
 ## 1. 任务目标
 
-建立“哪个区域放了哪些设备，每个设备绑定哪个模型版本”的 MVP 数据能力。优先用 Seed 数据建立默认场景、默认设备和 active 设备模型绑定，不急于开放完整管理页面。
+建立默认 scene、device instance、device model binding，让后端知道场景中有哪些设备以及设备绑定哪个 Published asset version。
 
 ## 2. 前置条件
 
-- MVP-01 后端解决方案骨架已完成。
-- MVP-02 数据库核心实体与 Migration 已完成。
-- MVP-06 资产版本状态与发布基线已完成。
-- 至少存在一个 Published `asset_version`。
-- `scene_node`、`device_instance`、`device_model_binding` 表可用。
+- MVP-06 已完成。
+- 至少存在一个 Published asset version。
+- `scene_node`, `device_instance`, `device_model_binding` 表可用。
 
 ## 3. 影响范围
 
-预计影响范围：
-
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Api/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Application/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Contracts/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Domain/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Infrastructure/**`
-- `idts3D_api/**/appsettings*.json`
-- `idts3D_docs/**`
+- `idts3D_api/src/HZ.IDTS.DigitalTwin.Contracts/**`
+- 可选 `idts3D_api/src/HZ.IDTS.DigitalTwin.Api/**`
 
 ## 4. 禁止修改范围
 
-- 不允许修改与本任务无关的 `src` 文件。
-- 不允许修改 `idts3D_ui/public/models/lifter.glb`。
-- 不允许格式化全仓库。
-- 不允许引入非必要依赖。
-- 不允许跨任务实现后续功能。
-- 不允许实现 scene manifest。
-- 不允许实现前端按场景加载。
-- 不允许实现完整场景管理后台。
-- 不允许修改前端源码。
+- 禁止做完整场景管理后台。
+- 禁止修改前端源码。
+- 禁止绑定非 Published 版本给 monitor。
+- 禁止允许同一 device instance 多个 active binding。
 
-## 5. 详细执行步骤
+## 5. 后端变更
 
-1. 输出本任务影响范围并等待确认。
-2. 检查 Published 资产版本是否存在。
-3. 检查当前 git 状态，记录已有变更。
-4. 定义默认场景 Seed 数据。
-5. 创建默认厂区 `scene_node`。
-6. 创建默认区域 `scene_node`。
-7. 创建默认设备 `device_instance`，设备编码建议 `LIFTER-001`。
-8. 为默认设备配置 position。
-9. 为默认设备配置 rotation。
-10. 为默认设备配置 scale。
-11. 创建默认 `device_model_binding`。
-12. 校验绑定的 `asset_version` 必须存在。
-13. 校验 monitor 模式只允许绑定 Published 版本。
-14. 校验同一 `device_instance` 同一时间只能有一个 active binding。
-15. 发布新 active binding 时归档旧 active binding。
-16. 回滚或切换绑定时继续保证 active 唯一。
-17. 如需要最小 API，定义场景列表查询接口。
-18. 如需要最小 API，定义场景设备查询接口。
-19. 如需要最小 API，定义设备模型绑定更新接口。
-20. 在 Swagger 或数据库中验证默认 scene_node 存在。
-21. 验证默认 device_instance 存在。
-22. 验证设备绑定 Published 版本。
-23. 验证 active binding 唯一。
-24. 运行 `dotnet build`。
-25. 输出 Seed 数据、绑定验证、构建结果和 git diff 摘要。
+- Entity：`SceneNode`, `DeviceInstance`, `DeviceModelBinding`, `AssetVersion`, `OperationAudit`。
+- DbContext：无结构变更。
+- Migration：无。
+- Controller：可选 seed / 查询端点；若无端点，使用 seed service。
+- Application Service：默认场景、设备、绑定创建。
+- Infrastructure Repository / EF 查询：active binding 查询和唯一校验。
+- Request DTO：`CreateSceneNodeRequest`, `CreateDeviceInstanceRequest`, `CreateDeviceModelBindingRequest` 或 seed DTO。
+- Response DTO：`SceneNodeResponse`, `DeviceInstanceResponse`, `DeviceModelBindingResponse`。
+- 校验规则：asset version 必须 Published，同设备只能一个 active。
+- 错误码：`VERSION_STATUS_INVALID`, `CONFLICT`, `NOT_FOUND`。
 
-## 6. 数据库变更
+## 6. 前端变更
 
-本任务不新增表。
+- TypeScript 类型：无。
+- API Client：无。
+- Vue 页面：无。
+- Engine 层：无。
+- fallback：无。
+- 状态字段：无。
+- UI 提示：无。
 
-读取表：
+## 7. 数据库变更
 
-- `asset_version`
-- `model_asset`
-- `scene_node`
-- `device_instance`
-- `device_model_binding`
+- 新增表：无。
+- 修改表：无。
+- 读取表：`asset_version`, `model_asset`, `scene_node`, `device_instance`, `device_model_binding`。
+- 写入表：`scene_node`, `device_instance`, `device_model_binding`, `operation_audit`。
+- 约束：`device_code` 唯一，`device_instance_id + asset_version_id` 唯一，同设备 active 唯一。
+- 索引：scene、device、binding 状态索引。
 
-写入表：
+## 8. API 契约
 
-- `scene_node`
-- `device_instance`
-- `device_model_binding`
-- `operation_audit`，如实现绑定变更审计。
+本任务主要为 `api-contracts/scenes.md` 的 scene manifest 提供数据。若新增 seed API，必须在任务输出中说明，但完整 manifest 契约仍以 `scenes.md` 为准。
 
-关键字段：
+## 9. 前后端对应关系
 
-- `scene_node.parent_id`
-- `scene_node.node_code`
-- `scene_node.node_name`
-- `scene_node.node_type`
-- `scene_node.enabled`
-- `device_instance.scene_node_id`
-- `device_instance.device_code`
-- `device_instance.device_name`
-- `device_instance.position_x/y/z`
-- `device_instance.rotation_x/y/z`
-- `device_instance.scale_x/y/z`
-- `device_model_binding.device_instance_id`
-- `device_model_binding.model_asset_id`
-- `device_model_binding.asset_version_id`
-- `device_model_binding.binding_status`
-- `device_model_binding.active_from`
-- `device_model_binding.active_to`
+| 后端 Entity | DTO | API | 前端 TypeScript interface | 前端调用文件 | Vue / engine 消费位置 |
+|---|---|---|---|---|---|
+| `SceneNode`, `DeviceInstance`, `DeviceModelBinding` | scene/device/binding DTO | seed 或内部服务 | MVP-11 `SceneManifestResponse` | MVP-11 `src/api/scenes.ts` | MVP-12 场景加载 |
 
-约束：
+## 10. 执行步骤
 
-- `device_instance.device_code` 唯一。
-- `device_model_binding.device_instance_id + asset_version_id` 唯一。
-- 同一 `device_instance` 同一时间只能有一个 active binding。
-- active binding 必须指向 Published asset_version。
+1. 输出影响范围并等待确认。
+2. 确认 Published asset version。
+3. 创建默认厂区 scene node。
+4. 创建默认区域 scene node。
+5. 创建设备 `LIFTER-001`。
+6. 创建 active device model binding。
+7. 校验绑定版本为 Published。
+8. 校验同设备只有一个 active binding。
+9. 写入审计。
+10. 运行 `dotnet build`。
 
-Migration 名称建议：
-
-- 本任务不建议创建 Migration；如缺字段，应停止并回到 MVP-02 修正。
-
-## 7. API 变更
-
-本任务优先使用 Seed 数据，可不开放完整管理 API。
-
-可选 API：
-
-| Method | Route |
-|---|---|
-| POST | `/api/scenes` |
-| GET | `/api/scenes` |
-| POST | `/api/scenes/{sceneId}/devices` |
-| GET | `/api/scenes/{sceneId}/devices` |
-| PUT | `/api/devices/{deviceId}/model-binding` |
-
-Request:
-
-- 场景创建：`nodeCode`, `nodeName`, `parentId`, `nodeType`, `enabled`
-- 设备创建：`deviceCode`, `deviceName`, `deviceType`, `position`, `rotation`, `scale`
-- 绑定更新：`modelAssetId`, `assetVersionId`, `reason`
-
-Response:
-
-- `sceneId`
-- `deviceId`
-- `bindingId`
-- `bindingStatus`
-- `message`
-
-校验规则：
-
-- 设备必须属于某个 scene_node。
-- 绑定的 asset_version 必须存在。
-- monitor 模式只允许绑定 Published 版本。
-- 同一 device_instance 同一时间只能有一个 active binding。
-- 发布新绑定时旧 active 绑定必须归档。
-
-错误码：
-
-- `400`: 请求字段无效。
-- `404`: 场景、设备、模型资产或版本不存在。
-- `409`: 版本未 Published 或 active 绑定冲突。
-
-## 8. 前端变更
-
-本任务不涉及前端变更。
-
-后续 MVP-10 提供 scene manifest，MVP-11 才允许前端按场景加载设备。
-
-## 9. 验收标准
+## 11. 验收标准
 
 - 数据库有默认 scene_node。
 - 数据库有默认 device_instance。
-- 设备绑定 Published asset_version。
-- 同一 device_instance 只能有一个 active binding。
-- 发布新绑定时旧 active 归档。
-- 回滚或切换绑定时仍保证 active 唯一。
+- 数据库有 active device_model_binding。
+- active binding 指向 Published asset_version。
+- 同一 device_instance 只有一个 active binding。
 - `dotnet build` 通过。
-- 无前端源码改动。
+- 不需要 `npm run build`。
 
-## 10. 回归测试
+## 12. 回归测试
 
-本任务不修改前端运行逻辑，但完成后仍需确认以下能力未被触碰：
+- GLB 加载：后续 MVP-12 验证。
+- 对象树：不执行。
+- 对象点击：不执行。
+- 查看子级 / 父级：不执行。
+- 异常高亮：不执行。
+- 异常 callout：不执行。
+- WASD / 鼠标视角：不执行。
+- monitor / edit guard：验证绑定只指向 Published。
+- localStorage fallback：不执行。
+- worldZ 任务移动：不执行。
+- 后端不可用时 fallback：后续 MVP-12 验证。
+- 后端可用时优先走后端：后续 MVP-12 验证。
 
-- GLB 加载。
-- 对象树。
-- 查看子级 / 父级。
-- 异常高亮。
-- 异常 callout。
-- WASD / 鼠标视角。
-- monitor / edit guard。
-- localStorage fallback。
-- worldZ 任务移动。
+## 13. 风险点
 
-## 11. 风险点
+- seed 数据依赖 Published version，顺序错误会失败。
+- active binding 唯一约束需要事务或服务层锁。
+- 场景坐标和模型 root transform 可能重复叠加。
 
-- active binding 唯一规则只在代码中口头约束，没有落到可验证逻辑。
-- 设备绑定 Draft 版本导致 monitor 加载未发布配置。
-- Seed 数据重复执行产生重复设备。
-- 坐标 transform 与前端坐标系语义不一致。
-- 过早实现完整场景管理 API，扩大任务范围。
+## 14. 回滚策略
 
-## 12. 回滚策略
+删除本任务 seed 的 scene_node、device_instance、device_model_binding 和审计数据。
 
-- 删除本任务新增的 Seed 数据配置、场景设备服务和可选 Controller。
-- 删除测试写入的 scene_node、device_instance、device_model_binding 数据。
-- 保留模型资产、版本发布和 manifest 能力。
-- 不回滚用户已有前端或文档变更。
-
-## 13. Codex 执行提示词
+## 15. Codex 执行提示词
 
 ```text
 请执行 MVP-09：场景 / 设备实例 / 设备模型绑定。
-
-当前只执行本任务，不执行 MVP-10 或任何后续任务。
-请先读取 AGENTS.md、idts3D_docs/idts-digital-twin-project-technical-plan.md、idts3D_docs/idts-mvp-task-breakdown.md，以及 idts3D_docs/mvp-tasks/MVP-09-scene-device-binding.md。
-先输出影响范围，等待我确认后再修改文件。
-禁止跨任务扩展，禁止实现 scene manifest、前端按场景加载、完整场景管理后台或 3D Tiles，禁止修改 idts3D_ui/public/models/lifter.glb。
-完成后输出修改文件路径、新增文件路径、是否有代码改动、是否有新增依赖、Seed 数据验证、active 绑定验证、dotnet build 结果、验收情况、git status 摘要和 git diff --stat 摘要。
+先读取 AGENTS.md、idts3D_docs/idts-mvp-task-breakdown.md、idts3D_docs/domain-entity-dto-map.md、idts3D_docs/api-contracts/scenes.md 和本任务卡。
+先输出影响范围，等待我确认后再改。
+只做默认 scene/device/binding 数据和服务，不做完整场景管理后台，不修改前端源码。
+完成后运行 dotnet build，并验证 active binding 指向 Published。
 不要 commit，不要 push。
 ```

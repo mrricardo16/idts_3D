@@ -2,208 +2,132 @@
 
 ## 1. 任务目标
 
-实现 MVP 一期 GLB 上传入口，完成文件校验、SHA256 计算、文件落盘、模型资产记录创建、资产版本创建、source 变体记录创建和转换任务记录创建。该任务只支持 GLB，不做 CAD 转换、LOD、3D Tiles 或前端接入。
+实现 GLB 上传、SHA256 计算、文件落盘、model asset / asset version / source variant / conversion job 入库。
 
 ## 2. 前置条件
 
-- MVP-01 后端解决方案骨架已完成。
-- MVP-02 数据库核心实体与 Migration 已完成。
-- `model_asset`、`asset_version`、`model_asset_variant`、`model_conversion_job` 表可用。
-- 文件存储根目录策略已明确，开发环境可先使用本地目录。
+- MVP-02 已完成。
+- 数据库可连接。
+- 文件存储根目录已配置。
+- 已读取 `api-contracts/model-assets.md`。
 
 ## 3. 影响范围
-
-预计影响范围：
 
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Api/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Application/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Contracts/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Domain/**`
 - `idts3D_api/src/HZ.IDTS.DigitalTwin.Infrastructure/**`
 - `idts3D_api/**/appsettings*.json`
-- `idts3D_docs/**`
 
 ## 4. 禁止修改范围
 
-- 不允许修改与本任务无关的 `src` 文件。
-- 不允许修改 `idts3D_ui/public/models/lifter.glb`。
-- 不允许格式化全仓库。
-- 不允许引入非必要依赖。
-- 不允许跨任务实现后续功能。
-- 不允许实现 manifest 查询。
-- 不允许实现 object-tree / model-stats。
-- 不允许实现可动部件或 motion target。
-- 不允许接入 3D Tiles。
-- 不允许修改前端源码。
+- 禁止做 CAD 转换。
+- 禁止做 STEP / IFC。
+- 禁止做 LOD / 3D Tiles。
+- 禁止修改前端源码。
+- 禁止跨任务实现 manifest 查询。
 
-## 5. 详细执行步骤
+## 5. 后端变更
 
-1. 输出本任务影响范围并等待确认。
-2. 检查 MVP-02 数据库表是否可用。
-3. 检查当前 git 状态，记录已有变更。
-4. 定义上传请求 DTO。
-5. 定义上传响应 DTO。
-6. 定义文件存储配置项。
-7. 实现文件扩展名校验，只允许 `.glb`。
-8. 实现 MIME 辅助校验，不把 MIME 作为唯一依据。
-9. 实现空文件校验。
-10. 实现文件大小限制校验。
-11. 实现 SHA256 计算。
-12. 查询 `model_asset.source_file_hash` 是否已存在。
-13. 处理 hash 未命中场景。
-14. 保存原始 GLB 文件到配置目录。
-15. 创建 `model_asset` 记录。
-16. 创建 `asset_version` Draft 记录。
-17. 创建 `model_asset_variant` source 记录。
-18. 创建 `model_conversion_job` upload / inspect 记录。
-19. 处理 hash 命中场景。
-20. 明确 hash 命中时返回已有资产或创建新版本的 MVP 策略。
-21. 增加上传失败时的文件清理逻辑。
-22. 增加上传失败时的数据库事务回滚。
-23. 在 Swagger 验证上传接口。
-24. 使用合法 GLB 验证成功上传。
-25. 使用非 GLB 文件验证拒绝。
-26. 使用重复 GLB 验证 hash 识别。
-27. 运行 `dotnet build`。
-28. 输出 API 响应、数据库记录、文件落盘路径、构建结果和 git diff 摘要。
+- Entity：使用 `ModelAsset`, `AssetVersion`, `ModelAssetVariant`, `ModelConversionJob`。
+- DbContext：使用既有 DbSet。
+- Migration：无，除非发现 MVP-02 缺字段则停止并回报。
+- Controller：新增 `ModelAssetsController.Upload`。
+- Application Service：新增上传用例。
+- Infrastructure Repository / EF 查询：实现 hash 去重、文件保存。
+- Request DTO：`UploadModelAssetRequest`。
+- Response DTO：`UploadModelAssetResponse`。
+- 校验规则：文件非空、扩展名 `.glb`、assetCode 必填、assetType 枚举。
+- 错误码：`FILE_TYPE_NOT_ALLOWED`, `VALIDATION_FAILED`, `CONFLICT`。
 
-## 6. 数据库变更
+## 6. 前端变更
 
-本任务不新增表。
+- TypeScript 类型：无。
+- API Client：无。
+- Vue 页面：无。
+- Engine 层：无。
+- fallback：无。
+- 状态字段：无。
+- UI 提示：无。
 
-写入表：
+## 7. 数据库变更
 
-- `model_asset`
-- `asset_version`
-- `model_asset_variant`
-- `model_conversion_job`
+- 新增表：无。
+- 修改表：无。
+- 读取表：`model_asset`。
+- 写入表：`model_asset`, `asset_version`, `model_asset_variant`, `model_conversion_job`, `operation_audit`。
+- 约束：`asset_code` 唯一，`source_file_hash` MVP 全局唯一。
+- 索引：使用 MVP-02 已建索引。
 
-关键写入字段：
+## 8. API 契约
 
-- `model_asset.asset_code`
-- `model_asset.asset_name`
-- `model_asset.source_file_name`
-- `model_asset.source_file_hash`
-- `model_asset.source_file_type = glb`
-- `model_asset.asset_type = device_glb` 或 `static_glb`
-- `model_asset.processing_status`
-- `asset_version.version_status = Draft`
-- `model_asset_variant.variant_level = source`
-- `model_asset_variant.file_url`
-- `model_asset_variant.file_hash`
-- `model_asset_variant.file_size`
-- `model_conversion_job.job_type = upload` 或 `inspect`
-- `model_conversion_job.status = pending`
+完整契约见 `idts3D_docs/api-contracts/model-assets.md#1-post-apimodel-assetsupload`。
 
-约束：
+## 9. 前后端对应关系
 
-- `assetCode` 冲突返回 409。
-- `source_file_hash` 命中按 MVP 策略复用已有资产或创建新版本。
+| 后端 Entity | DTO | API | 前端 TypeScript interface | 前端调用文件 | Vue / engine 消费位置 |
+|---|---|---|---|---|---|
+| `ModelAsset`, `AssetVersion`, `ModelAssetVariant`, `ModelConversionJob` | `UploadModelAssetRequest`, `UploadModelAssetResponse` | `POST /api/model-assets/upload` | MVP-11 创建 `UploadModelAssetRequest`, `UploadModelAssetResponse` | MVP-11 `src/api/modelAssets.ts` | 后续上传管理页，MVP 当前无页面 |
 
-Migration 名称建议：
+## 10. 执行步骤
 
-- 本任务不建议创建 Migration；如发现 MVP-02 缺字段，应停止并回到 MVP-02 修正。
+1. 输出影响范围并等待确认。
+2. 创建上传 Request / Response DTO。
+3. 配置文件存储选项。
+4. 创建文件存储服务。
+5. 实现 SHA256 计算。
+6. 实现 assetCode 和 hash 冲突处理。
+7. 创建 `model_asset`。
+8. 创建 Draft `asset_version`。
+9. 创建 source `model_asset_variant`。
+10. 创建 upload / inspect `model_conversion_job`。
+11. 写入审计记录。
+12. 在 Swagger 上传 GLB 验证。
+13. 运行 `dotnet build`。
 
-## 7. API 变更
-
-新增 API：
-
-| Method | Route |
-|---|---|
-| POST | `/api/model-assets/upload` |
-
-Request:
-
-- `file`: GLB 文件。
-- `assetCode`: 资产编码。
-- `assetName`: 资产名称。
-- `assetType`: `device_glb` 或 `static_glb`。
-- `sourceFileType`: `glb`。
-
-Response:
-
-- `assetId`
-- `versionId`
-- `jobId`
-- `processingStatus`
-- `message`
-
-校验规则：
-
-- 文件不能为空。
-- 文件扩展名必须为 `.glb`。
-- `sourceFileType` 必须为 `glb`。
-- `assetType` 只能为 `device_glb` 或 `static_glb`。
-- `assetCode` 必填且唯一。
-- 文件大小不得超过配置上限。
-
-错误码：
-
-- `400`: 文件为空、格式不支持、字段缺失。
-- `409`: `assetCode` 冲突。
-- `413`: 文件超过上传限制。
-- `500`: 文件存储失败或任务创建失败。
-
-## 8. 前端变更
-
-本任务不涉及前端变更。
-
-不得新增前端上传页面，不得修改 `idts3D_ui/src/api/**`，不得修改模型加载逻辑。
-
-## 9. 验收标准
+## 11. 验收标准
 
 - Swagger 可上传 GLB。
-- 数据库出现 `model_asset`。
-- 数据库出现 Draft `asset_version`。
-- 数据库出现 source `model_asset_variant`。
-- 数据库出现 `model_conversion_job`。
-- 文件保存到配置目录。
-- 重复文件 hash 可识别。
-- 非 GLB 文件被拒绝。
-- `assetCode` 冲突返回 409。
+- 非 GLB 返回 400。
+- assetCode 重复返回 409。
+- 文件落盘。
+- 数据库出现 asset/version/variant/job。
 - `dotnet build` 通过。
-- 无前端源码改动。
+- 不需要 `npm run build`。
+- 页面验证不执行。
 
-## 10. 回归测试
+## 12. 回归测试
 
-本任务不修改前端运行逻辑，但完成后仍需确认以下能力未被触碰：
+- GLB 加载：不执行，本任务只后端上传。
+- 对象树：不执行。
+- 对象点击：不执行。
+- 查看子级 / 父级：不执行。
+- 异常高亮：不执行。
+- 异常 callout：不执行。
+- WASD / 鼠标视角：不执行。
+- monitor / edit guard：通过接口只允许 edit/后台语义。
+- localStorage fallback：不执行。
+- worldZ 任务移动：不执行。
+- 后端不可用时 fallback：不执行。
+- 后端可用时优先走后端：后续 MVP-12 验证。
 
-- GLB 加载。
-- 对象树。
-- 查看子级 / 父级。
-- 异常高亮。
-- 异常 callout。
-- WASD / 鼠标视角。
-- monitor / edit guard。
-- localStorage fallback。
-- worldZ 任务移动。
+## 13. 风险点
 
-## 11. 风险点
+- 大文件上传大小限制。
+- Windows 路径和 URL 暴露混淆。
+- hash 命中策略若不清晰会导致重复资产。
 
-- 文件保存成功但数据库写入失败导致孤儿文件。
-- 数据库写入成功但文件保存失败导致无效资产。
-- 仅依赖 MIME 判断文件类型。
-- hash 命中策略没有写清楚，后续版本管理混乱。
-- 上传目录暴露路径不安全。
-- 大文件上传限制与现场部署反向代理限制不一致。
+## 14. 回滚策略
 
-## 12. 回滚策略
+删除上传接口、DTO、文件存储服务和测试上传文件；清理测试数据。
 
-- 删除本任务新增的上传 Controller、Service、DTO、文件存储实现和配置。
-- 删除测试上传产生的本地文件。
-- 删除测试上传产生的数据库记录。
-- 保留 MVP-01 和 MVP-02 基础结构。
-- 不回滚用户已有前端或文档变更。
-
-## 13. Codex 执行提示词
+## 15. Codex 执行提示词
 
 ```text
 请执行 MVP-03：文件存储与 GLB 上传。
-
-当前只执行本任务，不执行 MVP-04 或任何后续任务。
-请先读取 AGENTS.md、idts3D_docs/idts-digital-twin-project-technical-plan.md、idts3D_docs/idts-mvp-task-breakdown.md，以及 idts3D_docs/mvp-tasks/MVP-03-glb-upload-file-storage.md。
-先输出影响范围，等待我确认后再修改文件。
-禁止跨任务扩展，禁止实现 manifest、object-tree、model-stats、可动部件、motion target、scene manifest 或前端接入，禁止修改 idts3D_ui/public/models/lifter.glb。
-完成后输出修改文件路径、新增文件路径、是否有代码改动、是否有新增依赖、上传 API 验证结果、数据库记录验证、文件落盘结果、dotnet build 结果、验收情况、git status 摘要和 git diff --stat 摘要。
+先读取 AGENTS.md、idts3D_docs/idts-mvp-task-breakdown.md、idts3D_docs/api-contracts/model-assets.md、idts3D_docs/domain-entity-dto-map.md 和本任务卡。
+先输出影响范围，等待我确认后再改。
+只实现 POST /api/model-assets/upload，不做 manifest 查询、CAD 转换、LOD、3D Tiles，不修改前端源码。
+完成后运行 dotnet build，并用 Swagger 上传 GLB 验证。
 不要 commit，不要 push。
 ```

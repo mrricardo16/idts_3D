@@ -2,158 +2,131 @@
 
 ## 1. 任务目标
 
-建立 IDTS 数字孪生正式项目的 .NET 8 后端解决方案骨架，只完成工程结构、项目引用、Swagger、基础日志、异常处理占位和 Worker 可启动能力，不实现任何业务实体、Migration 或业务 Controller。
+创建 .NET 8 后端 solution 和 Api / Application / Domain / Infrastructure / Contracts / Worker 项目骨架，只完成启动、引用、Swagger、Serilog、统一响应和异常中间件占位，不实现业务 API。
 
 ## 2. 前置条件
 
-- 已阅读 `AGENTS.md`。
-- 已阅读 `idts3D_docs/idts-digital-twin-project-technical-plan.md`。
-- 已阅读 `idts3D_docs/idts-mvp-task-breakdown.md`。
-- 已确认本任务只执行 MVP-01。
-- 未开始 MVP-02 数据库实体与 Migration。
+- MVP-00 已完成。
+- 已读取 `backend-implementation-plan.md`。
+- 本任务开始前用户已确认允许创建真实 `idts3D_api` 工程。
 
 ## 3. 影响范围
 
-预计影响范围：
-
 - `idts3D_api/global.json`
 - `idts3D_api/HZ.IDTS.DigitalTwin.sln`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Api/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Application/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Domain/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Infrastructure/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Worker/**`
-- `idts3D_api/src/HZ.IDTS.DigitalTwin.Contracts/**`
-- `idts3D_docs/**`
+- `idts3D_api/src/HZ.IDTS.DigitalTwin.*`
+- `idts3D_api/README.md`
+- `idts3D_docs/mvp-tasks/MVP-01-backend-solution-skeleton.md`
 
 ## 4. 禁止修改范围
 
-- 不允许修改与本任务无关的 `src` 文件。
-- 不允许修改 `idts3D_ui/public/models/lifter.glb`。
-- 不允许格式化全仓库。
-- 不允许引入非必要依赖。
-- 不允许跨任务实现后续功能。
-- 不允许创建数据库实体。
-- 不允许创建 Migration。
-- 不允许实现 GLB 上传。
-- 不允许实现 manifest、object-tree、可动部件、motion target 或场景业务 API。
-- 不允许修改前端源码。
-- 不设计完整错误码体系。
-- 不设计业务异常枚举。
-- 不设计 `Result<T>` 全量框架。
-- 不引入数据库日志。
-- 不引入 OpenTelemetry。
-- Serilog、统一异常处理、统一响应结构只做最小占位。
+- 禁止创建 Entity、DbContext、Migration。
+- 禁止实现上传、manifest、object tree、movable part、motion target、scene 业务接口。
+- 禁止修改 `idts3D_ui/src/**`。
+- 禁止修改 `idts3D_ui/public/models/lifter.glb`。
+- 禁止新增非骨架必需依赖。
+- 禁止 commit / push。
 
-## 5. 详细执行步骤
+## 5. 后端变更
 
-1. 输出本任务影响范围并等待确认。
-2. 检查当前 git 状态，记录已有变更。
-3. 确认本机 .NET SDK 可用并记录 `dotnet --info`。
-4. 创建 `idts3D_api/global.json` 并锁定 .NET 8 SDK。
-5. 创建 `idts3D_api/HZ.IDTS.DigitalTwin.sln`。
-6. 创建 `HZ.IDTS.DigitalTwin.Api` Web API 项目。
-7. 创建 `HZ.IDTS.DigitalTwin.Application` 类库项目。
-8. 创建 `HZ.IDTS.DigitalTwin.Domain` 类库项目。
-9. 创建 `HZ.IDTS.DigitalTwin.Infrastructure` 类库项目。
-10. 创建 `HZ.IDTS.DigitalTwin.Contracts` 类库项目。
-11. 创建 `HZ.IDTS.DigitalTwin.Worker` Worker Service 项目。
-12. 将所有项目加入解决方案。
-13. 配置 `Api -> Application` 引用。
-14. 配置 `Application -> Domain` 引用。
-15. 配置 `Application -> Contracts` 引用。
-16. 配置 `Infrastructure -> Domain` 引用。
-17. 配置 `Infrastructure -> Application` 引用。
-18. 配置 `Api -> Infrastructure` 引用。
-19. 配置 `Worker -> Application` 引用。
-20. 配置 `Worker -> Infrastructure` 引用。
-21. 保留 Swagger / OpenAPI 基础访问。
-22. 配置 Serilog 基础日志占位。
-23. 配置统一异常处理中间件占位。
-24. 配置统一响应结构占位。
-25. 启动 API 验证 Swagger 可访问。
-26. 启动 Worker 验证进程可启动。
-27. 运行 `dotnet build`。
-28. 输出验收情况、构建结果和 git diff 摘要。
+- Entity：无。
+- DbContext：无。
+- Migration：无。
+- Controller：只保留健康检查或 WeatherForecast 默认文件应删除/替换为空健康端点。
+- Application Service：创建项目，不写业务服务。
+- Infrastructure Repository / EF 查询：创建项目，不写 EF 查询。
+- Request DTO：创建 `ApiResponse<T>`、`ApiErrorItem`。
+- Response DTO：同上。
+- 校验规则：无业务校验。
+- 错误码：定义基础 `OK`, `VALIDATION_FAILED`, `NOT_FOUND`, `CONFLICT`, `INTERNAL_ERROR`。
 
-## 6. 数据库变更
+## 6. 前端变更
 
-本任务不涉及数据库变更。
+- TypeScript 类型：无。
+- API Client：无。
+- Vue 页面：无。
+- Engine 层：无。
+- fallback：无。
+- 状态字段：无。
+- UI 提示：无。
 
-禁止在本任务中新增表、实体、DbContext、Migration 或数据库更新命令。
+## 7. 数据库变更
 
-## 7. API 变更
+- 新增表：无。
+- 修改表：无。
+- 读取表：无。
+- 写入表：无。
+- 约束：无。
+- 索引：无。
 
-本任务不涉及业务 API 变更。
+## 8. API 契约
 
-允许保留 Web API 模板自带的 Swagger 基础能力；如项目模板生成示例接口，应在后续正式业务开发前清理或替换，不得把示例接口当作 MVP 业务接口。
+引用 `api-contracts/README.md` 的统一响应结构。本任务不实现业务契约。
 
-## 8. 前端变更
+## 9. 前后端对应关系
 
-本任务不涉及前端变更。
+| 后端 Entity | DTO | API | 前端 TypeScript interface | 前端调用文件 | Vue / engine 消费位置 |
+|---|---|---|---|---|---|
+| 无 | `ApiResponse<T>`, `ApiErrorItem` | 健康端点 | 后续 MVP-11 建立 | 无 | 无 |
 
-不得修改：
+## 10. 执行步骤
 
-- `idts3D_ui/src/api/**`
-- `idts3D_ui/src/views/**`
-- `idts3D_ui/src/engine/**`
-- `idts3D_ui/src/styles/**`
-- `idts3D_ui/package.json`
-- `idts3D_ui/package-lock.json`
-- `idts3D_ui/vite.config.*`
-- `idts3D_ui/tsconfig.*`
+1. 输出影响范围并等待确认。
+2. 进入 `idts3D_api`。
+3. 创建 `global.json` 锁定 .NET 8。
+4. 创建 `HZ.IDTS.DigitalTwin.sln`。
+5. 创建 Api / Application / Domain / Infrastructure / Contracts / Worker 项目。
+6. 配置项目引用方向，禁止循环引用。
+7. 在 Api 配置 Swagger。
+8. 在 Api 配置 Serilog 基础日志。
+9. 在 Api 配置统一异常中间件占位。
+10. 在 Contracts 定义统一响应结构。
+11. 确认 Worker 可启动但不执行业务任务。
+12. 运行 `dotnet build idts3D_api/HZ.IDTS.DigitalTwin.sln`。
 
-## 9. 验收标准
+## 11. 验收标准
 
-- `idts3D_api/global.json` 存在并锁定 .NET 8。
-- `idts3D_api/HZ.IDTS.DigitalTwin.sln` 存在。
-- Api / Application / Domain / Infrastructure / Worker / Contracts 项目存在。
-- 项目引用关系清晰且无循环引用。
 - `dotnet build` 通过。
-- `HZ.IDTS.DigitalTwin.Api` 可启动。
-- Swagger 可访问。
-- `HZ.IDTS.DigitalTwin.Worker` 可启动。
-- 无前端源码改动。
-- 未创建数据库 Migration。
+- Swagger 可打开。
+- Api 可启动。
+- Worker 可启动。
+- 未创建数据库表和 migration。
+- 未修改 `idts3D_ui/src/**`。
+- 不需要 `npm run build`。
+- Swagger 只验证启动和统一响应示例。
 
-## 10. 回归测试
+## 12. 回归测试
 
-本任务不修改前端运行逻辑，但完成后仍需确认以下能力未被触碰：
+- GLB 加载：不执行，本任务不改前端。
+- 对象树：不执行。
+- 对象点击：不执行。
+- 查看子级 / 父级：不执行。
+- 异常高亮：不执行。
+- 异常 callout：不执行。
+- WASD / 鼠标视角：不执行。
+- monitor / edit guard：不执行。
+- localStorage fallback：不执行。
+- worldZ 任务移动：不执行。
+- 后端不可用时 fallback：不执行。
+- 后端可用时优先走后端：不执行。
 
-- GLB 加载。
-- 对象树。
-- 查看子级 / 父级。
-- 异常高亮。
-- 异常 callout。
-- WASD / 鼠标视角。
-- monitor / edit guard。
-- localStorage fallback。
-- worldZ 任务移动。
+## 13. 风险点
 
-## 11. 风险点
+- 项目引用方向错误会导致后续分层混乱。
+- 默认模板代码残留会污染 Swagger。
+- 提前引入 EF 或业务代码会跨到 MVP-02。
 
-- .NET SDK 版本与 `global.json` 不一致。
-- 项目引用方向错误导致后续分层混乱。
-- 模板生成的示例代码被误认为正式 API。
-- 过早引入数据库、上传或业务 Controller，造成任务边界失控。
-- 日志、异常、响应结构占位做成复杂框架，增加后续维护成本。
+## 14. 回滚策略
 
-## 12. 回滚策略
+删除 MVP-01 创建的 solution、project、global.json 和骨架文件，保留 `idts3D_api/README.md`。
 
-- 删除 `idts3D_api/` 下本任务新增的解决方案和项目文件。
-- 删除本任务新增的后端项目引用。
-- 保留本任务前已有的文档和前端文件。
-- 如只需回滚部分错误配置，优先用最小补丁恢复项目文件，不执行全仓库重置。
-
-## 13. Codex 执行提示词
+## 15. Codex 执行提示词
 
 ```text
 请执行 MVP-01：后端解决方案骨架。
-
-当前只执行本任务，不执行 MVP-02 或任何后续任务。
-请先读取 AGENTS.md、idts3D_docs/idts-digital-twin-project-technical-plan.md、idts3D_docs/idts-mvp-task-breakdown.md，以及 idts3D_docs/mvp-tasks/MVP-01-backend-solution-skeleton.md。
-先输出影响范围，等待我确认后再修改文件。
-禁止跨任务扩展，禁止创建数据库实体或 Migration，禁止实现业务 API，禁止修改前端源码，禁止修改 idts3D_ui/public/models/lifter.glb。
-完成后输出修改文件路径、新增文件路径、是否有代码改动、是否有新增依赖、是否创建后端项目、构建结果、验收情况、git status 摘要和 git diff --stat 摘要。
+先读取 AGENTS.md、idts3D_docs/idts-mvp-task-breakdown.md、idts3D_docs/backend-implementation-plan.md 和本任务卡。
+先输出影响范围，等待我确认后再改。
+只创建后端骨架，不创建 Entity、DbContext、Migration，不实现业务 API，不修改前端源码。
+完成后运行 dotnet build，输出修改文件、新增文件、验证结果、git status、git diff --stat。
 不要 commit，不要 push。
 ```

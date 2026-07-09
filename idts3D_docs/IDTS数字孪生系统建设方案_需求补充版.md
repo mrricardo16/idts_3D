@@ -12,16 +12,16 @@
 
 # 0. 资料读取与范围声明
 
-本方案基于当前 idts3ddemo 仓库、正式项目总体技术方案 v1.2、需求补充说明 v0.2、截图压缩包以及已提供的任务说明整理。当前仓库定位为独立 WebGL / Three.js 技术预研 Demo，不属于 HZ.IDTS.UI 或 HZ.IDTS.API；本次工作仅生成文档，不修改任何源码，不接入真实后端、数据库、登录或权限系统。
+本方案基于当前 `07_src_3DModesys` 仓库、正式项目总体技术方案 v1.2、需求补充说明 v0.2、截图材料以及已提供的任务说明整理。当前仓库已从独立 WebGL / Three.js 技术预研 Demo 演进为 IDTS 3D 数字孪生前后端一体化 MVP 任务书；文档设计阶段仍不修改业务源码、不创建真实后端工程。
 
 | 资料类别 | 读取结果 | 使用方式 |
 | --- | --- | --- |
 | 总体技术方案 | 已读取 idts3D_docs/idts-digital-twin-project-technical-plan.md | 作为正式技术路线、架构边界、MVP 与后续阶段划分依据 |
-| MVP 拆分文档 | idts3D_docs/idts-mvp-task-breakdown.md 当前仓库不存在 | 未引用该文件具体内容；改用 idts3D_docs/mvp-tasks/README.md 与总体技术方案中的 MVP 边界 |
-| MVP 任务索引 | 已读取 idts3D_docs/mvp-tasks/README.md | 仅用于理解一期边界，不执行任何开发任务 |
+| MVP 拆分文档 | 已读取 idts3D_docs/idts-mvp-task-breakdown.md | 作为 MVP 总纲、任务顺序、阶段门禁和端到端路径依据 |
+| MVP 任务索引 | 已读取 idts3D_docs/mvp-tasks/README.md | 作为 MVP-00 到 MVP-16 串行任务入口 |
 | 需求补充说明 | 已读取 idts3D_docs/idts-requirement-supplement-business-simulation-wcs-cad-glb-v0.2.md | 作为业务需求、WCS 对接、CAD/GLB 渲染、仿真和性能指标主输入 |
 | 截图材料 | 已读取 idts-requirement-supplement-v0.2-with-screenshots.zip 及 12 张 PNG 截图 | 作为截图需求校验与 Word 附录来源 |
-| 当前仓库规则 | 已读取 AGENTS.md 与项目维护规则 | 确认本次不修改源码、不新增依赖、不创建后端项目，并保持 UTF-8 输出 |
+| 当前仓库规则 | 已读取 AGENTS.md、idts3D_ui/AGENTS.md 与 development-rules.md | 区分文档设计阶段和 MVP 开发阶段，并保持 UTF-8 输出 |
 
 本方案不宣称当前 Demo 已完成正式项目能力。对于尚未实现或需上游系统配合的内容，统一使用“建议”“后续阶段”“需甲方提供接口或数据”等方式描述。
 

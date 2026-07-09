@@ -1084,9 +1084,66 @@ AGV：motion_type = path, axis_mode = path
 
 ---
 
-## 20. API 契约 v0.1
+## 20. API 契约 v1.0
 
-API v0.1 只覆盖 MVP 一期。
+API v1.0 只覆盖 MVP 一期，完整字段、DTO、TypeScript interface、读写表和错误示例以 `idts3D_docs/api-contracts/*.md` 为准。本节只保留路线和历史摘要，后续实现不得引用未列入统一路由清单的旧接口。
+
+统一响应结构固定为：
+
+```json
+{
+  "success": true,
+  "code": "OK",
+  "message": "",
+  "data": {}
+}
+```
+
+错误响应结构固定为：
+
+```json
+{
+  "success": false,
+  "code": "VERSION_STATUS_INVALID",
+  "message": "monitor 模式只能读取 Published 版本。",
+  "errors": []
+}
+```
+
+统一路由清单：
+
+```http
+POST   /api/model-assets/upload
+GET    /api/model-assets/{assetId}/manifest
+GET    /api/model-assets/{assetId}/object-tree
+PUT    /api/model-assets/{assetId}/versions/{versionId}/object-tree
+PUT    /api/model-assets/{assetId}/versions/{versionId}/model-stats
+GET    /api/model-assets/{assetId}/versions/{versionId}/model-stats
+POST   /api/model-assets/{assetId}/versions/{versionId}/mark-ready
+POST   /api/model-assets/{assetId}/versions/{versionId}/publish
+POST   /api/model-assets/{assetId}/versions/{versionId}/archive
+POST   /api/model-assets/{assetId}/versions/{versionId}/rollback
+GET    /api/model-assets/{assetId}/versions/{versionId}/movable-parts
+POST   /api/model-assets/{assetId}/versions/{versionId}/movable-parts
+PUT    /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}
+DELETE /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}
+GET    /api/movable-parts/{partId}/motion-targets
+POST   /api/movable-parts/{partId}/motion-targets
+PUT    /api/movable-parts/{partId}/motion-targets/{targetId}
+DELETE /api/movable-parts/{partId}/motion-targets/{targetId}
+GET    /api/scenes/{sceneId}/manifest
+GET    /api/model-conversion-jobs/{jobId}
+```
+
+专题契约：
+
+- `api-contracts/model-assets.md`
+- `api-contracts/object-tree-model-stats.md`
+- `api-contracts/asset-version.md`
+- `api-contracts/movable-parts.md`
+- `api-contracts/motion-targets.md`
+- `api-contracts/scenes.md`
+- `api-contracts/conversion-jobs.md`
 
 ### 20.1 `POST /api/model-assets/upload`
 
@@ -1122,28 +1179,7 @@ API v0.1 只覆盖 MVP 一期。
 - `413`：文件超过上传限制。
 - `500`：文件存储失败或任务创建失败。
 
-### 20.2 `GET /api/model-assets/{assetId}`
-
-用途：查询模型资产详情。
-
-响应字段：
-
-- `assetId`
-- `assetCode`
-- `assetName`
-- `assetType`
-- `sourceFileName`
-- `sourceFileHash`
-- `processingStatus`
-- `currentVersionId`
-- `createdTime`
-- `updatedTime`
-
-错误情况：
-
-- `404`：资产不存在。
-
-### 20.3 `GET /api/model-assets/{assetId}/manifest`
+### 20.2 `GET /api/model-assets/{assetId}/manifest`
 
 用途：获取当前 Published 或指定版本 manifest。
 
@@ -1172,7 +1208,7 @@ API v0.1 只覆盖 MVP 一期。
 - `404`：manifest 不存在。
 - `409`：版本状态不允许加载。
 
-### 20.4 `GET /api/model-assets/{assetId}/object-tree`
+### 20.3 `GET /api/model-assets/{assetId}/object-tree`
 
 用途：获取模型对象树。
 
@@ -1197,7 +1233,7 @@ API v0.1 只覆盖 MVP 一期。
 
 - `404`：资产或对象树不存在。
 
-### 20.5 `GET /api/model-conversion-jobs/{jobId}`
+### 20.4 `GET /api/model-conversion-jobs/{jobId}`
 
 用途：查询转换任务状态。
 
@@ -1219,7 +1255,7 @@ API v0.1 只覆盖 MVP 一期。
 
 - `404`：任务不存在。
 
-### 20.6 `GET /api/scenes/{sceneId}/manifest`
+### 20.5 `GET /api/scenes/{sceneId}/manifest`
 
 用途：获取场景加载清单。
 
@@ -1247,7 +1283,7 @@ API v0.1 只覆盖 MVP 一期。
 - `404`：场景不存在。
 - `409`：存在未发布或无效模型绑定。
 
-### 20.7 `GET /api/model-assets/{assetId}/versions/{versionId}/movable-parts`
+### 20.6 `GET /api/model-assets/{assetId}/versions/{versionId}/movable-parts`
 
 用途：查询模型可动部件。
 
@@ -1269,7 +1305,7 @@ API v0.1 只覆盖 MVP 一期。
 
 - `404`：模型资产、版本或可动部件配置不存在。
 
-### 20.8 `POST /api/model-assets/{assetId}/versions/{versionId}/movable-parts`
+### 20.7 `POST /api/model-assets/{assetId}/versions/{versionId}/movable-parts`
 
 用途：新增可动部件绑定。
 
@@ -1310,7 +1346,7 @@ API v0.1 只覆盖 MVP 一期。
 - `409`：partCode 重复或对象已绑定。
 - `404`：模型版本或对象不存在。
 
-### 20.9 `PUT /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}`
+### 20.8 `PUT /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}`
 
 用途：更新可动部件绑定。
 
@@ -1328,7 +1364,7 @@ API v0.1 只覆盖 MVP 一期。
 - `404`：可动部件不存在。
 - `409`：partCode 重复或版本状态不允许修改。
 
-### 20.10 `DELETE /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}`
+### 20.9 `DELETE /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}`
 
 用途：删除或禁用可动部件绑定。
 
@@ -1346,7 +1382,7 @@ API v0.1 只覆盖 MVP 一期。
 - `404`：可动部件不存在。
 - `409`：版本状态不允许删除。
 
-### 20.11 `GET /api/movable-parts/{partId}/motion-targets`
+### 20.10 `GET /api/movable-parts/{partId}/motion-targets`
 
 用途：查询可动部件目标点位。
 
@@ -1367,7 +1403,7 @@ API v0.1 只覆盖 MVP 一期。
 
 - `404`：可动部件不存在。
 
-### 20.12 `POST /api/movable-parts/{partId}/motion-targets`
+### 20.11 `POST /api/movable-parts/{partId}/motion-targets`
 
 用途：新增目标点位。
 
@@ -1392,7 +1428,7 @@ API v0.1 只覆盖 MVP 一期。
 - `400`：目标值无效。
 - `409`：targetCode 重复。
 
-### 20.13 `PUT /api/movable-parts/{partId}/motion-targets/{targetId}`
+### 20.12 `PUT /api/movable-parts/{partId}/motion-targets/{targetId}`
 
 用途：更新目标点位。
 
@@ -1402,7 +1438,7 @@ API v0.1 只覆盖 MVP 一期。
 - `404`：目标点位不存在。
 - `409`：targetCode 重复。
 
-### 20.14 `DELETE /api/movable-parts/{partId}/motion-targets/{targetId}`
+### 20.13 `DELETE /api/movable-parts/{partId}/motion-targets/{targetId}`
 
 用途：删除或禁用目标点位。
 
@@ -1422,8 +1458,6 @@ GET    /api/devices/{deviceId}/state
 POST   /api/devices/{deviceId}/tasks
 GET    /api/tasks/{taskId}
 GET    /api/alarms/active
-POST   /api/model-assets/{assetId}/publish
-POST   /api/model-assets/{assetId}/rollback
 GET    /api/tools
 POST   /api/tools/{toolId}/health-check
 ```
