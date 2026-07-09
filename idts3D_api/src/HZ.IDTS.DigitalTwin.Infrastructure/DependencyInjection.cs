@@ -1,4 +1,8 @@
+using HZ.IDTS.DigitalTwin.Application.ModelAssets;
+using HZ.IDTS.DigitalTwin.Application.Storage;
+using HZ.IDTS.DigitalTwin.Infrastructure.ModelAssets;
 using HZ.IDTS.DigitalTwin.Infrastructure.Persistence;
+using HZ.IDTS.DigitalTwin.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +35,11 @@ public static class DependencyInjection
         {
             options.UseNpgsql(connectionString);
         });
+
+        var fileStorageOptions = FileStorageOptions.FromConfiguration(configuration);
+        services.AddSingleton(fileStorageOptions);
+        services.AddScoped<IModelAssetFileStorage, LocalModelAssetFileStorage>();
+        services.AddScoped<IModelAssetRepository, ModelAssetRepository>();
 
         return services;
     }

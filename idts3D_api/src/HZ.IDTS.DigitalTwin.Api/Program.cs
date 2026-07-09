@@ -1,5 +1,8 @@
 using HZ.IDTS.DigitalTwin.Api.Extensions;
 using HZ.IDTS.DigitalTwin.Api.Middleware;
+using HZ.IDTS.DigitalTwin.Infrastructure.Storage;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +32,21 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
+var fileStorageOptions = app.Services.GetRequiredService<FileStorageOptions>();
+if (!string.IsNullOrWhiteSpace(fileStorageOptions.RootPath))
+{
+    Directory.CreateDirectory(fileStorageOptions.RootPath);
+    var contentTypeProvider = new FileExtensionContentTypeProvider();
+    contentTypeProvider.Mappings[".glb"] = "model/gltf-binary";
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(fileStorageOptions.RootPath),
+        ContentTypeProvider = contentTypeProvider,
+        RequestPath = fileStorageOptions.PublicBaseUrl
+    });
+}
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
