@@ -6,10 +6,9 @@
 
 1. 本项目是 Vue 3 + Vite + TypeScript + Three.js 前端工程，由原技术预研 Demo 演进为 IDTS 3D 数字孪生前端。
 2. 不属于旧 `HZ.IDTS.UI` 或 `HZ.IDTS.API`，不得修改旧项目代码。
-3. 文档设计阶段禁止修改 `idts3D_ui/src/**`。
-4. MVP 开发阶段只有在用户明确指定前端相关任务卡后，才允许按任务卡修改 `idts3D_ui/src/**`。
-5. 正式后端接入必须通过 `src/api` API Client 层，不允许在页面和 engine 中散落直接 `fetch`。
-6. 没有后端、后端不可用或没有 `public/models/lifter.glb` 时，必须保留 fallback 到本地模型 / 几何体场景的能力。
+3. 前端开发任务只有在用户明确指定前端任务卡或联调任务时，才允许修改 `idts3D_ui/src/**`。
+4. 正式后端接入必须通过 `src/api` API Client 层，不允许在页面和 engine 中散落直接 `fetch`。
+5. 没有后端、后端不可用或没有 `public/models/lifter.glb` 时，必须保留 fallback 到本地模型 / 几何体场景的能力。
 
 ## 模型文件规则
 
@@ -25,20 +24,24 @@
 3. README 必须随功能或模型处理流程同步更新。
 4. 前端字段、后端 DTO、API 契约、TypeScript interface 必须保持同名或有明确映射。
 5. `monitor` 模式不得保存配置；`edit` 模式保存必须调用任务卡指定 API。
-6. 提交前必须运行：
+6. API 调用集中在 `src/api`。
+7. 类型集中在 `src/types`。
+8. 页面不直接拼接后端 URL。
+9. `TwinScene.ts` 只消费解析后的 scene manifest、model manifest、object tree、movable part、motion target 数据。
+10. `LODModelLoader.ts` 只负责模型加载，不直接关心数据库实体。
+11. `localStorage` 只能作为 fallback 或编辑草稿缓存，不能伪装成 Published 后端配置。
 
-```bash
-npm run build
-```
+## 验证规则
 
-## 前端集成规则
+前端修改完成后，根据 lockfile 判断包管理器：
 
-1. `src/api` 只封装后端 HTTP 调用和统一错误转换。
-2. `src/types` 保存前端契约类型；后端 DTO 变更时必须同步更新。
-3. `TwinDemo.vue` 只负责页面状态、用户交互和调用 API Client / engine，不直接拼接后端 URL。
-4. `TwinScene.ts` 只消费解析后的 scene manifest、model manifest、object tree、movable part、motion target 数据。
-5. `LODModelLoader.ts` 只负责模型加载，不直接关心数据库实体。
-6. `localStorage` 只能作为 fallback 或编辑草稿缓存，不能伪装成 Published 后端配置。
+- 有 `pnpm-lock.yaml` 用 pnpm。
+- 有 `yarn.lock` 用 yarn。
+- 有 `package-lock.json` 用 npm。
+- 都没有时按 `README.md` 和 `package.json` 判断，不要擅自切换包管理器。
+
+构建命令以 `package.json` scripts 为准。
+如果无法执行 build，必须说明原因，不要假装通过。
 
 ## 编码规则
 
