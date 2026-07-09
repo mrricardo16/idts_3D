@@ -189,7 +189,6 @@ MVP 一期目标是打通“模型资产入库、GLB 上传、manifest 加载、
 - OffscreenCanvas。
 - KTX2 全纹理管线。
 - 复杂路径规划。
-- 与旧 `HZ.IDTS.UI` / `HZ.IDTS.API` 的正式菜单、登录和权限融合。
 
 这些能力可以在 MVP 闭环稳定后按阶段进入后续版本。
 

@@ -9,8 +9,8 @@ description: Maintain the local idts-demo WebGL / Three.js proof-of-concept proj
 
 Treat this repository as the independent `idts-demo` technical demo for industrial digital twin WebGL / Three.js validation.
 
-- Do not modify `HZ.IDTS.UI`, `HZ.IDTS.API`, or any legacy project code from this skill.
-- Do not connect to a real backend, database, login system, permission system, or formal menu unless the user explicitly asks.
+- Treat this project as an independent IDTS 3D digital twin engineering workspace.
+- Do not connect to a real backend or database unless the user explicitly asks.
 - Keep runtime state and business data mocked by default.
 - Keep the work scoped to this repository and the named feature, page, scene, model, or workflow.
 

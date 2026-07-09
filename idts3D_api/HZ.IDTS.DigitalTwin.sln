@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{520B930A-55CB-4450-B0DB-597F764AFB16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Api", "src\HZ.IDTS.DigitalTwin.Api\HZ.IDTS.DigitalTwin.Api.csproj", "{0473D5D9-0177-42C1-B75E-B3F2C5DAD948}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Application", "src\HZ.IDTS.DigitalTwin.Application\HZ.IDTS.DigitalTwin.Application.csproj", "{3FB96A89-87E0-4EB7-924A-7B30D02FE1E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Contracts", "src\HZ.IDTS.DigitalTwin.Contracts\HZ.IDTS.DigitalTwin.Contracts.csproj", "{EC720B9A-3D89-453E-B1BC-134B1A3D86C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Domain", "src\HZ.IDTS.DigitalTwin.Domain\HZ.IDTS.DigitalTwin.Domain.csproj", "{637FB790-A500-4E0C-B064-4F4800BAEE4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Infrastructure", "src\HZ.IDTS.DigitalTwin.Infrastructure\HZ.IDTS.DigitalTwin.Infrastructure.csproj", "{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Worker", "src\HZ.IDTS.DigitalTwin.Worker\HZ.IDTS.DigitalTwin.Worker.csproj", "{151A1886-D131-45F6-8164-F6081E3EFA9E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0473D5D9-0177-42C1-B75E-B3F2C5DAD948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0473D5D9-0177-42C1-B75E-B3F2C5DAD948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0473D5D9-0177-42C1-B75E-B3F2C5DAD948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0473D5D9-0177-42C1-B75E-B3F2C5DAD948}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FB96A89-87E0-4EB7-924A-7B30D02FE1E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FB96A89-87E0-4EB7-924A-7B30D02FE1E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FB96A89-87E0-4EB7-924A-7B30D02FE1E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FB96A89-87E0-4EB7-924A-7B30D02FE1E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC720B9A-3D89-453E-B1BC-134B1A3D86C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC720B9A-3D89-453E-B1BC-134B1A3D86C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC720B9A-3D89-453E-B1BC-134B1A3D86C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC720B9A-3D89-453E-B1BC-134B1A3D86C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{637FB790-A500-4E0C-B064-4F4800BAEE4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{637FB790-A500-4E0C-B064-4F4800BAEE4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{637FB790-A500-4E0C-B064-4F4800BAEE4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{637FB790-A500-4E0C-B064-4F4800BAEE4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{151A1886-D131-45F6-8164-F6081E3EFA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{151A1886-D131-45F6-8164-F6081E3EFA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{151A1886-D131-45F6-8164-F6081E3EFA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{151A1886-D131-45F6-8164-F6081E3EFA9E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0473D5D9-0177-42C1-B75E-B3F2C5DAD948} = {520B930A-55CB-4450-B0DB-597F764AFB16}
+		{3FB96A89-87E0-4EB7-924A-7B30D02FE1E5} = {520B930A-55CB-4450-B0DB-597F764AFB16}
+		{EC720B9A-3D89-453E-B1BC-134B1A3D86C3} = {520B930A-55CB-4450-B0DB-597F764AFB16}
+		{637FB790-A500-4E0C-B064-4F4800BAEE4C} = {520B930A-55CB-4450-B0DB-597F764AFB16}
+		{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA} = {520B930A-55CB-4450-B0DB-597F764AFB16}
+		{151A1886-D131-45F6-8164-F6081E3EFA9E} = {520B930A-55CB-4450-B0DB-597F764AFB16}
+	EndGlobalSection
+EndGlobal

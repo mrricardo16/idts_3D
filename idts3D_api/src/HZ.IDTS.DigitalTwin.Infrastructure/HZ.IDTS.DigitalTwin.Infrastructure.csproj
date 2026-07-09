@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\HZ.IDTS.DigitalTwin.Application\HZ.IDTS.DigitalTwin.Application.csproj" />
+    <ProjectReference Include="..\HZ.IDTS.DigitalTwin.Domain\HZ.IDTS.DigitalTwin.Domain.csproj" />
+    <ProjectReference Include="..\HZ.IDTS.DigitalTwin.Contracts\HZ.IDTS.DigitalTwin.Contracts.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

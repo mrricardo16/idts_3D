@@ -5,7 +5,7 @@
 ## 项目边界
 
 1. 本项目是 Vue 3 + Vite + TypeScript + Three.js 前端工程，由原技术预研 Demo 演进为 IDTS 3D 数字孪生前端。
-2. 不属于旧 `HZ.IDTS.UI` 或 `HZ.IDTS.API`，不得修改旧项目代码。
+2. 本项目为独立的 IDTS 3D 数字孪生工程。
 3. 前端开发任务只有在用户明确指定前端任务卡或联调任务时，才允许修改 `idts3D_ui/src/**`。
 4. 正式后端接入必须通过 `src/api` API Client 层，不允许在页面和 engine 中散落直接 `fetch`。
 5. 没有后端、后端不可用或没有 `public/models/lifter.glb` 时，必须保留 fallback 到本地模型 / 几何体场景的能力。

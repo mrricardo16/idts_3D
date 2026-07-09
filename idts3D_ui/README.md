@@ -1,10 +1,10 @@
 # idts-demo
 
-`idts-demo` 是一个独立的 WebGL / Three.js 数字孪生技术预研 Demo，不属于现有 `HZ.IDTS.UI` 或 `HZ.IDTS.API` 项目。
+`idts-demo` 是一个独立的 WebGL / Three.js 数字孪生技术预研 Demo。
 
 ## 项目目的
 
-本 Demo 用于验证浏览器端加载工业设备三维模型、点击查看模型对象、查看模型结构、手动绑定可动部件、下发 mock 任务并驱动提升机可动部件沿 Z 轴移动。第一版只做纯前端 Demo，不接入真实后端、数据库、登录权限或正式菜单体系。
+本 Demo 用于验证浏览器端加载工业设备三维模型、点击查看模型对象、查看模型结构、手动绑定可动部件、下发 mock 任务并驱动提升机可动部件沿 Z 轴移动。第一版只做纯前端 Demo，不接入真实后端或数据库。
 
 ## 技术栈
 
@@ -679,4 +679,4 @@ D:\tool\CAD Assistant
 - 将 `src/mock/deviceStatus.ts` 替换为 API 或 WebSocket 数据适配层。
 - 不要在 Three.js 模块中直接写 HTTP 请求。
 
-当前版本不接入真实后端，也不修改任何现有正式项目。
+当前版本不接入真实后端。

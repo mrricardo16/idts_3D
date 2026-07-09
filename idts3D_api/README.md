@@ -12,7 +12,43 @@
 - `HZ.IDTS.DigitalTwin.Contracts`
 - `HZ.IDTS.DigitalTwin.Worker`
 
-当前阶段不创建 .NET solution，不创建 .NET project，不实现业务 API。
+当前已进入 MVP-01 后端解决方案骨架阶段，可创建 .NET solution 和 project，但不实现业务 API。
+
+## MVP-01 后端骨架启动说明
+
+本目录使用本机实际存在的 .NET SDK `8.0.100`，并通过 `global.json` 锁定。
+
+构建后端骨架：
+
+```powershell
+dotnet build .\HZ.IDTS.DigitalTwin.sln
+```
+
+启动 API：
+
+```powershell
+dotnet run --project .\src\HZ.IDTS.DigitalTwin.Api\HZ.IDTS.DigitalTwin.Api.csproj
+```
+
+启动后可访问健康检查：
+
+```text
+GET /api/health
+```
+
+开发环境下可打开 Swagger：
+
+```text
+/swagger
+```
+
+启动 Worker 空骨架：
+
+```powershell
+dotnet run --project .\src\HZ.IDTS.DigitalTwin.Worker\HZ.IDTS.DigitalTwin.Worker.csproj
+```
+
+MVP-01 不包含 Entity、DbContext、Migration、业务 API、GLB 上传、Manifest、Object Tree、Movable Part、Motion Target 或前端联调。
 
 ## 分阶段规则
 
