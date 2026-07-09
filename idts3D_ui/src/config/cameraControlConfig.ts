@@ -1,0 +1,38 @@
+export const cameraControlConfig = {
+  camera: {
+    fov: 48,
+    near: 0.01,
+    far: 5000,
+    position: {
+      x: 8,
+      y: -10,
+      z: 7,
+    },
+  },
+  controls: {
+    minDistance: 0.2,
+    maxDistance: 500,
+    zoomToCursor: false,
+    zoomSpeed: 1.2,
+    panSpeed: 1.0,
+    rotateSpeed: 0.8,
+    enableDamping: true,
+    dampingFactor: 0.08,
+  },
+  navigation: {
+    mode: "free-look" as const,
+    lookSensitivity: 0.003,
+    invertLookX: true,
+    invertLookY: true,
+    wheelMoveSpeed: 4.0,
+    enableKeyboardMove: true,
+    keyboardMoveMode: "fly" as "ground" | "fly",
+    keyMoveSpeed: 12.0,
+    keyBoostMultiplier: 4.0,
+    pitchMinDeg: -85,
+    pitchMaxDeg: 85,
+    dragThresholdPx: 5,
+    minCameraZ: 0.05,
+    maxDistanceMultiplier: 50,
+  },
+};

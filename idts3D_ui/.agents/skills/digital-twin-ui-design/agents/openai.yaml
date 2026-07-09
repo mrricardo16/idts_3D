@@ -1,0 +1,5 @@
+interface:
+  display_name: "Digital Twin UI Design"
+  short_description: "Enterprise digital-twin monitoring UI and Three.js workspace design"
+  brand_color: "#2563EB"
+  default_prompt: "Use $digital-twin-ui-design to design or review this digital-twin monitoring frontend as an operational 3D workspace."
