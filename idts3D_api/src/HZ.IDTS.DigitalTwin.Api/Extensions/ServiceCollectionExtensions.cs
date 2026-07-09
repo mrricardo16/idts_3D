@@ -16,6 +16,8 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        return services;
+        return HZ.IDTS.DigitalTwin.Infrastructure.DependencyInjection.AddDigitalTwinInfrastructure(
+            services,
+            configuration);
     }
 }
