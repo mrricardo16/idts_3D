@@ -13,15 +13,18 @@ public sealed class ModelAssetsController : ControllerBase
     private readonly IModelAssetUploadService _uploadService;
     private readonly IModelManifestService _manifestService;
     private readonly IObjectTreeModelStatsService _objectTreeModelStatsService;
+    private readonly IAssetVersionLifecycleService _assetVersionLifecycleService;
 
     public ModelAssetsController(
         IModelAssetUploadService uploadService,
         IModelManifestService manifestService,
-        IObjectTreeModelStatsService objectTreeModelStatsService)
+        IObjectTreeModelStatsService objectTreeModelStatsService,
+        IAssetVersionLifecycleService assetVersionLifecycleService)
     {
         _uploadService = uploadService;
         _manifestService = manifestService;
         _objectTreeModelStatsService = objectTreeModelStatsService;
+        _assetVersionLifecycleService = assetVersionLifecycleService;
     }
 
     [HttpGet("{assetId:long}/manifest")]
@@ -87,6 +90,50 @@ public sealed class ModelAssetsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await _objectTreeModelStatsService.GetModelStatsAsync(new GetModelStatsRequest(assetId, versionId), cancellationToken);
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpPost("{assetId:long}/versions/{versionId:long}/mark-ready")]
+    public async Task<ActionResult<ApiResponse<AssetVersionResponse>>> MarkReady(
+        [FromRoute] long assetId,
+        [FromRoute] long versionId,
+        [FromBody] ChangeVersionStatusRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _assetVersionLifecycleService.MarkReadyAsync(assetId, versionId, request, cancellationToken);
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpPost("{assetId:long}/versions/{versionId:long}/publish")]
+    public async Task<ActionResult<ApiResponse<AssetVersionResponse>>> Publish(
+        [FromRoute] long assetId,
+        [FromRoute] long versionId,
+        [FromBody] ChangeVersionStatusRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _assetVersionLifecycleService.PublishAsync(assetId, versionId, request, cancellationToken);
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpPost("{assetId:long}/versions/{versionId:long}/archive")]
+    public async Task<ActionResult<ApiResponse<AssetVersionResponse>>> Archive(
+        [FromRoute] long assetId,
+        [FromRoute] long versionId,
+        [FromBody] ChangeVersionStatusRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _assetVersionLifecycleService.ArchiveAsync(assetId, versionId, request, cancellationToken);
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpPost("{assetId:long}/versions/{versionId:long}/rollback")]
+    public async Task<ActionResult<ApiResponse<AssetVersionResponse>>> Rollback(
+        [FromRoute] long assetId,
+        [FromRoute] long versionId,
+        [FromBody] ChangeVersionStatusRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _assetVersionLifecycleService.RollbackAsync(assetId, versionId, request, cancellationToken);
         return StatusCode((int)result.StatusCode, result.Response);
     }
 

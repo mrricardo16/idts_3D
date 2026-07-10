@@ -11,6 +11,9 @@ public static class ErrorCode
     public const string AssetNotFound = "ASSET_NOT_FOUND";
     public const string VersionNotFound = "VERSION_NOT_FOUND";
     public const string VersionStatusInvalid = "VERSION_STATUS_INVALID";
+    public const string ManifestRequired = "MANIFEST_REQUIRED";
+    public const string ObjectTreeRequired = "OBJECT_TREE_REQUIRED";
+    public const string ModelStatsRequired = "MODEL_STATS_REQUIRED";
     public const string Conflict = "CONFLICT";
     public const string InternalError = "INTERNAL_ERROR";
 }

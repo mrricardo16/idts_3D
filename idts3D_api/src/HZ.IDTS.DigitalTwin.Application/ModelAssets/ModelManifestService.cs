@@ -48,6 +48,7 @@ public sealed class ModelManifestService : IModelManifestService
         var manifestData = await _repository.GetModelManifestAsync(
             request.AssetId,
             request.VersionId,
+            mode == MonitorMode,
             cancellationToken);
 
         if (manifestData is null)

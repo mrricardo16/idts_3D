@@ -56,7 +56,7 @@ public sealed class ObjectTreeModelStatsService : IObjectTreeModelStatsService
             return ObjectTreeFailure(HttpStatusCode.BadRequest, ErrorCode.ValidationFailed, "mode 参数无效。", new[] { new ApiErrorItem("mode", "只允许 monitor 或 edit。") });
         }
 
-        var version = await GetAssetVersionAsync(request.AssetId, request.VersionId, cancellationToken);
+        var version = await GetAssetVersionAsync(request.AssetId, request.VersionId, cancellationToken, mode == MonitorMode);
         if (version is null)
         {
             return await ObjectTreeVersionNotFoundAsync(request.AssetId, request.VersionId, cancellationToken);
@@ -137,9 +137,13 @@ public sealed class ObjectTreeModelStatsService : IObjectTreeModelStatsService
         }
     }
 
-    private async Task<AssetVersionAccessData?> GetAssetVersionAsync(long assetId, long? versionId, CancellationToken cancellationToken)
+    private async Task<AssetVersionAccessData?> GetAssetVersionAsync(
+        long assetId,
+        long? versionId,
+        CancellationToken cancellationToken,
+        bool usePublishedBaseline = false)
     {
-        return await _repository.GetAssetVersionAsync(assetId, versionId, cancellationToken);
+        return await _repository.GetAssetVersionAsync(assetId, versionId, usePublishedBaseline, cancellationToken);
     }
 
     private async Task<ObjectTreeResult> ObjectTreeVersionNotFoundAsync(long assetId, long? versionId, CancellationToken cancellationToken)

@@ -20,11 +20,13 @@ public interface IModelAssetRepository
     Task<ModelManifestQueryData?> GetModelManifestAsync(
         long assetId,
         long? versionId,
+        bool usePublishedBaseline,
         CancellationToken cancellationToken);
 
     Task<AssetVersionAccessData?> GetAssetVersionAsync(
         long assetId,
         long? versionId,
+        bool usePublishedBaseline,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ModelObjectIndexData>> GetObjectTreeAsync(
@@ -52,6 +54,10 @@ public interface IModelAssetRepository
         long assetId,
         long versionId,
         SaveModelStatsRequest request,
+        CancellationToken cancellationToken);
+
+    Task<AssetVersionLifecycleRepositoryResult> ExecuteVersionLifecycleAsync(
+        AssetVersionLifecycleCommand command,
         CancellationToken cancellationToken);
 
     Task<UploadModelAssetResponse> CreateUploadAsync(
