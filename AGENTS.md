@@ -85,7 +85,10 @@
 - 不允许修改与当前任务无关的文件。
 - 不允许大范围无关重构。
 - 本项目为独立的 IDTS 3D 数字孪生工程。
-- 不允许 commit / push，除非用户明确要求。
+- 只读分析阶段禁止 commit / push。
+- 写入任务未经用户确认时禁止 commit / push。
+- 用户确认写入任务后，必须按项目级架构治理 Skill 的 main 交付流程完成验证、commit 并 push `origin/main`。
+- 禁止 force push。
 - 如果任务需要新增依赖，必须先说明原因、影响范围和替代方案，等待用户确认。
 
 ## 7. 执行前输出
@@ -115,3 +118,12 @@
 - 验证命令和结果。
 - `git status` 摘要。
 - `git diff --stat` 摘要。
+
+## 9. 项目级架构治理与 main 交付
+
+- 所有涉及源码、配置、数据库、API、前端契约、目录结构、测试和架构的任务，必须先读取 `.agents/skills/idts3d-architecture-governance/SKILL.md`。
+- 一个 Codex 选项卡只执行一个独立任务；同一时间只允许一个写入型选项卡。
+- 写入任务默认直接在 `main` 工作，不创建任务分支；开始前必须同步 `origin/main`，且工作区必须干净。
+- 架构治理任务与业务任务必须分离。发现债务先登记，不在无关任务中顺手修复。
+- 修改前必须输出架构影响，修改后必须输出架构复检。
+- main 交付的完整步骤见 `idts3D_docs/architecture/main-delivery-workflow.md`。

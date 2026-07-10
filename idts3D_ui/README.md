@@ -1,6 +1,19 @@
 # idts-demo
 
-`idts-demo` 是一个独立的 WebGL / Three.js 数字孪生技术预研 Demo。
+`idts-demo` 是本仓库 `idts3D_ui` 下的 WebGL / Three.js 数字孪生技术预研 Demo。
+
+## 当前项目进度
+
+- 已实现：静态 GLB 加载、对象树、选择、可动部件手动绑定、worldZ mock 动画、LOD 与性能观测。
+- 部分实现：前端仍通过静态 manifest、mock 数据和 localStorage 草稿运行。
+- 尚未实现：正式 `src/api` API Client、后端业务 API 消费、Scene/Movable Part/Motion Target 联调、自动化测试和 CI。
+
+架构治理入口：
+
+- [`../idts3D_docs/architecture/project-architecture-baseline.md`](../idts3D_docs/architecture/project-architecture-baseline.md)
+- [`../idts3D_docs/architecture/project-architecture-debt-register.md`](../idts3D_docs/architecture/project-architecture-debt-register.md)
+- [`../idts3D_docs/architecture/project-refactoring-roadmap.md`](../idts3D_docs/architecture/project-refactoring-roadmap.md)
+- [`../idts3D_docs/architecture/main-delivery-workflow.md`](../idts3D_docs/architecture/main-delivery-workflow.md)
 
 ## 项目目的
 
@@ -280,17 +293,17 @@ idts-demo:model-config:lifter-001
 
 当前阶段不主动把大 GLB 写入 IndexedDB，也不新增 Service Worker。浏览器侧优先依赖 HTTP Cache / ETag / Cache-Control；`allowIndexedDbCache` 只作为后续能力开关预留。
 
-更详细的性能优化边界见 [docs/model-performance-boundary.md](docs/model-performance-boundary.md)。
+更详细的性能优化边界见 [../idts3D_docs/model-performance-boundary.md](../idts3D_docs/model-performance-boundary.md)。
 
 ## 文档目录
 
-项目文档统一放在 `docs` 目录：
+项目文档统一放在仓库 `../idts3D_docs` 目录：
 
-- [docs/model-performance-boundary.md](docs/model-performance-boundary.md)：纯前端性能边界与后续后端流水线分工。
-- [docs/model-asset-guideline.md](docs/model-asset-guideline.md)：模型资产检查、命名和轻量化约定。
-- [docs/factory-scale-roadmap.md](docs/factory-scale-roadmap.md)：厂区级能力的长期技术路线。
-- [docs/idts-demo-codex-performance-plan.md](docs/idts-demo-codex-performance-plan.md)：Codex 分阶段性能优化执行方案。
-- [docs/idts-digital-twin-project-technical-plan.md](docs/idts-digital-twin-project-technical-plan.md)：正式数字孪生项目技术方案与实施计划。
+- [../idts3D_docs/model-performance-boundary.md](../idts3D_docs/model-performance-boundary.md)：纯前端性能边界与后续后端流水线分工。
+- [../idts3D_docs/model-asset-guideline.md](../idts3D_docs/model-asset-guideline.md)：模型资产检查、命名和轻量化约定。
+- [../idts3D_docs/factory-scale-roadmap.md](../idts3D_docs/factory-scale-roadmap.md)：厂区级能力的长期技术路线。
+- [../idts3D_docs/idts-demo-codex-performance-plan.md](../idts3D_docs/idts-demo-codex-performance-plan.md)：Codex 分阶段性能优化执行方案。
+- [../idts3D_docs/idts-digital-twin-project-technical-plan.md](../idts3D_docs/idts-digital-twin-project-technical-plan.md)：正式数字孪生项目技术方案与实施计划。
 
 ## Three.js 资源释放
 

@@ -1,6 +1,6 @@
 # idts3D_api
 
-本目录预留给 IDTS 3D 数字孪生系统后端工程。文档设计阶段只允许保留本说明文件，不创建真实 .NET solution / project。
+本目录承载 IDTS 3D 数字孪生系统后端工程。当前已建立 .NET 8 六项目 Solution，并完成 MVP-01 至 MVP-06 的后端能力基线。
 
 后续 .NET solution 和项目命名应使用：
 
@@ -12,9 +12,9 @@
 - `HZ.IDTS.DigitalTwin.Contracts`
 - `HZ.IDTS.DigitalTwin.Worker`
 
-当前已进入 MVP-01 后端解决方案骨架阶段，可创建 .NET solution 和 project，但不实现业务 API。
+当前已实现的业务能力包括 PostgreSQL EF Core、初始 Migration、GLB 上传、本地文件存储、Model Manifest、Object Tree、Model Stats 和 Asset Version 生命周期。Worker 仍为空骨架；Scene、Movable Part、Motion Target、转换流水线和前端联调尚未完成。
 
-## MVP-01 后端骨架启动说明
+## 当前后端启动说明
 
 本目录使用本机实际存在的 .NET SDK `8.0.100`，并通过 `global.json` 锁定。
 
@@ -48,17 +48,18 @@ GET /api/health
 dotnet run --project .\src\HZ.IDTS.DigitalTwin.Worker\HZ.IDTS.DigitalTwin.Worker.csproj
 ```
 
-MVP-01 不包含 Entity、DbContext、Migration、业务 API、GLB 上传、Manifest、Object Tree、Movable Part、Motion Target 或前端联调。
+当前尚未包含 Scene、Movable Part、Motion Target 业务 API、Worker 转换流水线、正式前端 API Client 或前后端联调。自动化测试和 CI 尚未建立。
 
 ## 分阶段规则
 
-- 文档设计阶段：禁止创建真实后端工程，禁止写 C# 代码，禁止执行 migration。
-- MVP-01 后端解决方案骨架阶段：允许按 `idts3D_docs/mvp-tasks/MVP-01-backend-solution-skeleton.md` 创建 solution 和项目骨架。
-- MVP-02 之后：允许按任务卡逐步创建 Entity、DbContext、Migration、Controller、Application Service、Infrastructure Repository、DTO 和 Worker 基础日志。
-- 任何阶段默认禁止 commit / push，除非用户明确要求。
+- 后续后端能力必须严格按当前任务卡实施，不得把规划中的 API 写成已完成能力。
+- 只读阶段禁止 commit / push；用户确认写入任务后，按项目级 Skill 验证、commit 并 push `origin/main`，禁止 force push。
 
 后端详细规划见：
 
 - `idts3D_docs/backend-implementation-plan.md`
 - `idts3D_docs/domain-entity-dto-map.md`
 - `idts3D_docs/api-contracts/README.md`
+- `../idts3D_docs/architecture/project-architecture-baseline.md`
+- `../idts3D_docs/architecture/project-architecture-debt-register.md`
+- `../idts3D_docs/architecture/main-delivery-workflow.md`

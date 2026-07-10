@@ -46,3 +46,11 @@
 ## 编码规则
 
 修改代码时必须保持文件编码为 UTF-8，不要使用 ANSI/GBK。不要把已有中文注释、中文文案、中文日志改成乱码。如果发现文件疑似非 UTF-8 编码，先提示用户确认，不要直接重写整个文件。
+
+## 架构治理补充
+
+1. 所有前端任务必须先读取 `../.agents/skills/idts3d-architecture-governance/SKILL.md`。
+2. Vue 页面不得直接承载完整 Three.js 引擎；场景、模型加载、交互、状态和 Vue UI 必须保持明确分层。
+3. 正式 API 请求统一进入 API Client；TypeScript 类型必须与后端契约同步，页面不得复制后端 DTO。
+4. 新功能开始前必须判断 view、component、composable、store、api、engine 的职责归属；不允许无边界扩张 utils。
+5. 非功能重构不得改变页面、接口或场景表现。发现债务先登记，不在业务任务中顺手大改；完成后必须执行结构复检。

@@ -49,3 +49,13 @@
 - `dotnet test`
 
 如果项目尚未创建，则说明无法执行对应命令，不要假装验证通过。
+
+## 6. 架构治理补充
+
+- 所有后端任务必须先读取 `../.agents/skills/idts3d-architecture-governance/SKILL.md`。
+- Controller 不得访问 DbContext；Application 不得依赖 Infrastructure；Domain 不得依赖 Application、Infrastructure 或 Api。
+- Infrastructure 不得决定业务状态矩阵。Contracts 不得返回 Entity。
+- Repository 不得无边界扩张为多业务能力集合；新增能力先判断是否需要独立 Service / Repository。
+- 事务、锁和审计必须属于明确用例；不得持续把新能力堆入已有大型 Repository。
+- 非功能重构不得改变 API、数据库、状态、事务或错误码。
+- 发现架构债务必须登记，不在业务任务中顺手修复；完成后必须执行结构复检。
