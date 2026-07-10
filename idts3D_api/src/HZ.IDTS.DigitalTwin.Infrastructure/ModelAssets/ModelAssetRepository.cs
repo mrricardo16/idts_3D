@@ -37,6 +37,143 @@ public sealed class ModelAssetRepository : IModelAssetRepository
             .AnyAsync(x => x.SourceFileHash == sourceFileHash, cancellationToken);
     }
 
+    public Task<bool> AssetExistsByIdAsync(
+        long assetId,
+        CancellationToken cancellationToken)
+    {
+        return _dbContext.ModelAssets
+            .AsNoTracking()
+            .AnyAsync(x => x.Id == assetId, cancellationToken);
+    }
+
+    public async Task<ModelManifestQueryData?> GetModelManifestAsync(
+        long assetId,
+        long? versionId,
+        CancellationToken cancellationToken)
+    {
+        var asset = await _dbContext.ModelAssets
+            .AsNoTracking()
+            .Where(x => x.Id == assetId)
+            .Select(x => new
+            {
+                x.Id,
+                x.AssetCode,
+                x.AssetName,
+                x.CurrentVersionId
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (asset is null)
+        {
+            return null;
+        }
+
+        var versionQuery = _dbContext.AssetVersions
+            .AsNoTracking()
+            .Where(x => x.ModelAssetId == assetId);
+
+        var version = versionId.HasValue
+            ? await versionQuery
+                .Where(x => x.Id == versionId.Value)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.VersionNo,
+                    x.VersionStatus
+                })
+                .SingleOrDefaultAsync(cancellationToken)
+            : await versionQuery
+                .Where(x => !asset.CurrentVersionId.HasValue || x.Id == asset.CurrentVersionId.Value)
+                .OrderByDescending(x => x.VersionNo)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.VersionNo,
+                    x.VersionStatus
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
+        if (version is null)
+        {
+            return null;
+        }
+
+        var variants = await _dbContext.ModelAssetVariants
+            .AsNoTracking()
+            .Where(x => x.ModelAssetId == assetId && x.AssetVersionId == version.Id)
+            .OrderBy(x => x.VariantLevel)
+            .Select(x => new ModelManifestVariantData(
+                x.VariantLevel,
+                x.FileUrl))
+            .ToListAsync(cancellationToken);
+
+        var manifestJson = await _dbContext.AssetManifests
+            .AsNoTracking()
+            .Where(x => x.ModelAssetId == assetId && x.AssetVersionId == version.Id)
+            .Select(x => x.ManifestJson)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        var movableParts = await _dbContext.MovablePartBindings
+            .AsNoTracking()
+            .Where(x =>
+                x.ModelAssetId == assetId &&
+                x.AssetVersionId == version.Id &&
+                x.BindingStatus == BindingStatus.active &&
+                x.Enabled)
+            .OrderBy(x => x.PartCode)
+            .Select(x => new
+            {
+                x.Id,
+                x.PartCode,
+                x.BusinessName,
+                x.MotionType,
+                x.AxisMode,
+                x.Axis
+            })
+            .ToListAsync(cancellationToken);
+
+        var movablePartIds = movableParts.Select(x => x.Id).ToArray();
+        var targets = movablePartIds.Length == 0
+            ? new List<MotionTarget>()
+            : await _dbContext.MotionTargets
+                .AsNoTracking()
+                .Where(x => movablePartIds.Contains(x.MovablePartId) && x.Enabled)
+                .OrderBy(x => x.SortNo)
+                .ThenBy(x => x.Id)
+                .ToListAsync(cancellationToken);
+
+        var targetLookup = targets
+            .GroupBy(x => x.MovablePartId)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(target => new ModelManifestMotionTargetData(
+                        target.Id,
+                        target.TargetCode,
+                        target.TargetName,
+                        target.TargetValue))
+                    .ToList());
+
+        return new ModelManifestQueryData(
+            asset.Id,
+            version.Id,
+            asset.AssetCode,
+            asset.AssetName,
+            version.VersionStatus,
+            variants,
+            manifestJson,
+            movableParts.Select(x => new ModelManifestMovablePartData(
+                    x.Id,
+                    x.PartCode,
+                    x.BusinessName,
+                    x.MotionType,
+                    x.AxisMode,
+                    x.Axis,
+                    targetLookup.TryGetValue(x.Id, out var partTargets)
+                        ? partTargets
+                        : Array.Empty<ModelManifestMotionTargetData>()))
+                .ToList());
+    }
+
     public async Task<UploadModelAssetResponse> CreateUploadAsync(
         CreateModelAssetUploadCommand command,
         Func<long, long, CancellationToken, Task<StoredModelAssetFile>> persistSourceFileAsync,

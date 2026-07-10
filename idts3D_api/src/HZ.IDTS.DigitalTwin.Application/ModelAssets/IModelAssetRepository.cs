@@ -13,6 +13,15 @@ public interface IModelAssetRepository
         string sourceFileHash,
         CancellationToken cancellationToken);
 
+    Task<bool> AssetExistsByIdAsync(
+        long assetId,
+        CancellationToken cancellationToken);
+
+    Task<ModelManifestQueryData?> GetModelManifestAsync(
+        long assetId,
+        long? versionId,
+        CancellationToken cancellationToken);
+
     Task<UploadModelAssetResponse> CreateUploadAsync(
         CreateModelAssetUploadCommand command,
         Func<long, long, CancellationToken, Task<StoredModelAssetFile>> persistSourceFileAsync,

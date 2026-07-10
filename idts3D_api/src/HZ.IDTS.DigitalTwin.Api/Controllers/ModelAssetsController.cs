@@ -11,10 +11,37 @@ namespace HZ.IDTS.DigitalTwin.Api.Controllers;
 public sealed class ModelAssetsController : ControllerBase
 {
     private readonly IModelAssetUploadService _uploadService;
+    private readonly IModelManifestService _manifestService;
 
-    public ModelAssetsController(IModelAssetUploadService uploadService)
+    public ModelAssetsController(
+        IModelAssetUploadService uploadService,
+        IModelManifestService manifestService)
     {
         _uploadService = uploadService;
+        _manifestService = manifestService;
+    }
+
+    [HttpGet("{assetId:long}/manifest")]
+    [ProducesResponseType(typeof(ApiResponse<ModelManifestResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<ModelManifestResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<ModelManifestResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<ModelManifestResponse>), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ApiResponse<ModelManifestResponse>>> GetManifest(
+        [FromRoute] long assetId,
+        [FromQuery] long? versionId,
+        [FromQuery] string? mode,
+        CancellationToken cancellationToken)
+    {
+        var request = new GetModelManifestRequest(
+            assetId,
+            versionId,
+            mode);
+
+        var result = await _manifestService.GetManifestAsync(
+            request,
+            cancellationToken);
+
+        return StatusCode((int)result.StatusCode, result.Response);
     }
 
     [HttpPost("upload")]

@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddScoped<IModelAssetUploadService, ModelAssetUploadService>();
+        services.AddScoped<IModelManifestService, ModelManifestService>();
 
         return services;
     }
