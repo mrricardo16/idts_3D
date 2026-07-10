@@ -29,6 +29,10 @@ description: Govern all idts_3D repository tasks, including architecture, docume
 ## 根目录与文档治理
 
 - 源码、文档、生成文件、本地配置必须分离；不得提交 `bin`、`obj`、`dist`、日志、数据库导出、上传/转换临时文件。
+- 新建文本文件必须遵循根级 `.editorconfig`；文本与二进制 Git 属性以根级 `.gitattributes` 为准。
+- 业务任务不得执行 `git add --renormalize .`，也不得顺手批量转换全仓库换行、BOM 或文件末尾换行。
+- 新增构建产物、本地输出或自动生成报告前必须检查 `.gitignore`；正式模型资产不得仅因扩展名被误忽略，目录与大文件策略未明确时须登记独立治理任务。
+- `debug` 与 `reports` 仅可在人工筛选后入库；历史编码或换行问题登记为独立治理任务，不在无关任务中批量修复。
 - 不无边界新增根目录；新增目录必须有明确职责。
 - README 必须反映真实进度。
 - Markdown 是治理规则和 API 契约的规范源；DOCX 只作参考，不覆盖 Markdown。

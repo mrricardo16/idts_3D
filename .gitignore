@@ -6,6 +6,36 @@ idts3D_ui/.vite/
 idts3D_ui/.cache/
 idts3D_ui/coverage/
 
+# .NET build and test outputs
+**/[Bb]in/
+**/[Oo]bj/
+**/TestResults/
+**/coverage/
+
+# Local runtime, upload, and conversion outputs
+**/uploads/
+**/local-uploads/
+**/conversion-output/
+**/conversion-temp/
+**/converted/
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.backup
+*.bak
+
+# Local environment and browser-test artifacts; tracked examples remain allowed.
+idts3D_api/.env*
+idts3D_ui/.env*
+!idts3D_api/.env.example
+!idts3D_api/.env.sample
+!idts3D_ui/.env.example
+!idts3D_ui/.env.sample
+idts3D_ui/playwright-report/
+idts3D_ui/test-results/
+idts3D_ui/screenshots/
+
 idts3D_ui/public/models/**/*.glb
 idts3D_ui/source-models/*
 !idts3D_ui/source-models/.gitkeep
@@ -24,6 +54,8 @@ idts3D_ui/source-models/*
 *.log
 *.tmp
 *.temp
+*.user
+*.suo
 *.tsbuildinfo
 .DS_Store
 Thumbs.db

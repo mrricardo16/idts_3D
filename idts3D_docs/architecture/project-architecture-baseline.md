@@ -44,18 +44,24 @@ TwinDemo.vue
 - 文件存储：`LocalModelAssetFileStorage` 保存资产，Api 将受控目录通过 `/assets` 暴露；API 不应返回物理路径。
 - Worker：存在 Hosted Service 骨架，尚无转换队列、重试、幂等或实际处理流水线。
 
-## 6. 契约、测试与交付
+## 6. 仓库文本与产物基线
+
+ARCH-02 已建立根级 `.editorconfig` 与 `.gitattributes`。新建或修改文本以 UTF-8、默认 LF、基础缩进、末尾换行和无意义行尾空白规则为基线；Markdown 保留语义行尾空格，Windows 脚本使用 CRLF。图片、文档、GLB、字体、压缩包和可执行产物均按二进制处理。
+
+构建产物、本地文件、debug/reports 与正式静态资产的入库边界由 `repository-text-and-artifact-policy.md` 说明。ARCH-02 不批量标准化历史文件；既有 BOM、混合换行和空白问题均保留并登记为独立债务。当前 `public/models/**/*.glb` 忽略规则可能误伤正式运行资产，留待 ARCH-02A 审核资产来源、交付方式与大文件策略。
+
+## 7. 契约、测试与交付
 
 API 契约 Markdown、Contracts DTO 与后续 TypeScript 类型必须同步。当前 TypeScript API 契约与 API Client 尚未建立。仓库没有后端测试项目、前端测试、lint/format 基线或 CI；本项是架构债务而非“验证已通过”。当前交付分支是 `main` 跟踪 `origin/main`。
 
-## 7. 当前部分完成、缺失与限制
+## 8. 当前部分完成、缺失与限制
 
 | 分类 | 内容 |
 |---|---|
 | 部分完成 | Worker 空骨架；scene/device/motion 有数据表但无业务 API；前端仍是静态 Demo。 |
 | 缺失 | Scene、Movable Part、Motion Target API；正式 API Client；前后端联调；转换流水线；自动化测试；CI。 |
-| 已知限制 | 配置与机密治理未定；大型 Repository/Entity/EF Configuration 后续存在职责膨胀风险；Markdown 与 DOCX 的规范源边界此前未声明。 |
+| 已知限制 | 配置与机密治理未定；大型 Repository/Entity/EF Configuration 后续存在职责膨胀风险；正式模型目录、来源与大文件交付策略待 ARCH-02A 确认。 |
 
-## 8. 目标方向
+## 9. 目标方向
 
 目标是保持后端分层，令前端通过集中 API Client 和契约类型消费已发布配置，Worker 复用 Application 用例处理后台任务，并通过测试、CI、编码治理和独立 ARCH 任务控制债务。目标能力均须以独立任务实现。

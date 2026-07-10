@@ -1,0 +1,33 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+# Markdown 的两个行尾空格可表达硬换行。
+trim_trailing_whitespace = false
+
+[*.{cs,csproj,props,targets,xml}]
+indent_style = space
+indent_size = 4
+
+[*.{js,jsx,ts,tsx,vue,json,yaml,yml,css,scss,html}]
+indent_style = space
+indent_size = 2
+
+[*.{ps1,cmd,bat}]
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+
+[*.{png,jpg,jpeg,webp,gif,ico,pdf,docx,xlsx,xls,vsdx,rp,glb,gltf,bin,zip,7z,rar,exe,dll,pdb,woff,woff2,ttf,otf,eot}]
+# 二进制边界由 .gitattributes 负责；编辑器不得将这些文件按文本重写。
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset

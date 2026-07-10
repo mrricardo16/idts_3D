@@ -48,9 +48,10 @@
 
 | ID | 登记 |
 |---|---|
-| REPO-DEBT-001 | Open / P1；缺少 `.editorconfig`；编码/换行依赖人工；下次跨平台编辑前触发；ARCH-02；否/否/否/否；编码与 diff 检查；删除配置。 |
-| REPO-DEBT-002 | Open / P1；缺少 `.gitattributes`；文本与二进制边界未机械化；ARCH-02；否/否/否/否；属性检查；删除配置。 |
+| REPO-DEBT-001 | Closed / P1；ARCH-02 已创建根级 `.editorconfig`；新文本具备 UTF-8、换行、缩进和基础空白规则；ARCH-02；否/否/否/否；配置 UTF-8 检查与 `git diff --check`；删除配置可回退。 |
+| REPO-DEBT-002 | Closed / P1；ARCH-02 已创建根级 `.gitattributes`；文本换行与二进制边界已机械化；ARCH-02；否/否/否/否；`git check-attr` 验证代表性文本和二进制文件；删除配置可回退。 |
 | REPO-DEBT-003 | Open / P1；无 `.github` CI；main 无自动门禁；ARCH-03；否/否/否/否；CI 运行；删除 workflow。 |
-| REPO-DEBT-004 | Open / P2；`idts3D_ui/debug/**`、`reports/**` 已跟踪；资产入库边界未声明；新增报告/资产时触发；ARCH-02；否/否/否/否；git status/ignore 检查；还原规则。 |
+| REPO-DEBT-004 | Planned / P1；ARCH-02 已声明 debug/reports 与产物边界，但 `idts3D_ui/public/models/**/*.glb` 同时命中 `public/models/lifter.glb` 和 `public/models/lifter/lifter.high.glb`；正式 GLB 与临时/转换 GLB 不能仅靠现有目录规则区分，忽略规则可能误伤正式资产。本次禁止提交或取消忽略二进制模型，故未修复；ARCH-02A；否/否/否/否；核验来源、授权、大小、部署依赖、LFS/外部制品与精确忽略例外；仅回退 ARCH-02A 的资产治理决定。 |
 | REPO-DEBT-005 | Closed / P1；根级项目 Skill 缺失；ARCH-01 创建 `.agents/skills/idts3d-architecture-governance`；无影响；Skill 发现与路径检查；还原 ARCH-01 提交。 |
 | REPO-DEBT-006 | Closed / P1；AGENTS 曾永久默认禁止 commit/push；ARCH-01 改为确认后 main 直交付；无影响；规则搜索；还原 ARCH-01 提交。 |
+| REPO-DEBT-007 | Open / P2；ARCH-02 只读检查发现 8 个混合换行文本、10 个 UTF-8 BOM、67 个含行尾空白的文本和 1 个缺少末尾换行的文本；历史文件一致性不满足新基线，但无严格 UTF-8 解码失败；独立历史文本规范化任务（ARCH-14，待排期）；否/否/否/否；逐文件审计、最小 diff 与功能回归；按文件回退。 |
