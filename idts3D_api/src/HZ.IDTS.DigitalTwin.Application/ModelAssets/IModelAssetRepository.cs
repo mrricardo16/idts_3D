@@ -22,6 +22,38 @@ public interface IModelAssetRepository
         long? versionId,
         CancellationToken cancellationToken);
 
+    Task<AssetVersionAccessData?> GetAssetVersionAsync(
+        long assetId,
+        long? versionId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<ModelObjectIndexData>> GetObjectTreeAsync(
+        long assetId,
+        long versionId,
+        CancellationToken cancellationToken);
+
+    Task<DateTime> ReplaceObjectTreeAsync(
+        long assetId,
+        long versionId,
+        IReadOnlyList<ObjectTreeNodeRequest> nodes,
+        CancellationToken cancellationToken);
+
+    Task<string?> GetModelStatsJsonAsync(
+        long assetId,
+        long versionId,
+        CancellationToken cancellationToken);
+
+    Task<DateTime?> GetModelStatsUpdatedTimeAsync(
+        long assetId,
+        long versionId,
+        CancellationToken cancellationToken);
+
+    Task<SaveModelStatsData?> SaveModelStatsAsync(
+        long assetId,
+        long versionId,
+        SaveModelStatsRequest request,
+        CancellationToken cancellationToken);
+
     Task<UploadModelAssetResponse> CreateUploadAsync(
         CreateModelAssetUploadCommand command,
         Func<long, long, CancellationToken, Task<StoredModelAssetFile>> persistSourceFileAsync,

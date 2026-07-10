@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IModelAssetUploadService, ModelAssetUploadService>();
         services.AddScoped<IModelManifestService, ModelManifestService>();
+        services.AddScoped<IObjectTreeModelStatsService, ObjectTreeModelStatsService>();
 
         return services;
     }

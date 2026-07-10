@@ -174,6 +174,201 @@ public sealed class ModelAssetRepository : IModelAssetRepository
                 .ToList());
     }
 
+    public async Task<AssetVersionAccessData?> GetAssetVersionAsync(
+        long assetId,
+        long? versionId,
+        CancellationToken cancellationToken)
+    {
+        var asset = await _dbContext.ModelAssets
+            .AsNoTracking()
+            .Where(x => x.Id == assetId)
+            .Select(x => new { x.Id, x.CurrentVersionId })
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (asset is null)
+        {
+            return null;
+        }
+
+        var versions = _dbContext.AssetVersions
+            .AsNoTracking()
+            .Where(x => x.ModelAssetId == assetId);
+
+        var version = versionId.HasValue
+            ? await versions
+                .Where(x => x.Id == versionId.Value)
+                .Select(x => new AssetVersionAccessData(assetId, x.Id, x.VersionStatus))
+                .SingleOrDefaultAsync(cancellationToken)
+            : await versions
+                .Where(x => !asset.CurrentVersionId.HasValue || x.Id == asset.CurrentVersionId.Value)
+                .OrderByDescending(x => x.VersionNo)
+                .Select(x => new AssetVersionAccessData(assetId, x.Id, x.VersionStatus))
+                .FirstOrDefaultAsync(cancellationToken);
+
+        return version;
+    }
+
+    public async Task<IReadOnlyList<ModelObjectIndexData>> GetObjectTreeAsync(
+        long assetId,
+        long versionId,
+        CancellationToken cancellationToken)
+    {
+        return await _dbContext.ModelObjectIndexes
+            .AsNoTracking()
+            .Where(x => x.ModelAssetId == assetId && x.AssetVersionId == versionId)
+            .OrderBy(x => x.ObjectPath)
+            .ThenBy(x => x.ObjectUuid)
+            .Select(x => new ModelObjectIndexData(
+                x.ObjectUuid,
+                x.ObjectName,
+                x.ObjectPath,
+                x.ParentUuid,
+                x.ParentPath,
+                x.ObjectType,
+                x.BoundingBoxMinX,
+                x.BoundingBoxMinY,
+                x.BoundingBoxMinZ,
+                x.BoundingBoxMaxX,
+                x.BoundingBoxMaxY,
+                x.BoundingBoxMaxZ,
+                x.MeshFingerprint))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<DateTime> ReplaceObjectTreeAsync(
+        long assetId,
+        long versionId,
+        IReadOnlyList<ObjectTreeNodeRequest> nodes,
+        CancellationToken cancellationToken)
+    {
+        var savedTime = DateTime.UtcNow;
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+        await _dbContext.ModelObjectIndexes
+            .Where(x => x.ModelAssetId == assetId && x.AssetVersionId == versionId)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        var indexes = nodes.Select(node => new ModelObjectIndex
+        {
+            ModelAssetId = assetId,
+            AssetVersionId = versionId,
+            ObjectUuid = node.ObjectUuid,
+            ObjectName = node.ObjectName,
+            ObjectPath = node.ObjectPath,
+            ParentUuid = node.ParentUuid,
+            ParentPath = node.ParentPath,
+            ObjectType = node.ObjectType,
+            BoundingBoxMinX = node.BoundingBox?.Min.X,
+            BoundingBoxMinY = node.BoundingBox?.Min.Y,
+            BoundingBoxMinZ = node.BoundingBox?.Min.Z,
+            BoundingBoxMaxX = node.BoundingBox?.Max.X,
+            BoundingBoxMaxY = node.BoundingBox?.Max.Y,
+            BoundingBoxMaxZ = node.BoundingBox?.Max.Z,
+            MeshFingerprint = node.MeshFingerprint
+        }).ToList();
+
+        _dbContext.ModelObjectIndexes.AddRange(indexes);
+        _dbContext.OperationAudits.Add(new OperationAudit
+        {
+            OperationType = OperationType.edit,
+            TargetType = OperationTargetType.asset_version,
+            TargetId = versionId,
+            AfterJson = JsonSerializer.Serialize(new { assetId, versionId, nodeCount = indexes.Count }, AuditJsonOptions),
+            CreatedTime = savedTime
+        });
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return savedTime;
+    }
+
+    public Task<string?> GetModelStatsJsonAsync(
+        long assetId,
+        long versionId,
+        CancellationToken cancellationToken)
+    {
+        return _dbContext.AssetManifests
+            .AsNoTracking()
+            .Where(x => x.ModelAssetId == assetId && x.AssetVersionId == versionId)
+            .Select(x => x.ModelStatsJson)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<DateTime?> GetModelStatsUpdatedTimeAsync(
+        long assetId,
+        long versionId,
+        CancellationToken cancellationToken)
+    {
+        return _dbContext.AssetManifests
+            .AsNoTracking()
+            .Where(x => x.ModelAssetId == assetId && x.AssetVersionId == versionId)
+            .Select(x => (DateTime?)x.UpdatedTime)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<SaveModelStatsData?> SaveModelStatsAsync(
+        long assetId,
+        long versionId,
+        SaveModelStatsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var savedTime = DateTime.UtcNow;
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+        var sourceVariant = await _dbContext.ModelAssetVariants
+            .Where(x => x.ModelAssetId == assetId && x.AssetVersionId == versionId && x.VariantLevel == VariantLevel.source)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (sourceVariant is null)
+        {
+            return null;
+        }
+
+        var manifest = await _dbContext.AssetManifests
+            .SingleOrDefaultAsync(x => x.ModelAssetId == assetId && x.AssetVersionId == versionId, cancellationToken);
+
+        var beforeStatsJson = manifest?.ModelStatsJson;
+        var statsJson = JsonSerializer.Serialize(request, AuditJsonOptions);
+        if (manifest is null)
+        {
+            manifest = new AssetManifest
+            {
+                ModelAssetId = assetId,
+                AssetVersionId = versionId,
+                ManifestJson = "{}",
+                ModelStatsJson = statsJson,
+                CreatedTime = savedTime,
+                UpdatedTime = savedTime
+            };
+            _dbContext.AssetManifests.Add(manifest);
+        }
+        else
+        {
+            manifest.ModelStatsJson = statsJson;
+            manifest.UpdatedTime = savedTime;
+        }
+
+        sourceVariant.TriangleCount = request.TriangleCount;
+        sourceVariant.VertexCount = request.VertexCount;
+        sourceVariant.MeshCount = request.MeshCount;
+        sourceVariant.MaterialCount = request.MaterialCount;
+        sourceVariant.TextureCount = request.TextureCount;
+
+        _dbContext.OperationAudits.Add(new OperationAudit
+        {
+            OperationType = OperationType.edit,
+            TargetType = OperationTargetType.asset_version,
+            TargetId = versionId,
+            BeforeJson = beforeStatsJson,
+            AfterJson = statsJson,
+            CreatedTime = savedTime
+        });
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return new SaveModelStatsData(savedTime);
+    }
+
     public async Task<UploadModelAssetResponse> CreateUploadAsync(
         CreateModelAssetUploadCommand command,
         Func<long, long, CancellationToken, Task<StoredModelAssetFile>> persistSourceFileAsync,

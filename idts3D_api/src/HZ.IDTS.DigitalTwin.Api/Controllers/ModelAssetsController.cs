@@ -12,13 +12,16 @@ public sealed class ModelAssetsController : ControllerBase
 {
     private readonly IModelAssetUploadService _uploadService;
     private readonly IModelManifestService _manifestService;
+    private readonly IObjectTreeModelStatsService _objectTreeModelStatsService;
 
     public ModelAssetsController(
         IModelAssetUploadService uploadService,
-        IModelManifestService manifestService)
+        IModelManifestService manifestService,
+        IObjectTreeModelStatsService objectTreeModelStatsService)
     {
         _uploadService = uploadService;
         _manifestService = manifestService;
+        _objectTreeModelStatsService = objectTreeModelStatsService;
     }
 
     [HttpGet("{assetId:long}/manifest")]
@@ -41,6 +44,49 @@ public sealed class ModelAssetsController : ControllerBase
             request,
             cancellationToken);
 
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpPut("{assetId:long}/versions/{versionId:long}/object-tree")]
+    public async Task<ActionResult<ApiResponse<ObjectTreeResponse>>> SaveObjectTree(
+        [FromRoute] long assetId,
+        [FromRoute] long versionId,
+        [FromBody] SaveObjectTreeRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _objectTreeModelStatsService.SaveObjectTreeAsync(assetId, versionId, request, cancellationToken);
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpGet("{assetId:long}/object-tree")]
+    public async Task<ActionResult<ApiResponse<ObjectTreeResponse>>> GetObjectTree(
+        [FromRoute] long assetId,
+        [FromQuery] long? versionId,
+        [FromQuery] string? mode,
+        CancellationToken cancellationToken)
+    {
+        var result = await _objectTreeModelStatsService.GetObjectTreeAsync(new GetObjectTreeRequest(assetId, versionId, mode), cancellationToken);
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpPut("{assetId:long}/versions/{versionId:long}/model-stats")]
+    public async Task<ActionResult<ApiResponse<ModelStatsResponse>>> SaveModelStats(
+        [FromRoute] long assetId,
+        [FromRoute] long versionId,
+        [FromBody] SaveModelStatsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _objectTreeModelStatsService.SaveModelStatsAsync(assetId, versionId, request, cancellationToken);
+        return StatusCode((int)result.StatusCode, result.Response);
+    }
+
+    [HttpGet("{assetId:long}/versions/{versionId:long}/model-stats")]
+    public async Task<ActionResult<ApiResponse<ModelStatsResponse>>> GetModelStats(
+        [FromRoute] long assetId,
+        [FromRoute] long versionId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _objectTreeModelStatsService.GetModelStatsAsync(new GetModelStatsRequest(assetId, versionId), cancellationToken);
         return StatusCode((int)result.StatusCode, result.Response);
     }
 
