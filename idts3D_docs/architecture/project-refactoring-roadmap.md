@@ -9,7 +9,7 @@
 | ARCH-14 | 历史文本一致性治理：逐文件处理 BOM、混合换行、尾随空白和末尾换行问题。 | ARCH-02 发现的历史问题经范围确认后。 | 否/否/否/否 | 逐文件 UTF-8、EOL、diff 与功能回归；按文件回退。 | 不阻塞当前 MVP，不得与业务任务混做。 |
 | ARCH-03A（已完成） | 已建立 Application + Architecture Tests，覆盖业务规则、ErrorCode、协作行为、程序集引用和类型签名边界；不包含 PostgreSQL、API 集成或完整静态分析。 | 已完成。 | 否/否/否/否 | restore、build、两个完整测试项目；移除新增测试基础设施。 | 为后续 Application 业务规则和跨层依赖提供本地门禁。 |
 | ARCH-03B（已完成） | 已建立前端 ESLint、独立 type-check、Vitest、Vue Test Utils、jsdom、ModelStructure/ModelStats 纯逻辑测试和 App stub 基础渲染测试；不包含真实 WebGL、API Client、浏览器 E2E 或视觉测试。 | 已完成。 | 否/否/否/否 | `npm ci`、lint、type-check、unit tests、build；移除独立前端测试基础设施。 | 为 ARCH-03C 本地门禁提供基础。 |
-| ARCH-03C | GitHub Actions CI。 | 本地测试基线建立后。 | 否/否/否/否 | CI 运行；删除 workflow。 | 未完成。 |
+| ARCH-03C | GitHub Actions CI：repository-policy、后端 restore/Release build/Application Tests/Architecture Tests，以及前端 npm ci/lint/type-check/unit test/build。 | 本地测试基线建立后。仅当本次 workflow 在 GitHub Actions 成功运行后才标记已完成。 | 否/否/否/否 | CI 运行；删除 workflow。 | 实施中，待首次远程 run 成功。 |
 | ARCH-03D | API Integration Tests。 | Controller、路由或 HTTP 映射变更前。 | 否/否/否/否 | API 集成测试；移除独立测试基础设施。 | 未完成。 |
 | ARCH-03E | 共享 fixture、测试模型来源与测试数据治理。 | 扩展测试资产或跨测试复用数据前。 | 否/否/否/否 | fixture 来源、隔离与清理验证；回退测试数据治理。 | Planned。 |
 | ARCH-03F | PostgreSQL Infrastructure Integration Tests。 | 具备真实 PostgreSQL/Docker 测试环境后。 | 否/否/否/否 | Migration、事务、`FOR UPDATE`、并发与回滚集成验证；移除独立测试基础设施。 | Planned / Environment Blocked。 |

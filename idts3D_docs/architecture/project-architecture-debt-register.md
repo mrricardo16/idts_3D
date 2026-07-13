@@ -55,7 +55,8 @@
 |---|---|
 | REPO-DEBT-001 | Closed / P1；ARCH-02 已创建根级 `.editorconfig`；新文本具备 UTF-8、换行、缩进和基础空白规则；ARCH-02；否/否/否/否；配置 UTF-8 检查与 `git diff --check`；删除配置可回退。 |
 | REPO-DEBT-002 | Closed / P1；ARCH-02 已创建根级 `.gitattributes`；文本换行与二进制边界已机械化；ARCH-02；否/否/否/否；`git check-attr` 验证代表性文本和二进制文件；删除配置可回退。 |
-| REPO-DEBT-003 | Open / P1；无 `.github` CI；main 无自动门禁；ARCH-03；否/否/否/否；CI 运行；删除 workflow。 |
+| REPO-DEBT-003 | Partially Resolved / P1；ARCH-03C 已建立 `.github/workflows/ci.yml`，包含 repository-policy、backend-quality 与 frontend-quality；仅当 workflow 已进入 main、GitHub Actions 自动触发且三个 Job 均成功、后端和前端质量命令真实执行后才可 Closed；ARCH-03C；否/否/否/否；检查本次 GitHub Actions run；删除 workflow。 |
+| REPO-DEBT-008 | Open / P1；main 仍采用直接 push，CI 只能在提交进入 main 后验证，branch protection 与 PR required checks 尚未建立；切换 PR 交付流程时触发；独立治理任务；否/否/否/否；配置 PR branch protection 与 required checks；还原交付流程配置。 |
 | REPO-DEBT-004 | Planned / P1；ARCH-02 已声明 debug/reports 与产物边界，但 `idts3D_ui/public/models/**/*.glb` 同时命中 `public/models/lifter.glb` 和 `public/models/lifter/lifter.high.glb`；正式 GLB 与临时/转换 GLB 不能仅靠现有目录规则区分，忽略规则可能误伤正式资产。本次禁止提交或取消忽略二进制模型，故未修复；ARCH-02A；否/否/否/否；核验来源、授权、大小、部署依赖、LFS/外部制品与精确忽略例外；仅回退 ARCH-02A 的资产治理决定。 |
 | REPO-DEBT-005 | Closed / P1；根级项目 Skill 缺失；ARCH-01 创建 `.agents/skills/idts3d-architecture-governance`；无影响；Skill 发现与路径检查；还原 ARCH-01 提交。 |
 | REPO-DEBT-006 | Closed / P1；AGENTS 曾永久默认禁止 commit/push；ARCH-01 改为确认后 main 直交付；无影响；规则搜索；还原 ARCH-01 提交。 |
