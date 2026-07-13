@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{520B930A-55CB-4450-B0DB-597F764AFB16}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7F18CBF9-7EAF-4BF2-BE64-2E9468608540}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Api", "src\HZ.IDTS.DigitalTwin.Api\HZ.IDTS.DigitalTwin.Api.csproj", "{0473D5D9-0177-42C1-B75E-B3F2C5DAD948}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Application", "src\HZ.IDTS.DigitalTwin.Application\HZ.IDTS.DigitalTwin.Application.csproj", "{3FB96A89-87E0-4EB7-924A-7B30D02FE1E5}"
@@ -16,6 +18,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Infrastructure", "src\HZ.IDTS.DigitalTwin.Infrastructure\HZ.IDTS.DigitalTwin.Infrastructure.csproj", "{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Worker", "src\HZ.IDTS.DigitalTwin.Worker\HZ.IDTS.DigitalTwin.Worker.csproj", "{151A1886-D131-45F6-8164-F6081E3EFA9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Application.Tests", "tests\HZ.IDTS.DigitalTwin.Application.Tests\HZ.IDTS.DigitalTwin.Application.Tests.csproj", "{A0B89CB5-9E7F-4D34-A2FF-2612FB2A731F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZ.IDTS.DigitalTwin.Architecture.Tests", "tests\HZ.IDTS.DigitalTwin.Architecture.Tests\HZ.IDTS.DigitalTwin.Architecture.Tests.csproj", "{7D0E7277-D604-4544-98CB-2F739DAAD059}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +56,14 @@ Global
 		{151A1886-D131-45F6-8164-F6081E3EFA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{151A1886-D131-45F6-8164-F6081E3EFA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{151A1886-D131-45F6-8164-F6081E3EFA9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B89CB5-9E7F-4D34-A2FF-2612FB2A731F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B89CB5-9E7F-4D34-A2FF-2612FB2A731F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B89CB5-9E7F-4D34-A2FF-2612FB2A731F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B89CB5-9E7F-4D34-A2FF-2612FB2A731F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D0E7277-D604-4544-98CB-2F739DAAD059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D0E7277-D604-4544-98CB-2F739DAAD059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D0E7277-D604-4544-98CB-2F739DAAD059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D0E7277-D604-4544-98CB-2F739DAAD059}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0473D5D9-0177-42C1-B75E-B3F2C5DAD948} = {520B930A-55CB-4450-B0DB-597F764AFB16}
@@ -58,5 +72,7 @@ Global
 		{637FB790-A500-4E0C-B064-4F4800BAEE4C} = {520B930A-55CB-4450-B0DB-597F764AFB16}
 		{3D7473FC-9D7B-4992-BAE5-1076ABCD3BEA} = {520B930A-55CB-4450-B0DB-597F764AFB16}
 		{151A1886-D131-45F6-8164-F6081E3EFA9E} = {520B930A-55CB-4450-B0DB-597F764AFB16}
+		{A0B89CB5-9E7F-4D34-A2FF-2612FB2A731F} = {7F18CBF9-7EAF-4BF2-BE64-2E9468608540}
+		{7D0E7277-D604-4544-98CB-2F739DAAD059} = {7F18CBF9-7EAF-4BF2-BE64-2E9468608540}
 	EndGlobalSection
 EndGlobal

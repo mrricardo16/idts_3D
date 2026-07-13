@@ -12,6 +12,10 @@
 
 ## 任务完成后
 
+- [ ] 新增 Application 业务规则已增加有效 Application Test；新增跨层依赖已通过 Architecture Tests。
+- [ ] Controller 未直接依赖 DbContext 或 Infrastructure 实现，Domain 和 Contracts 保持纯净。
+- [ ] 手写 Fake 未替代 PostgreSQL Integration Tests；Migration、事务、Provider SQL、`FOR UPDATE` 和并发行为仍由真实 PostgreSQL 测试验证。
+- [ ] 已明确 Architecture Tests 仅覆盖程序集引用与类型签名，不等同于完整 IL 或源码静态分析；测试失败未通过降低断言处理。
 - [ ] Controller 保持薄，Service/Repository 职责明确，Domain 纯净，DTO 与契约一致。
 - [ ] TypeScript 类型已同步；页面未直接操作底层引擎；无重复逻辑或无边界 Common/Utils 扩张。
 - [ ] 事务、审计和错误码受控；新增债务已登记。
