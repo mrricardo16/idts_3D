@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vue-tsc -b && vite build",
+    "lint": "eslint . --max-warnings=0",
+    "type-check": "vue-tsc -b",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "export:model-structure": "node scripts/export-model-structure.mjs",
     "inspect:model": "node scripts/inspect-model.mjs",
     "model:inspect": "node scripts/inspect-model.mjs",

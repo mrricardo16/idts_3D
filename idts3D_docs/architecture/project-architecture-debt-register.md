@@ -33,7 +33,9 @@
 | FE-DEBT-004 | Open / P1；无 API TypeScript 类型；契约可能漂移；MVP-11 前触发；ARCH-10/11；否/是/否/否；契约比对；还原类型变更。 |
 | FE-DEBT-005 | Open / P2；`TwinDemo.vue`；页面膨胀风险；新增独立面板/工作流时触发；ARCH-09；否/否/否/否；页面表现回归；还原组件拆分。 |
 | FE-DEBT-006 | Open / P3；`src/utils` 未来目录；通用工具可能吞入业务逻辑；新增领域 utils 时触发；ARCH-09；否/否/否/否；依赖/行为检查；还原移动。 |
-| FE-DEBT-007 | Open / P1；无前端测试；关键交互无自动保护；引入 API Client 或状态流转前触发；ARCH-03；否/否/否/否；test/lint；删除测试基础设施。 |
+| FE-DEBT-007A | Closed / P1；ARCH-03B 已建立 ESLint 和独立 `vue-tsc -b` type-check，本地前端质量门禁可检查 TypeScript、Vue、测试和 Node 脚本；不含格式化规则；新增前端代码时触发；ARCH-03B；否/否/否/否；`npm run lint`、`npm run type-check`；删除独立质量配置可回退。 |
+| FE-DEBT-007B | Closed / P1；ARCH-03B 已建立 Vitest、Vue Test Utils、jsdom 与测试清理基线，覆盖 ModelStructure、ModelStats 和 App 对 TwinDemo 的 stub 基础渲染；不启动真实 WebGL、不加载正式 GLB；新增前端纯逻辑或组件行为时触发；ARCH-03B；否/否/否/否；`npm run test:unit`；删除独立测试基础设施可回退。 |
+| FE-DEBT-007C | Open / P1；浏览器 E2E、真实 WebGL 渲染与视觉测试仍缺失；手写 Three.js 纯逻辑和 jsdom 测试不能替代真实渲染验证；新增浏览器级交互或视觉验收前触发；ARCH-03C/MVP-16；否/否/否/否；浏览器 E2E、真实 WebGL 与视觉验证；移除独立浏览器测试基础设施。 |
 | FE-DEBT-008 | Open / P1；静态资源与无环境 API 地址；环境/接口地址治理未建立；MVP-11 前触发；ARCH-04/10；否/是/否/否；开发/部署配置验证；还原配置抽象。 |
 
 ## 跨端

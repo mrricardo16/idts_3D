@@ -20,6 +20,11 @@
 - [ ] TypeScript 类型已同步；页面未直接操作底层引擎；无重复逻辑或无边界 Common/Utils 扩张。
 - [ ] 事务、审计和错误码受控；新增债务已登记。
 - [ ] 已执行适用的 build/test/lint/API/页面验证；无自动测试时已列人工回归。
+- [ ] 新增前端纯逻辑已增加有效单元测试；新增 Vue 组件行为已判断组件测试或浏览器测试。
+- [ ] Three.js 纯逻辑测试未冒充真实 WebGL 渲染测试；测试不依赖未提交的正式 GLB。
+- [ ] 新增 API Client 已补充请求、错误码和 fallback 测试。
+- [ ] lint、type-check、unit test 和 build 均已通过；未通过禁用规则或降低断言处理失败。
+- [ ] 测试后未留下 dist、coverage 或测试报告产物进入 Git。
 - [ ] `git diff --check` 通过，diff 仅含任务范围，一个任务一个 commit。
 - [ ] 新增文本符合 `.editorconfig`，代表性文本和二进制文件的 Git 属性正确。
 - [ ] 未意外修改现有源码换行，未误加入构建产物，未误忽略正式模型资产，且不存在不应入库的 debug/reports 文件。
