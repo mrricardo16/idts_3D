@@ -75,6 +75,8 @@ Worker -> Infrastructure
 | Response DTO | `MovablePartResponse`, `ModelManifestResponse` |
 | Error Code | `VERSION_STATUS_INVALID`, `DUPLICATE_PART_CODE` |
 
+MVP-07 已采用独立 `MovablePartService` 与 `MovablePartRepository`，避免将 CRUD 继续加入 `ModelAssetsController` 或 `ModelAssetRepository`。该边界不包含 Motion Target CRUD，后者保留给 MVP-08。
+
 ## 6. EF Core 配置方式
 
 推荐：

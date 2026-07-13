@@ -227,6 +227,8 @@
 读取接口：model manifest、movable parts、publish guard。  
 写入接口：movable part CRUD。
 
+MVP-07 实现边界：Contracts 的 `MovablePartResponse`、`MovablePartListResponse`、Create/Update Request 由 `Application/MovableParts/MovablePartService` 编排，`Infrastructure/MovableParts/MovablePartRepository` 承担对象 canonical 复检、版本锁、事务和审计，`Api/Controllers/MovablePartsController` 仅绑定四个 CRUD 路由。Create/Update Request 不包含 `BindingStatus`；成功绑定使用既有 `active`，不改变 Entity、DbContext、Fluent API、Migration 或 Snapshot。
+
 ### 3.11 `motion_target`
 
 | 字段 | 类型 | 必填 | 默认值 | 约束 / 索引 / 外键 | 枚举 |

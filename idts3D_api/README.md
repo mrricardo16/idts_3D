@@ -1,6 +1,6 @@
 # idts3D_api
 
-本目录承载 IDTS 3D 数字孪生系统后端工程。当前已建立 .NET 8 六项目 Solution，并完成 MVP-01 至 MVP-06 的后端能力基线。
+本目录承载 IDTS 3D 数字孪生系统后端工程。当前已建立 .NET 8 六项目 Solution，并完成 MVP-01 至 MVP-07 的后端能力基线；MVP-07 提供独立的 movable part CRUD API，写入仅允许 Draft、Ready 版本。
 
 后续 .NET solution 和项目命名应使用：
 

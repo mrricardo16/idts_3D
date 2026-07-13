@@ -76,7 +76,7 @@
 6. 校验 partCode 唯一。
 7. 校验 min/home/max。
 8. 实现 PUT update。
-9. 实现 DELETE disable 或删除策略。
+9. 实现 DELETE 物理删除，并在同一事务清理 motion target。
 10. 实现 Published guard。
 11. 写入审计。
 12. 运行 `dotnet build`。
@@ -127,3 +127,11 @@
 完成后运行 dotnet build，并用 Swagger 验证 200、400、404、409。
 不要 commit，不要 push。
 ```
+
+## 完成记录
+
+- 已实现 GET、POST、PUT、DELETE 四个 movable part 路由及独立 Contracts / Application Service / Infrastructure Repository。
+- GET 默认 `monitor` 且只读取 Published；`edit` 读取 Draft、Ready、Published。写入仅允许 Draft、Ready。
+- canonical object 来自 `model_object_index`；成功创建和全量更新均写入既有 `BindingStatus.active`，`enabled` 为独立开关。
+- 未实现 Motion Target CRUD；MVP-06 发布门禁未放宽，enabled movable part 仍需 enabled motion target 才可发布。
+- 未修改 Domain、EF Configuration、Schema、Migration 或前端源码。

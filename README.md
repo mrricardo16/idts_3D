@@ -5,7 +5,7 @@
 ## 目录结构
 
 - `idts3D_ui`：Vue3 + TypeScript + Three.js 前端工程，由原 `idts3ddemo` 技术验证 Demo 迁移而来。
-- `idts3D_api`：.NET 8 后端 API、Application、Contracts、Domain、Infrastructure 与 Worker 六项目 Solution；当前已完成 MVP-01 至 MVP-06 的后端基线。
+- `idts3D_api`：.NET 8 后端 API、Application、Contracts、Domain、Infrastructure 与 Worker 六项目 Solution；当前已完成 MVP-01 至 MVP-07 的后端基线。
 - `idts3D_docs`：项目方案、需求补充、MVP 总纲、API 契约、实体 DTO 映射、前后端集成计划、任务卡。
 
 ## 必读文档
@@ -24,7 +24,7 @@
 
 ## 当前进度
 
-- 已实现：后端 MVP-01 至 MVP-06，包括 PostgreSQL EF Core、初始 Migration、GLB 上传、本地文件存储、manifest、object-tree、model-stats 和资产版本生命周期。
+- 已实现：后端 MVP-01 至 MVP-07，包括 PostgreSQL EF Core、初始 Migration、GLB 上传、本地文件存储、manifest、object-tree、model-stats、资产版本生命周期和可动部件配置 API。
 - 部分实现：Worker 仅为空骨架；前端仍是静态数字孪生 Demo，使用静态 manifest、mock 和 localStorage。
 - 尚未实现：正式前端 API Client、前后端业务联调、Scene/Movable Part/Motion Target API、Worker 转换流水线、自动化测试和 CI。
 

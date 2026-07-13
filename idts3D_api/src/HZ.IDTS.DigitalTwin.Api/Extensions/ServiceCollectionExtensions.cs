@@ -1,4 +1,5 @@
 using HZ.IDTS.DigitalTwin.Application.ModelAssets;
+using HZ.IDTS.DigitalTwin.Application.MovableParts;
 
 namespace HZ.IDTS.DigitalTwin.Api.Extensions;
 
@@ -12,6 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IModelManifestService, ModelManifestService>();
         services.AddScoped<IObjectTreeModelStatsService, ObjectTreeModelStatsService>();
         services.AddScoped<IAssetVersionLifecycleService, AssetVersionLifecycleService>();
+        services.AddScoped<IMovablePartService, MovablePartService>();
 
         return services;
     }

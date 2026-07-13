@@ -6,7 +6,7 @@
 |---|---|
 | Method | `GET` |
 | Route | `/api/model-assets/{assetId}/versions/{versionId}/movable-parts` |
-| Query 参数 | `enabled?: boolean` |
+| Query 参数 | `enabled?: boolean`, `mode?: string` |
 | Path 参数 | `assetId: long`, `versionId: long` |
 | Request Body | 无 |
 | monitor 模式 | 允许读取 Published |
@@ -16,6 +16,8 @@
 | 后端实体 | `MovablePartBinding`, `AssetVersion` |
 | 读取表 | `movable_part_binding`, `asset_version`, `model_object_index` |
 | 写入表 | 无 |
+
+读取规则：`mode` 缺失或空值时为 `monitor`，只允许读取 Published 版本；`mode=edit` 可读取 Draft、Ready、Published；其他值返回 `400 VALIDATION_FAILED`。列表按 `partCode`、`partId` 稳定排序。
 
 Response Body：
 
@@ -112,6 +114,10 @@ Request Body：
 | `defaultSpeed` | number | 是 | 大于 0 |
 | `enabled` | boolean | 是 | 是否启用 |
 
+服务端会 Trim `objectUuid`、`objectPath`、`businessName` 和 `partCode`，并将 `partCode` 转为大写；UUID 与 Path 同时提供时必须命中同一 `model_object_index` 节点。响应中的 Object 字段均来自该 canonical 节点，客户端不能提交 `bindingStatus`。
+
+`bindingStatus` 沿用当前 Domain Enum：成功创建或成功全量更新后均为 `active`。它表示绑定能解析到当前版本 object tree，和 `enabled` 独立：`enabled=false` 仍可保持 `active`；canonical 校验失败直接返回错误，不保存 `invalid` 记录。
+
 成功响应返回完整 `MovablePartResponse`。
 
 400 示例：
@@ -200,3 +206,5 @@ Request Body：
 400 示例：partId 无效。  
 404 示例：part 不存在。  
 409 示例：Published 版本不能物理删除，只允许新草稿版本禁用。
+
+DELETE 物理删除 `movable_part_binding`，并在同一事务中清理其 `motion_target`；仅 Draft、Ready 版本允许写入，Published、Archived、Failed、Invalid 返回 `409 VERSION_STATUS_INVALID`。

@@ -1,4 +1,5 @@
 using HZ.IDTS.DigitalTwin.Application.ModelAssets;
+using HZ.IDTS.DigitalTwin.Application.MovableParts;
 using HZ.IDTS.DigitalTwin.Application.Storage;
 using HZ.IDTS.DigitalTwin.Infrastructure.ModelAssets;
 using HZ.IDTS.DigitalTwin.Infrastructure.Persistence;
@@ -22,6 +23,7 @@ public sealed class DigitalTwinApiFactory : WebApplicationFactory<Program>
     public FakeObjectTreeModelStatsService ObjectTreeModelStatsService { get; } = new();
 
     public FakeAssetVersionLifecycleService AssetVersionLifecycleService { get; } = new();
+    public FakeMovablePartService MovablePartService { get; } = new();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -48,11 +50,13 @@ public sealed class DigitalTwinApiFactory : WebApplicationFactory<Program>
             services.RemoveAll<IModelManifestService>();
             services.RemoveAll<IObjectTreeModelStatsService>();
             services.RemoveAll<IAssetVersionLifecycleService>();
+            services.RemoveAll<IMovablePartService>();
 
             services.AddSingleton<IModelAssetUploadService>(UploadService);
             services.AddSingleton<IModelManifestService>(ManifestService);
             services.AddSingleton<IObjectTreeModelStatsService>(ObjectTreeModelStatsService);
             services.AddSingleton<IAssetVersionLifecycleService>(AssetVersionLifecycleService);
+            services.AddSingleton<IMovablePartService>(MovablePartService);
         });
     }
 }

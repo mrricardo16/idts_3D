@@ -15,5 +15,6 @@ public static class ErrorCode
     public const string ObjectTreeRequired = "OBJECT_TREE_REQUIRED";
     public const string ModelStatsRequired = "MODEL_STATS_REQUIRED";
     public const string Conflict = "CONFLICT";
+    public const string DuplicatePartCode = "DUPLICATE_PART_CODE";
     public const string InternalError = "INTERNAL_ERROR";
 }
