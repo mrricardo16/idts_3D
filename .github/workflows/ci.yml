@@ -86,6 +86,8 @@ jobs:
         run: dotnet test idts3D_api/tests/HZ.IDTS.DigitalTwin.Application.Tests/HZ.IDTS.DigitalTwin.Application.Tests.csproj --configuration Release --no-build
       - name: Run Architecture Tests
         run: dotnet test idts3D_api/tests/HZ.IDTS.DigitalTwin.Architecture.Tests/HZ.IDTS.DigitalTwin.Architecture.Tests.csproj --configuration Release --no-build
+      - name: Run API Integration Tests
+        run: dotnet test idts3D_api/tests/HZ.IDTS.DigitalTwin.Api.IntegrationTests/HZ.IDTS.DigitalTwin.Api.IntegrationTests.csproj --configuration Release --no-build
 
   frontend-quality:
     name: frontend-quality

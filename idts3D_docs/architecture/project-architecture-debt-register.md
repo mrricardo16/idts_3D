@@ -17,7 +17,7 @@
 | BE-DEBT-005 | Open / P3；`Api/Extensions/ServiceCollectionExtensions.cs`；Application DI 位于 Api，组合根职责边界需明确；新增模块注册时触发；ARCH-08；否/否/否/否；启动与 DI 验证；还原注册迁移。 |
 | BE-DEBT-006A | Closed / P1；ARCH-03A 已建立 Application Tests，覆盖 `ModelAssetUploadService`、`ModelManifestService`、`ObjectTreeModelStatsService`、`AssetVersionLifecycleService` 的业务结果、ErrorCode、Repository/FileStorage 协作与临时文件清理；不包含数据库 Provider、事务或 Migration 验证；后续新增 Application 业务规则时触发；ARCH-03A；否/否/否/否；完整 Application Tests；删除测试基础设施可回退。 |
 | BE-DEBT-006B | Open / P1 / Environment Blocked；缺少 PostgreSQL Infrastructure Integration Tests，本机未提供 Docker 环境；Migration、事务、`FOR UPDATE`、并发发布和回滚仍未验证，手写 Fake 不能替代；具备真实 PostgreSQL 测试环境时触发；ARCH-03F；否/否/否/否；真实 PostgreSQL 集成测试；移除独立测试基础设施。 |
-| BE-DEBT-006C | Open / P1；缺少 API Integration Tests，HTTP 路由、最终响应映射及 WebApplicationFactory 未验证；API 端点或中间件变更前触发；ARCH-03D；否/否/否/否；API Integration Tests；移除独立测试基础设施。 |
+| BE-DEBT-006C | Closed / P1；ARCH-03D 已建立基于 `WebApplicationFactory` 和 TestServer 的 API Integration Tests，使用手写 Fake Application Service 验证 HTTP 路由、绑定、200/400/404/409/500 响应映射、`ApiResponse`、multipart 与全局异常，且已接入 CI；不覆盖数据库、Repository SQL、Migration 或事务；后续 Controller、路由或中间件变更时触发扩展；ARCH-03D；否/否/否/否；完整 API Integration Tests；移除独立测试基础设施可回退。 |
 | BE-DEBT-007 | Closed / P1；`idts3D_api/README.md` 曾停留 MVP-01；进度误导；ARCH-01 已同步；ARCH-13 持续防漂移；否/否/否/否；README 与代码/任务卡核对；还原文档提交。 |
 | BE-DEBT-008 | Open / P2；`Api/Controllers/ModelAssetsController.cs`；端点继续堆积会使 Controller 失焦；新增独立领域端点时触发；ARCH-07；否/否/否/否；路由/响应回归；还原控制器拆分。 |
 | BE-DEBT-009 | Open / P1；跟踪的 Development appsettings；连接串与路径策略未定；进入多人/部署环境前触发；ARCH-04；否/否/否/否；secret scan 与启动配置验证；还原配置治理变更。 |
@@ -55,7 +55,7 @@
 |---|---|
 | REPO-DEBT-001 | Closed / P1；ARCH-02 已创建根级 `.editorconfig`；新文本具备 UTF-8、换行、缩进和基础空白规则；ARCH-02；否/否/否/否；配置 UTF-8 检查与 `git diff --check`；删除配置可回退。 |
 | REPO-DEBT-002 | Closed / P1；ARCH-02 已创建根级 `.gitattributes`；文本换行与二进制边界已机械化；ARCH-02；否/否/否/否；`git check-attr` 验证代表性文本和二进制文件；删除配置可回退。 |
-| REPO-DEBT-003 | Partially Resolved / P1；ARCH-03C 已建立 `.github/workflows/ci.yml`，包含 repository-policy、backend-quality 与 frontend-quality；仅当 workflow 已进入 main、GitHub Actions 自动触发且三个 Job 均成功、后端和前端质量命令真实执行后才可 Closed；ARCH-03C；否/否/否/否；检查本次 GitHub Actions run；删除 workflow。 |
+| REPO-DEBT-003 | Closed / P1；ARCH-03C 已建立 `.github/workflows/ci.yml`，并已在 main 自动触发成功运行 repository-policy、backend-quality 与 frontend-quality；ARCH-03D 将 API Integration Tests 纳入 backend-quality。该关闭仅表示 CI 已建立并成功运行，不表示 required checks 已启用；ARCH-03C/ARCH-03D；否/否/否/否；检查 GitHub Actions run；删除 workflow。 |
 | REPO-DEBT-008 | Open / P1；main 仍采用直接 push，CI 只能在提交进入 main 后验证，branch protection 与 PR required checks 尚未建立；切换 PR 交付流程时触发；独立治理任务；否/否/否/否；配置 PR branch protection 与 required checks；还原交付流程配置。 |
 | REPO-DEBT-004 | Planned / P1；ARCH-02 已声明 debug/reports 与产物边界，但 `idts3D_ui/public/models/**/*.glb` 同时命中 `public/models/lifter.glb` 和 `public/models/lifter/lifter.high.glb`；正式 GLB 与临时/转换 GLB 不能仅靠现有目录规则区分，忽略规则可能误伤正式资产。本次禁止提交或取消忽略二进制模型，故未修复；ARCH-02A；否/否/否/否；核验来源、授权、大小、部署依赖、LFS/外部制品与精确忽略例外；仅回退 ARCH-02A 的资产治理决定。 |
 | REPO-DEBT-005 | Closed / P1；根级项目 Skill 缺失；ARCH-01 创建 `.agents/skills/idts3d-architecture-governance`；无影响；Skill 发现与路径检查；还原 ARCH-01 提交。 |

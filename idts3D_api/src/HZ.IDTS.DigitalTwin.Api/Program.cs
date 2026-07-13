@@ -7,14 +7,29 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+    {
+        ["Database:Provider"] = "PostgreSql",
+        ["Database:ConnectionString"] = "Host=127.0.0.1;Port=1;Database=arch03d_forbidden;Username=arch03d;Password=arch03d;Timeout=1;Command Timeout=1",
+        ["FileStorage:RootPath"] = string.Empty,
+        ["FileStorage:PublicBaseUrl"] = "/assets"
+    });
+}
+
 builder.Host.UseSerilog((context, services, configuration) =>
 {
-    configuration
+    var loggerConfiguration = configuration
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
-        .WriteTo.Console()
-        .WriteTo.File("logs/idts3d-api-.log", rollingInterval: RollingInterval.Day);
+        .WriteTo.Console();
+
+    if (!context.HostingEnvironment.IsEnvironment("Testing"))
+    {
+        loggerConfiguration.WriteTo.File("logs/idts3d-api-.log", rollingInterval: RollingInterval.Day);
+    }
 });
 
 builder.Services.AddApplicationServices();
@@ -58,4 +73,8 @@ try
 finally
 {
     Log.CloseAndFlush();
+}
+
+public partial class Program
+{
 }

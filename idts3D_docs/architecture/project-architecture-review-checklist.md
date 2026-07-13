@@ -23,6 +23,9 @@
 - [ ] 提交前仍已在本地执行适用命令，push 后已检查 GitHub Actions；CI 失败未被忽略。
 - [ ] workflow 仅申请必要权限；新增 CI Job 不依赖开发数据库、本机路径、正式 GLB、Secrets 或部署。
 - [ ] 已明确当前 CI 不替代 PostgreSQL/API Integration/浏览器 E2E/真实 WebGL 测试；required checks 未启用时未描述为 pre-merge gate。
+- [ ] 新增或修改 Controller、路由或 HTTP 状态映射时已补充 API Integration Test；Application Test 不能替代 HTTP 管道测试。
+- [ ] API Fake 测试未被描述为 PostgreSQL 集成测试；WebApplicationFactory 使用隔离配置，未读取开发连接串或写入正式 FileStorage。
+- [ ] 500 响应未泄露内部异常；新增 API Integration Tests 已接入 CI。
 - [ ] 本次治理任务保持一个提交。
 - [ ] 新增前端纯逻辑已增加有效单元测试；新增 Vue 组件行为已判断组件测试或浏览器测试。
 - [ ] Three.js 纯逻辑测试未冒充真实 WebGL 渲染测试；测试不依赖未提交的正式 GLB。

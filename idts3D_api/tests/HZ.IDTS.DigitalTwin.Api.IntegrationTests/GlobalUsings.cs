@@ -1,0 +1,11 @@
+global using System.Net;
+global using System.Net.Http.Json;
+global using System.Text.Json;
+global using HZ.IDTS.DigitalTwin.Api;
+global using HZ.IDTS.DigitalTwin.Api.IntegrationTests.Fakes;
+global using HZ.IDTS.DigitalTwin.Api.IntegrationTests.Infrastructure;
+global using HZ.IDTS.DigitalTwin.Application.ModelAssets;
+global using HZ.IDTS.DigitalTwin.Contracts.Common;
+global using HZ.IDTS.DigitalTwin.Contracts.ModelAssets;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Xunit;
