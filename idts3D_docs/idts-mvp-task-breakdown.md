@@ -1,316 +1,73 @@
 # IDTS 数字孪生 MVP 开发总纲
 
-## DOC-3DT-02 混合场景基线
+> 本总纲是当前唯一执行基线。它只定义任务边界和依赖，不授权业务代码、数据库、依赖安装、POC、构建、测试或 Git 写操作。
 
-MVP 一期继续以 GLB 动态设备闭环为基础，同时把 3D Tiles 调整为正式混合场景接入前必须完成的技术验证：3D Tiles 只承担大型静态厂区底座，GLB 继续承担动态设备、Object Tree、Movable Part、Motion Target、Edit / Monitor、worldZ、状态和告警。
+## 1. MVP 目标与范围
 
-本轮文档审核后，建议顺序为 MVP-08 → 文档审核 → POC-3DT-01 文档准备 → MVP-09 → MVP-10 → POC-3DT-01 → POC 结果审核 → MVP-10A → MVP-11～MVP-16。POC 不阻塞 MVP-09、MVP-10 或无关纯后端任务，但直接阻塞 MVP-10A；MVP-10A 完成前，正式混合场景前端任务不得按纯 GLB 最终架构验收。
+MVP 继续完成 GLB 动态设备的资产、Manifest、Object Tree、Movable Part、Motion Target、Edit / Monitor 与 worldZ 闭环。3D Tiles 负责大型静态厂区底座，GLB 负责动态设备和业务交互。
 
-当前 MVP 不做完整 CAD/IFC 自动转换、生产切片平台或完整 3D Tiles 资产管理。POC 不落库；正式资源身份与版本优先研究 model_asset / asset_version，静态底座放置关系优先研究 scene_resource 或 scene_layer，最终结构仍需审核。当前 tilesets 占位不是正式完成；目标 Scene Manifest 为 baseLayers + devices。
+当前 MVP 不包含完整 CAD/IFC 自动转换、生产切片平台、完整 3D Tiles 资产管理、未授权真实数据或最终现场性能承诺。POC 不落库；正式数据库结构、Scene Resource 字段、DTO、TypeScript 与 API 仍需在 MVP-10A-01 审核冻结。
 
-MVP-16 的混合闭环为：静态底座加载 → GLB 设备加载 → 坐标/方向/比例校验 → GLB Object Tree → Edit 保存 Movable Part / Motion Target → 发布 → Monitor worldZ → 告警和高亮 → 持续共存 → Tiles 失败时 GLB 回退 → 页面退出资源释放。
+## 2. 唯一执行顺序
 
+~~~text
+文档审核
+→ POC-3DT-01
+→ POC 结果审核
+→ 用户批准 Go 或获批 Conditional Go
+→ MVP-09 / MVP-10
+→ MVP-10A-01
+→ MVP-10A-02
+→ MVP-10A-03
+→ MVP-10A-04
+→ MVP-10A-05
+→ MVP-11～MVP-16
+~~~
 
-> 文档版本：v1.0  
-> 文档性质：前后端一体化 MVP 开发总纲  
-> 适用范围：`idts3D_api` 后端、`idts3D_ui` 前端、`idts3D_docs` 契约与任务卡  
-> 固定技术约束：后端采用 ASP.NET Core Web API / .NET 8 / EF Core 8；前端采用 Vue 3 + Vite + TypeScript + Three.js；数据库 PostgreSQL 优先，SQL Server 备选。
+MVP-09、MVP-10 可以与 POC 并行；单人默认优先执行 POC。POC 不阻塞这两个任务或无关纯后端工作，但直接阻塞全部 MVP-10A 子任务。MVP-11～MVP-16 的正式混合场景完成依赖其所需的 MVP-10A 子任务。
 
-## 1. 项目目标
+## 3. 阶段门禁
 
-MVP 一期目标是形成一个可串行开发、可验收、可回滚的数字孪生最小闭环：
-
-```text
-上传一个 GLB
--> 后端保存 model asset / asset version / source variant / conversion job
--> 保存或查询 model manifest / object tree / model stats
--> 发布 Published asset version
--> seed scene / device instance / device model binding
--> 前端从后端加载 scene manifest 和 model manifest
--> 前端加载 GLB 并显示 object tree
--> edit 模式保存 movable part 和 motion target
--> monitor 模式只读 Published 配置并驱动 worldZ 动画
--> 后端不可用时 fallback 到当前本地模型能力
-```
-
-MVP 一期不做完整 CAD 自动转换、完整 3D Tiles 生产化、权限审批、真实 WCS 调度、SignalR 实时推送、多租户、GPU Picking、复杂路径规划。
-
-## 2. 技术栈
-
-| 层 | 技术 | 说明 |
+| 阶段 | 进入条件 | 退出/验收条件 |
 |---|---|---|
-| 前端 | Vue 3 + Vite + TypeScript + Three.js | 保留当前 `TwinDemo.vue`、`TwinScene.ts`、`LODModelLoader.ts` 能力 |
-| 后端 API | ASP.NET Core Web API / .NET 8 | 统一响应、Swagger、异常处理中间件 |
-| 后端数据 | EF Core 8 | PostgreSQL 优先，SQL Server 备选 |
-| Worker | .NET Worker Service | MVP 只记录基础任务日志，不做完整 CAD 转换 |
-| 数据库 | PostgreSQL / SQL Server | Provider 边界由 Infrastructure 控制 |
-| 日志 | Serilog | API 与 Worker 共用基础日志规范 |
+| 文档审核 | 本总纲、ADR、坐标、架构、生命周期、Manifest、性能、回退与任务卡可审查 | 用户确认可进行 POC 准备 |
+| POC-3DT-01 | 单独执行授权、许可明确的阶段 A 数据 | 测试计划和结果模板有可复现证据 |
+| POC 结果审核 | Go / Conditional Go / No-Go 建议已记录 | 用户或项目负责人批准结论 |
+| MVP-09/10 | 既有后端前置完成 | GLB 设备绑定和当前 devices Manifest 基线可验收 |
+| MVP-10A-01～05 | POC 门禁全部解除 | 每张子卡独立验收、回归、回滚材料完备 |
+| MVP-11～16 | 所需 10A 子任务完成 | 混合场景、后端配置、失败回退与资源释放闭环验收 |
 
-## 3. 目录结构
+## 4. 禁止跨阶段事项
 
-```text
-07_src_3DModesys/
-  AGENTS.md
-  README.md
-  idts3D_ui/
-    AGENTS.md
-    package.json
-    src/
-      api/                  # MVP-11 新增，统一 API Client
-      types/                # 前端契约类型
-      views/TwinDemo.vue
-      engine/
-  idts3D_api/
-    README.md
-    global.json             # MVP-01 创建
-    HZ.IDTS.DigitalTwin.sln # MVP-01 创建
-    src/
-      HZ.IDTS.DigitalTwin.Api/
-      HZ.IDTS.DigitalTwin.Application/
-      HZ.IDTS.DigitalTwin.Domain/
-      HZ.IDTS.DigitalTwin.Infrastructure/
-      HZ.IDTS.DigitalTwin.Contracts/
-      HZ.IDTS.DigitalTwin.Worker/
-  idts3D_docs/
-    development-rules.md
-    idts-digital-twin-project-technical-plan.md
-    idts-mvp-task-breakdown.md
-    domain-entity-dto-map.md
-    frontend-integration-plan.md
-    backend-implementation-plan.md
-    e2e-acceptance-plan.md
-    api-contracts/
-    mvp-tasks/
-```
+- POC 不修改 TwinDemo 主流程、正式 TwinScene、API、DTO、TypeScript 正式类型、数据库或 Migration。
+- MVP-09 不使用设备实例或设备模型绑定表达静态厂区底座。
+- MVP-10 只维持当前 devices 基线；tilesets 空占位不是正式静态底座契约。
+- MVP-11 只建立当前 GLB/API Client 基线，不提前定义 baseLayers、Tiles 或 Scene Resource 类型。
+- MVP-12 不在 MVP-10A-04 前实现正式混合 Manifest 加载，不把 Tiles 内部节点加入设备 Object Tree。
+- MVP-13 只编辑 GLB 动态设备；TilesLayer 只读。
+- MVP-14 只驱动 GLB；Tiles 存在或失败都不得破坏 GLB Monitor。
+- MVP-15 不承担 CAD/IFC 到 3D Tiles 的生产切片。
+- MVP-16 不把 POC 证据、tilesets 空占位或单纯构建成功作为正式混合场景验收。
 
-## 4. 前后端分层
+## 5. 端到端联调路径
 
-后端分层：
+~~~text
+审核后的 baseLayers + devices 契约
+→ 加载静态 3D Tiles 底座
+→ 加载 GLB 动态设备
+→ 校验三个标定点、位置、方向、比例
+→ GLB Object Tree、拾取、高亮仍可用
+→ Edit 保存 GLB Movable Part / Motion Target
+→ 发布并在 Monitor 只读加载
+→ Tiles 存在时 worldZ、告警、高亮正常
+→ Tiles 失败时 GLB-only fallback
+→ 场景切换、请求取消、页面退出后资源释放
+~~~
 
-```text
-Api -> Application -> Domain
-Api -> Contracts
-Application -> Contracts
-Application -> Domain
-Infrastructure -> Domain
-Infrastructure -> Application
-Worker -> Application
-```
+## 6. 契约与数据规则
 
-禁止循环引用。`Contracts` 放 DTO、统一响应、错误码和枚举契约；`Domain` 放 Entity 和领域枚举；`Infrastructure` 放 EF Core、文件存储、Provider 切换、Repository 或 EF 查询；`Api` 放 Controller、中间件和 Swagger；`Worker` 在 MVP 只做 conversion job 基础日志。
+正式方向为 baseLayers + devices。baseLayers 表达场景级静态底座，devices 表达 GLB 动态设备。model_asset / asset_version 是资源身份与版本候选；scene_resource 或 scene_layer 是静态底座放置关系候选。最终表名、字段、兼容策略和 API 版本必须由 MVP-10A-01 冻结，不得猜测实施。
 
-前端分层：
+## 7. Codex 执行规则
 
-```text
-TwinDemo.vue -> src/api -> 后端 API
-TwinDemo.vue -> TwinScene.ts -> LODModelLoader.ts / engine modules
-src/types -> 页面、engine、api client 共用契约类型
-```
-
-页面不得直接散落 `fetch`。后端不可用时由 API Client 返回可识别错误，页面和 engine 决定 fallback。
-
-## 5. 数据库核心实体
-
-MVP 核心表固定为：
-
-- `model_asset`
-- `asset_version`
-- `model_asset_variant`
-- `model_conversion_job`
-- `model_object_index`
-- `asset_manifest`
-- `scene_node`
-- `device_instance`
-- `device_model_binding`
-- `movable_part_binding`
-- `motion_target`
-- `operation_audit`
-- `tool_package`
-- `tool_health_check`
-
-详细字段、Entity、DTO、TypeScript interface、读写接口和前端消费位置见 `domain-entity-dto-map.md`。
-
-## 6. API 契约规则
-
-所有接口必须使用统一响应：
-
-```json
-{
-  "success": true,
-  "code": "OK",
-  "message": "",
-  "data": {}
-}
-```
-
-错误响应：
-
-```json
-{
-  "success": false,
-  "code": "VERSION_STATUS_INVALID",
-  "message": "monitor 模式只能读取 Published 版本。",
-  "errors": []
-}
-```
-
-统一路由：
-
-- `POST /api/model-assets/upload`
-- `GET /api/model-assets/{assetId}/manifest`
-- `GET /api/model-assets/{assetId}/object-tree`
-- `PUT /api/model-assets/{assetId}/versions/{versionId}/object-tree`
-- `PUT /api/model-assets/{assetId}/versions/{versionId}/model-stats`
-- `GET /api/model-assets/{assetId}/versions/{versionId}/model-stats`
-- `POST /api/model-assets/{assetId}/versions/{versionId}/mark-ready`
-- `POST /api/model-assets/{assetId}/versions/{versionId}/publish`
-- `POST /api/model-assets/{assetId}/versions/{versionId}/archive`
-- `POST /api/model-assets/{assetId}/versions/{versionId}/rollback`
-- `GET /api/model-assets/{assetId}/versions/{versionId}/movable-parts`
-- `POST /api/model-assets/{assetId}/versions/{versionId}/movable-parts`
-- `PUT /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}`
-- `DELETE /api/model-assets/{assetId}/versions/{versionId}/movable-parts/{partId}`
-- `GET /api/movable-parts/{partId}/motion-targets`
-- `POST /api/movable-parts/{partId}/motion-targets`
-- `PUT /api/movable-parts/{partId}/motion-targets/{targetId}`
-- `DELETE /api/movable-parts/{partId}/motion-targets/{targetId}`
-- `GET /api/scenes/{sceneId}/manifest`
-- `GET /api/model-conversion-jobs/{jobId}`
-
-完整契约见 `api-contracts/README.md` 和各专题文档。
-
-## 7. DTO 命名规则
-
-| 类型 | 命名规则 | 示例 |
-|---|---|---|
-| 创建请求 | `Create{Name}Request` | `CreateMovablePartRequest` |
-| 更新请求 | `Update{Name}Request` | `UpdateMotionTargetRequest` |
-| 查询请求 | `{Name}QueryRequest` | `ModelStatsQueryRequest` |
-| 响应 DTO | `{Name}Response` | `ModelManifestResponse` |
-| 列表项 | `{Name}ListItemResponse` | `MovablePartListItemResponse` |
-| 统一响应 | `ApiResponse<T>` | `ApiResponse<ModelManifestResponse>` |
-| 错误项 | `ApiErrorItem` | `ApiErrorItem` |
-
-DTO 放在 `HZ.IDTS.DigitalTwin.Contracts`。Controller 不直接返回 Entity。
-
-## 8. TypeScript 类型同步规则
-
-MVP 阶段可先手写 TypeScript interface，但必须遵守：
-
-1. `idts3D_ui/src/types/api.ts` 放统一响应、错误、基础枚举。
-2. `idts3D_ui/src/types/modelAsset.ts` 放 model asset、asset version、model manifest。
-3. `idts3D_ui/src/types/modelObject.ts` 放 object tree、model stats。
-4. `idts3D_ui/src/types/motion.ts` 放 movable part、motion target。
-5. `idts3D_ui/src/types/sceneManifest.ts` 放 scene manifest。
-6. 后端 DTO 字段变更时，同任务必须同步 TS interface 和 API Client。
-7. 不允许页面临时定义与后端 DTO 重名但字段不同的类型。
-
-后续如引入 OpenAPI 生成类型，必须由独立任务执行，不得混入 MVP-11。
-
-## 9. MVP 执行顺序
-
-1. MVP-00：开发规则切换与文档基线
-2. MVP-01：后端解决方案骨架
-3. MVP-02：数据库核心实体与 Migration
-4. MVP-03：文件存储与 GLB 上传
-5. MVP-04：Model Manifest 查询接口
-6. MVP-05：Object-tree / Model-stats
-7. MVP-06：资产版本状态与发布基线
-8. MVP-07：可动部件配置 API
-9. MVP-08：Motion Target API
-10. MVP-09：场景 / 设备实例 / 设备模型绑定
-11. MVP-10：Scene Manifest
-12. MVP-11：前端 API Client 与契约类型
-13. MVP-12：前端接后端 Manifest / Object-tree
-14. MVP-13：前端 Edit 模式保存可动部件与目标点位
-15. MVP-14：Monitor 模式只读配置并驱动 worldZ 动画
-16. MVP-15：转换任务状态与基础日志
-17. MVP-16：端到端联调与验收
-
-`POC-3DT-01` 是 3D Tiles 技术验证支线，不进入 MVP 主链。
-
-## 10. 每阶段验收门禁
-
-| 阶段 | 必须通过的门禁 |
-|---|---|
-| MVP-00 | 文档链接无缺失、规则无冲突、未改业务代码 |
-| MVP-01 | `dotnet build`，Swagger 可打开，Worker 可启动 |
-| MVP-02 | migration 可生成并更新数据库，核心表和约束存在 |
-| MVP-03 | Swagger 上传 GLB，文件落盘，四类记录入库 |
-| MVP-04 | model manifest 支持 monitor / edit 状态规则 |
-| MVP-05 | object tree / model stats 可保存和查询 |
-| MVP-06 | mark-ready / publish / archive / rollback 状态正确 |
-| MVP-07 | movable part CRUD 和版本状态 guard 正确 |
-| MVP-08 | motion target CRUD、范围校验、重复校验正确 |
-| MVP-09 | scene / device / binding seed 和 active 约束正确 |
-| MVP-10 | scene manifest 只返回 active + Published |
-| MVP-11 | `npm run build`，API Client 和类型集中封装 |
-| MVP-12 | 后端可用优先读 manifest / object tree，后端不可用 fallback |
-| MVP-13 | edit 保存 movable part / motion target，monitor 禁止保存 |
-| MVP-14 | monitor 只读 Published 配置并执行 worldZ 动画 |
-| MVP-15 | conversion job 查询和基础日志可用 |
-| MVP-16 | 完整闭环、`npm run build`、`dotnet build` 全部通过 |
-
-## 11. 禁止跨阶段事项
-
-- MVP-01 不创建 Entity / Migration。
-- MVP-02 不写业务 Controller。
-- MVP-03 不做完整 CAD 转换。
-- MVP-04 不让前端直接拼文件 URL。
-- MVP-05 不要求 Worker 自动解析 GLB。
-- MVP-06 不实现前端发布页面。
-- MVP-07 不实现 motion target。
-- MVP-08 不扩展 local axis / rotate / path / AGV path / joint。
-- MVP-09 不做完整场景管理后台。
-- MVP-10 不做 3D Tiles 生产化。
-- MVP-11 不改 `TwinDemo.vue` 主流程，只建类型和 API Client。
-- MVP-12 不保存 edit 配置。
-- MVP-13 不改 monitor 动画策略。
-- MVP-14 不开放 monitor 编辑能力。
-- MVP-15 不做完整 Worker 队列系统。
-- MVP-16 不新增功能，只联调和验收。
-
-## 12. 端到端联调路径
-
-完整联调顺序固定为：
-
-1. 启动数据库。
-2. 启动后端。
-3. Swagger 上传 GLB。
-4. 生成 asset / version / source variant / job。
-5. 保存 object tree。
-6. 保存 model stats。
-7. mark-ready。
-8. publish。
-9. seed scene / device / binding。
-10. GET scene manifest。
-11. GET model manifest。
-12. GET object tree。
-13. 启动前端。
-14. 前端优先从后端加载 scene manifest。
-15. 前端加载 GLB。
-16. 前端显示 object tree。
-17. edit 模式设置 movable part。
-18. edit 模式保存 motion target。
-19. 刷新页面从后端读取配置。
-20. monitor 模式只读。
-21. monitor 模式点击目标点位后执行 worldZ 动画。
-22. 关闭后端验证 fallback。
-23. `npm run build` 通过。
-24. `dotnet build` 通过。
-
-详细验收脚本见 `e2e-acceptance-plan.md`。
-
-## 13. Codex 执行规则
-
-每次执行具体 MVP 任务时，Codex 必须：
-
-1. 先读 `AGENTS.md`。
-2. 先读 `idts3D_docs/development-rules.md`。
-3. 先读本文档。
-4. 先读当前任务卡。
-5. 先读任务卡引用的 API 契约和实体映射。
-6. 先输出影响范围。
-7. 等待用户确认后再改文件。
-8. 不 commit。
-9. 不 push。
+每次只执行一个明确任务。实施前读取当前任务卡和引用契约，输出影响范围、禁止范围、风险、验证与回滚，再等待用户对该实施任务的授权。任何任务发现跨端契约、数据库或架构债务时，只登记，不在无关任务中顺手修复。

@@ -1,148 +1,32 @@
-# MVP-16：端到端联调与验收
+# MVP-16：混合场景端到端联调与验收
 
-## 1. 任务目标
+> 状态：正式执行依赖 MVP-10A-05；本卡不授权执行。
 
-按 `e2e-acceptance-plan.md` 完成从 GLB 上传到前端 monitor worldZ 动画的完整闭环验收，不新增功能。
+## 1. 目标与前置条件
 
-## 2. 前置条件
+验收 3D Tiles 静态底座、GLB 动态设备、后端配置闭环、失败回退和资源释放。前置为 MVP-01～MVP-15、MVP-10A-01～05、已批准 POC 结论、数据库/后端/前端可启动及获授权测试数据。
 
-- MVP-01 到 MVP-15 已完成。
-- 数据库可启动。
-- 后端可启动。
-- 前端可启动。
-- 有可用 GLB 测试文件。
+## 2. 范围与禁止范围
 
-## 3. 影响范围
+只允许修复经确认的当前闭环问题；禁止新增功能、无关重构、模型修改、跳过失败项或把 POC/空占位当作正式验收。
 
-- `idts3D_api/**` 只允许修复联调中确认的当前任务范围内问题。
-- `idts3D_ui/src/**` 只允许修复联调中确认的当前任务范围内问题。
-- `idts3D_docs/e2e-acceptance-plan.md`
-- 验收记录文档，如 `idts3D_docs/e2e-acceptance-report.md`
+## 3. 验收链路
 
-## 4. 禁止修改范围
+~~~text
+加载 3D Tiles 静态底座
+→ 加载 GLB 动态设备
+→ 校验位置、方向、比例和标定点
+→ GLB Object Tree、拾取、高亮
+→ Edit 保存 Movable Part / Motion Target
+→ 发布并在 Monitor 只读加载
+→ worldZ、告警和高亮
+→ Tiles 与 GLB 持续共存
+→ Tiles 失败时 GLB fallback
+→ 场景切换/退出后请求取消和资源释放
+~~~
 
-- 禁止新增功能。
-- 禁止重构无关代码。
-- 禁止修改模型文件。
-- 禁止跳过失败项。
-- 禁止 commit / push。
+## 4. 回归、风险、回滚与 Codex 提示词
 
-## 5. 后端变更
+回归覆盖 GLB、Object Tree、点击、层级、异常、WASD、Edit/Monitor、worldZ、Tiles 开关、失败注入、重复进入退出和后端 fallback。风险为契约漂移、坐标偏差、资源泄漏或 fallback 混淆；回滚优先关闭 TilesLayer 并恢复 GLB-only 路径。
 
-- Entity：原则上无新增。
-- DbContext：原则上无新增。
-- Migration：原则上无新增。
-- Controller：只修复已实现接口的联调问题。
-- Application Service：只修复已实现业务闭环问题。
-- Infrastructure Repository / EF 查询：只修复当前闭环问题。
-- Request DTO：不得新增字段，除非契约与实现不一致并经确认。
-- Response DTO：不得新增字段，除非契约与实现不一致并经确认。
-- 校验规则：按契约修正。
-- 错误码：按契约修正。
-
-## 6. 前端变更
-
-- TypeScript 类型：只修复契约不一致。
-- API Client：只修复联调错误。
-- Vue 页面：只修复显示、fallback、guard 问题。
-- Engine 层：只修复 manifest / object tree / worldZ 映射问题。
-- fallback：必须验证并保留。
-- 状态字段：不新增非必要状态。
-- UI 提示：只补必要错误提示。
-
-## 7. 数据库变更
-
-- 新增表：无。
-- 修改表：原则上无。
-- 读取表：完整闭环涉及全部核心表。
-- 写入表：上传、object tree、model stats、发布、seed、movable part、motion target、job。
-- 约束：验证唯一、外键、active binding、Published。
-- 索引：不新增，除非性能阻塞并经确认。
-
-## 8. API 契约
-
-引用全部 `api-contracts/*.md` 和 `e2e-acceptance-plan.md`。
-
-## 9. 前后端对应关系
-
-| 后端 Entity | DTO | API | 前端 TypeScript interface | 前端调用文件 | Vue / engine 消费位置 |
-|---|---|---|---|---|---|
-| 全部核心 Entity | 全部 MVP DTO | 全部 MVP API | `src/types/*.ts` | `src/api/*.ts` | `TwinDemo.vue`, `TwinScene.ts`, `LODModelLoader.ts` |
-
-## 10. 执行步骤
-
-1. 输出影响范围并等待确认。
-2. 启动数据库。
-3. 启动后端。
-4. Swagger 上传 GLB。
-5. 验证 asset/version/source variant/job。
-6. 保存 object tree。
-7. 保存 model stats。
-8. mark-ready。
-9. publish。
-10. seed scene/device/binding。
-11. GET scene manifest。
-12. GET model manifest。
-13. GET object tree。
-14. 启动前端。
-15. 验证前端优先从后端加载。
-16. edit 保存 movable part。
-17. edit 保存 motion target。
-18. 刷新验证后端配置持久化。
-19. monitor 验证只读。
-20. monitor 点击目标点执行 worldZ。
-21. 关闭后端验证 fallback。
-22. 运行 `npm run build`。
-23. 运行 `dotnet build`。
-24. 输出验收报告。
-
-## 11. 验收标准
-
-- 24 步端到端链路全部有结果。
-- Swagger 关键接口全部返回预期。
-- 前端后端可用时优先走后端。
-- 后端不可用时 fallback。
-- edit 可保存配置。
-- monitor 只读并可执行 worldZ。
-- `npm run build` 通过。
-- `dotnet build` 通过。
-
-## 12. 回归测试
-
-- GLB 加载：必须通过。
-- 对象树：必须通过。
-- 对象点击：必须通过。
-- 查看子级 / 父级：必须通过。
-- 异常高亮：必须通过。
-- 异常 callout：必须通过。
-- WASD / 鼠标视角：必须通过。
-- monitor / edit guard：必须通过。
-- localStorage fallback：必须通过。
-- worldZ 任务移动：必须通过。
-- 后端不可用时 fallback：必须通过。
-- 后端可用时优先走后端：必须通过。
-
-## 13. 风险点
-
-- 联调发现契约字段不一致。
-- 运行数据污染导致重复 code 冲突。
-- fallback 和后端正式数据来源混淆。
-- build 通过但页面流程失败。
-
-## 14. 回滚策略
-
-本任务不新增功能。若修复代码导致回归，撤回本任务修复，保留 MVP-01 到 MVP-15 已验证部分，并记录失败项。
-
-## 15. Codex 执行提示词
-
-```text
-请执行 MVP-16：端到端联调与验收。
-先读取 AGENTS.md、idts3D_docs/idts-mvp-task-breakdown.md、idts3D_docs/e2e-acceptance-plan.md、全部 api-contracts 文档和本任务卡。
-先输出影响范围，等待我确认后再改。
-本任务不新增功能，只做联调验证和必要修复；禁止跨任务重构，禁止修改 lifter.glb。
-按 24 步闭环执行，完成后运行 npm run build 和 dotnet build，并输出验收报告、git status、git diff --stat。
-不要 commit，不要 push。
-```
-# DOC-3DT-02 对齐说明
-
-MVP-16 的正式混合场景验收依赖 MVP-10A。闭环必须覆盖：加载静态 3D Tiles 底座；加载 GLB 动态设备；校验位置、方向、比例；Object Tree 正常；Edit 保存 Movable Part / Motion Target；发布配置；Monitor 只读加载；worldZ 动画、告警和高亮正常；Tiles 与 GLB 持续共存；Tiles 失败时 GLB 可回退；页面退出后资源正确释放。
+请确认 MVP-10A-05、POC 批准和验收计划均已满足。按完整链路记录证据，不新增功能，先输出影响范围并等待授权。
