@@ -1,5 +1,12 @@
 # 领域实体、DTO 与前端类型映射
 
+## DOC-3DT-02 静态资源候选边界
+
+本文件记录的 device_instance、device_model_binding、MovablePartBinding 和 MotionTarget 仍只服务 GLB 动态设备，不能用来伪装厂区静态底座。POC 阶段不落库。
+
+正式混合场景只提出候选方向：model_asset / asset_version 管理资源身份和版本，scene_resource 或 scene_layer 管理静态底座资源及场景放置关系。表名、字段、关系、DTO 和 TypeScript 类型均为待审核设计，详见 scene-resource-manifest-design.md；本轮未新增任何实体、DbSet、Migration 或正式契约。
+
+
 本文档是数据库表、C# Entity、DbSet、DTO、API、TypeScript interface、前端消费位置的唯一映射基线。
 
 ## 1. 通用约定

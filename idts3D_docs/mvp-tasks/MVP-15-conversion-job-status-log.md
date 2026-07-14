@@ -124,3 +124,6 @@
 完成后运行 dotnet build，并用 Swagger 验证。
 不要 commit，不要 push。
 ```
+# DOC-3DT-02 对齐说明
+
+本任务的 conversion job 和日志仅覆盖当前 GLB 资产链路。未来 Tileset 生产工具链、CAD/IFC 到 3D Tiles 转换、生产级切片及其队列不得混入 MVP-15；它们属于 POC 后另行审核的生产化能力，不是当前 MVP 承诺。

@@ -1,5 +1,16 @@
 # IDTS 数字孪生 MVP 开发总纲
 
+## DOC-3DT-02 混合场景基线
+
+MVP 一期继续以 GLB 动态设备闭环为基础，同时把 3D Tiles 调整为正式混合场景接入前必须完成的技术验证：3D Tiles 只承担大型静态厂区底座，GLB 继续承担动态设备、Object Tree、Movable Part、Motion Target、Edit / Monitor、worldZ、状态和告警。
+
+本轮文档审核后，建议顺序为 MVP-08 → 文档审核 → POC-3DT-01 文档准备 → MVP-09 → MVP-10 → POC-3DT-01 → POC 结果审核 → MVP-10A → MVP-11～MVP-16。POC 不阻塞 MVP-09、MVP-10 或无关纯后端任务，但直接阻塞 MVP-10A；MVP-10A 完成前，正式混合场景前端任务不得按纯 GLB 最终架构验收。
+
+当前 MVP 不做完整 CAD/IFC 自动转换、生产切片平台或完整 3D Tiles 资产管理。POC 不落库；正式资源身份与版本优先研究 model_asset / asset_version，静态底座放置关系优先研究 scene_resource 或 scene_layer，最终结构仍需审核。当前 tilesets 占位不是正式完成；目标 Scene Manifest 为 baseLayers + devices。
+
+MVP-16 的混合闭环为：静态底座加载 → GLB 设备加载 → 坐标/方向/比例校验 → GLB Object Tree → Edit 保存 Movable Part / Motion Target → 发布 → Monitor worldZ → 告警和高亮 → 持续共存 → Tiles 失败时 GLB 回退 → 页面退出资源释放。
+
+
 > 文档版本：v1.0  
 > 文档性质：前后端一体化 MVP 开发总纲  
 > 适用范围：`idts3D_api` 后端、`idts3D_ui` 前端、`idts3D_docs` 契约与任务卡  

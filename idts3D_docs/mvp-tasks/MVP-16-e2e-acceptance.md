@@ -143,3 +143,6 @@
 按 24 步闭环执行，完成后运行 npm run build 和 dotnet build，并输出验收报告、git status、git diff --stat。
 不要 commit，不要 push。
 ```
+# DOC-3DT-02 对齐说明
+
+MVP-16 的正式混合场景验收依赖 MVP-10A。闭环必须覆盖：加载静态 3D Tiles 底座；加载 GLB 动态设备；校验位置、方向、比例；Object Tree 正常；Edit 保存 Movable Part / Motion Target；发布配置；Monitor 只读加载；worldZ 动画、告警和高亮正常；Tiles 与 GLB 持续共存；Tiles 失败时 GLB 可回退；页面退出后资源正确释放。

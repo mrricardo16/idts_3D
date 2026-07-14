@@ -127,3 +127,6 @@ MVP 只支持 linear + world + z，禁止实现 local axis、rotate、path、AGV
 完成后运行 npm run build，并回归后端目标点动画、fallback、monitor 禁止编辑。
 不要 commit，不要 push。
 ```
+# DOC-3DT-02 对齐说明
+
+在正式混合场景验收中，本任务依赖 MVP-10A。Monitor 仍只驱动 GLB 的 worldZ 动画；验收环境须包含已启用或明确可选的 TilesLayer。TilesLayer 存在时 GLB 动画、告警和高亮必须正常；Tiles 加载失败不能使 GLB Monitor 必然失效，必须保留受控回退。

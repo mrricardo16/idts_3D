@@ -125,3 +125,6 @@
 完成后运行 dotnet build，并用 Swagger 验证 200、404、409。
 不要 commit，不要 push。
 ```
+# DOC-3DT-02 对齐说明
+
+MVP-10 保留当前 Scene Manifest 基础交付和 devices 语义。当前 tilesets: [] 仅是兼容占位，既不是正式静态底座契约，也不代表 3D Tiles 已接入。正式方向为 baseLayers + devices，由 POC 通过、用户批准和 MVP-10A 在独立任务中扩展；本任务不得直接实现正式 3D Tiles 接入。

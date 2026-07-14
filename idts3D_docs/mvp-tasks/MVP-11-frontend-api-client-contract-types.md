@@ -126,3 +126,6 @@
 完成后运行 npm run build，输出验证结果、git status、git diff --stat。
 不要 commit，不要 push。
 ```
+# DOC-3DT-02 对齐说明
+
+MVP-11 的正式混合场景契约类型依赖 MVP-10A；在 MVP-10A 解除 Blocked 前，本任务只可保持既有 GLB/API Client 基线，不得在页面中临时散落 Tiles 类型。未来 baseLayers、静态资源和变换类型必须以 scene-resource-manifest-design.md 的已审核版本为唯一来源，并由 API 契约、后端 DTO 与 TypeScript 类型同步实施。

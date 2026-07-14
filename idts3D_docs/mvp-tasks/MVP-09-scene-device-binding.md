@@ -124,3 +124,6 @@
 完成后运行 dotnet build，并验证 active binding 指向 Published。
 不要 commit，不要 push。
 ```
+# DOC-3DT-02 对齐说明
+
+本任务的 device_instance 与 device_model_binding 仅服务 GLB 动态设备实例和其已发布模型绑定。静态厂区底座不得使用这两类实体伪装表达；MVP-09 不新增静态资源表，也不在本任务实现 scene_resource / scene_layer。后续正式静态底座关系由 MVP-10A 前的设计审核决定。

@@ -1,5 +1,12 @@
 # API 契约：scene manifest
 
+## DOC-3DT-02 契约边界
+
+本文件当前的 API 契约不因本轮文档而变更。现有 tilesets 空数组只是兼容占位，不能作为正式 3D Tiles 静态底座契约或已实现能力。
+
+正式演进方向为 baseLayers + devices：baseLayers 表达 3D Tiles 等场景级静态底座资源，devices 表达 GLB 动态设备及其模型绑定。该方向的 JSON、DTO、TypeScript、版本兼容和数据库候选仅见 scene-resource-manifest-design.md 的设计草案；在 MVP-10A 解除 Blocked 并经过用户审核前，不得修改当前接口、DTO、TypeScript 类型或数据库。
+
+
 ## GET /api/scenes/{sceneId}/manifest
 
 | 项 | 值 |

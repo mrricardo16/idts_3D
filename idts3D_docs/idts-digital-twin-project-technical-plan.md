@@ -1,5 +1,12 @@
 # IDTS 数字孪生正式项目总体技术方案与实施计划 v1.2
 
+## DOC-3DT-02 修订基线
+
+本计划中的 3D Tiles 采用两步：先在 POC-3DT-01 验证大型静态底座与 GLB 动态设备同场展示、坐标对齐、交互兼容、生命周期和性能基线；仅在 POC 证据完成、用户批准且设计审核通过后，才由 MVP-10A 正式接入。3D Tiles 负责厂房、楼层、墙体、道路、大型货架与固定设施；GLB 负责动态设备、业务交互、Object Tree、Movable Part、Motion Target、worldZ、状态与告警。
+
+正式 Scene Manifest 方向为 baseLayers + devices。POC 不落库；正式数据库仅研究 model_asset / asset_version 加 scene_resource 或 scene_layer，不能使用 device_instance / device_model_binding 伪装静态底座。完整 CAD/IFC 转换、生产切片和完整 Tiles 资产管理不进入当前 MVP。
+
+
 > 文档版本：v1.2  
 > 修订日期：2026-07-08  
 > 文档性质：正式项目落地审查报告  

@@ -1,5 +1,12 @@
 # 前端集成计划
 
+## DOC-3DT-02 混合场景接入边界
+
+POC 只能使用独立页面和独立 tiles engine，不改 TwinDemo 主流程，也不是生产入口。正式接入由 MVP-10A 在 POC 通过并获用户批准后执行，目标是在 TwinScene 内分为 TilesLayer、DeviceLayer、AnnotationLayer、HelperLayer，并共用 Renderer、Camera、Controls 与 Animation Loop。
+
+正式 Scene Manifest 先决定 baseLayers 和 devices：TilesLayer 分层加载静态底座，DeviceLayer 加载 GLB 动态设备。Object Tree、Movable Part、Motion Target 和 worldZ 继续以 GLB 为主，Tiles 节点不进入设备 Object Tree。Tiles 加载失败必须保持 GLB / fallback 可用；类型不得在页面临时散落，最终以 Scene Resource Manifest 设计审核结果为准。
+
+
 本文档基于当前 `idts3D_ui` 实际代码编写，不描述尚不存在的能力为已完成能力。
 
 ## 1. 当前前端事实

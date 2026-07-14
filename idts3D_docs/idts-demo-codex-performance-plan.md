@@ -1,5 +1,11 @@
 # idts-demo 厂区级数字孪生性能优化 Codex 分步执行方案
 
+## DOC-3DT-02 性能计划边界
+
+3D Tiles 不再只作为最后阶段的抽象研究：在任何正式混合场景编码前，必须通过 POC-3DT-01 记录可复现的同场展示、坐标、GLB 交互/动画、资源释放和性能基线。基线阈值是 POC 暂定门槛，不是已经实测或生产达标声明。
+
+正式生产级 Tileset 切片、CAD/IFC 转换、资产流水线与最终性能门禁仍不属于当前 MVP；POC 不修改 TwinDemo 主流程，正式分层接入只在 MVP-10A 解锁后进行。
+
 > 适用项目：`idts-demo`  
 > 技术栈：Vue3 + Vite + TypeScript + Three.js + GLB/glTF + 静态配置 / mock 数据  
 > 目标：让 Codex 按阶段执行性能优化，且每一阶段都有明确回归验证。只有验证通过，才允许进入下一阶段。
@@ -1133,7 +1139,7 @@ git commit -m "feat: add area chunk loading foundation"
 
 ---
 
-# 阶段 12：长期技术预研，不直接改主线
+# 阶段 12：3D Tiles POC 基线与长期技术预研，不直接改主线
 
 ## 目标
 

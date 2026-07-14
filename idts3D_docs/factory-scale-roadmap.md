@@ -1,6 +1,13 @@
 # Factory Scale Roadmap
 
-This document records later-stage research directions for factory-scale digital twin scenes. These items are not implemented in the current demo. They should only be evaluated after stages 0 to 11 are stable.
+## DOC-3DT-02 更新：先验证，后生产化
+
+3D Tiles 不再只是当前 GLB Demo 完全稳定后的可选末期评估项。当前必须先完成独立 POC-3DT-01，验证与 GLB 的同场展示、坐标对齐、拾取/动画兼容、生命周期和性能基线；这不等同于生产化。
+
+生产化工具链、CAD/IFC 转换、切片、资产治理和正式大规模性能门禁仍在后续阶段。POC 不阻塞 MVP-09/MVP-10，但阻塞 MVP-10A；MVP-10A 是把已验证方向接入正式 TwinScene 的唯一入口。
+
+
+This document records factory-scale research and productionization directions. They are not implemented in the current demo. POC-3DT-01 must validate the 3D Tiles and GLB coexistence baseline before formal hybrid-scene integration; productionization remains later-stage work.
 
 ## When To Consider 3D Tiles
 
@@ -13,14 +20,14 @@ Use 3D Tiles when the scene grows beyond a manageable set of GLB chunks:
 - real streaming and tile-level culling are required
 - asset updates need spatial hierarchy instead of per-device manual wiring
 
-3D Tiles should not be the first optimization step for the current lifter demo. The current path should remain:
+3D Tiles productionization is not the first optimization step for the current lifter demo. The required near-term step is the isolated POC-3DT-01 validation; the current GLB optimization path should remain:
 
 1. GLB preprocessing
 2. `high / medium / low` LOD
 3. chunk manifest
 4. hitbox picking
 5. budget checks
-6. then evaluate 3D Tiles
+6. then evaluate production-scale 3D Tiles tooling
 
 ## When To Consider OffscreenCanvas
 

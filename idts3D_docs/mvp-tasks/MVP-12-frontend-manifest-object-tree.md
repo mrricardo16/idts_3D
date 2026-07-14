@@ -129,3 +129,6 @@
 完成后运行 npm run build，并回归 GLB、对象树、点击、异常、WASD、fallback。
 不要 commit，不要 push。
 ```
+# DOC-3DT-02 对齐说明
+
+MVP-12 的正式混合场景加载依赖 MVP-10A。加载链路必须先按 Scene Manifest 区分 baseLayers 与 devices，再分层加载 3D Tiles 底座和 GLB 设备；不得把 Tiles 节点树强行加入现有设备 Object Tree。Object Tree 继续主要服务 GLB 设备，底座加载失败时必须保留可识别的 GLB fallback。

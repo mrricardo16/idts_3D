@@ -1,5 +1,12 @@
 # 后端实现计划
 
+## DOC-3DT-02 静态底座与后端边界
+
+POC-3DT-01 不读写数据库、不新增 Entity、DbContext、Migration、Controller、Service 或 DTO。MVP-09 / MVP-10 可继续完成既有 GLB 设备和基础 Scene Manifest 交付；当前 tilesets 占位不表示静态底座已落地。
+
+正式混合接入只能在 MVP-10A 解锁后，根据已审核的 Scene Resource Manifest 设计同步评估 model_asset / asset_version 与 scene_resource 或 scene_layer。不得用 device_instance 或 device_model_binding 表达静态厂区底座；完整 CAD/IFC 转换和 3D Tiles 生产切片仍不属于当前 MVP 或 MVP-15 的 Worker 范围。
+
+
 本文档定义 `idts3D_api` 的后端工程规划。文档设计阶段不创建真实工程；MVP-01 开始按任务卡执行。
 
 ## 1. 目录结构

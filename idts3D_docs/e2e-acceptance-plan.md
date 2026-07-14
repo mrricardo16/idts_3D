@@ -1,5 +1,12 @@
 # 端到端联调与验收计划
 
+## DOC-3DT-02 正式混合场景验收门槛
+
+本计划原有 GLB 闭环保持有效。正式混合场景部分必须等待 MVP-10A，且 MVP-10A 必须先满足 POC-3DT-01 完成、结果报告完成、用户批准 Go 或获批 Conditional Go、相关设计文档审核通过。
+
+混合验收增加：静态 3D Tiles 底座与 GLB 同场展示；位置、方向、比例和标定点校验；GLB Object Tree、拾取、Movable Part、Motion Target、Edit/Monitor、worldZ、告警和高亮持续可用；Tiles 失败时 GLB 回退；页面退出后资源释放。不得把 POC 证据或 tilesets 空占位当作生产验收。
+
+
 本文档定义 MVP-16 的完整闭环验收路径。MVP-16 不新增功能，只联调和验证 MVP-01 到 MVP-15 的结果。
 
 ## 1. 前置条件
