@@ -1,5 +1,6 @@
 using HZ.IDTS.DigitalTwin.Application.ModelAssets;
 using HZ.IDTS.DigitalTwin.Application.MovableParts;
+using HZ.IDTS.DigitalTwin.Application.MotionTargets;
 
 namespace HZ.IDTS.DigitalTwin.Api.Extensions;
 
@@ -14,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IObjectTreeModelStatsService, ObjectTreeModelStatsService>();
         services.AddScoped<IAssetVersionLifecycleService, AssetVersionLifecycleService>();
         services.AddScoped<IMovablePartService, MovablePartService>();
+        services.AddScoped<IMotionTargetService, MotionTargetService>();
 
         return services;
     }

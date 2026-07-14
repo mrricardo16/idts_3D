@@ -1,5 +1,14 @@
 # MVP-08：Motion Target API
 
+## 实施状态
+
+- Implementation Status：Completed。
+- Automated Test Status：Completed（Application、Architecture、API Integration 测试）。
+- PostgreSQL Manual Smoke：Deferred，登记为 `MVP-08-VERIFY` 独立验证项。
+- Delivery Status：Ready after CI。
+
+`MVP-08-VERIFY` 待验证真实 PostgreSQL Draft CRUD、`target_code` 唯一索引冲突映射、`target_z` 与 `target_value` 落库一致性、create/update/delete 审计、Published 写保护，以及事务和行锁顺序。自动测试不等价于以上真实数据库事务、锁和约束验收。
+
 ## 1. 任务目标
 
 实现 motion target CRUD，把 F1/F2/F3/F4 等目标点位从前端硬编码迁移为后端配置。

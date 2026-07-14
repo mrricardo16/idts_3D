@@ -6,11 +6,11 @@
 |---|---|
 | Method | `GET` |
 | Route | `/api/movable-parts/{partId}/motion-targets` |
-| Query 参数 | `enabled?: boolean` |
+| Query 参数 | `enabled?: boolean`, `mode?: string` |
 | Path 参数 | `partId: long` |
 | Request Body | 无 |
-| monitor 模式 | 允许读取 Published 对应 part |
-| edit 模式 | 允许 |
+| monitor 模式 | 仅允许读取 Published 对应 part |
+| edit 模式 | 允许读取 Draft、Ready、Published 对应 part |
 | 前端 TS interface | `MotionTargetListItem`, `MotionTargetListResponse` |
 | 后端 DTO | `GetMotionTargetsRequest`, `MotionTargetListResponse` |
 | 后端实体 | `MotionTarget`, `MovablePartBinding`, `AssetVersion` |
@@ -46,6 +46,8 @@ Response Body：
 400 示例：enabled 参数无效。  
 404 示例：movable part 不存在。  
 409 示例：monitor 读取非 Published 配置。
+
+读取规则：`mode` 缺失、`null` 或空白时为 `monitor`；`monitor` 只允许 Published，`edit` 只允许 Draft、Ready、Published，其他值返回 `400 VALIDATION_FAILED`。列表按 `sortNo`、`targetCode`、`targetId` 稳定排序；无数据时返回 `200` 和 `items: []`。
 
 ## 2. POST /api/movable-parts/{partId}/motion-targets
 
@@ -84,12 +86,15 @@ Request Body：
 |---|---|---|---|
 | `targetCode` | string | 是 | 同 movable part 下唯一 |
 | `targetName` | string | 是 | 显示名称 |
-| `targetValue` | number? | MVP 是 | linear 模式目标值 |
-| `targetX/Y/Z` | number? | 否 | 可选坐标，worldZ 用 `targetZ` 辅助显示 |
-| `sortNo` | int | 是 | 显示顺序 |
+| `targetValue` | number? | MVP 是 | linear 模式唯一权威目标值，必须在 movable part 的 minValue/maxValue 内 |
+| `targetX/Y` | number? | MVP 是 null | MVP-08 不支持三维路径点 |
+| `targetZ` | number? | 否 | world-Z 展示冗余值；省略时服务端保存为 targetValue，提供时必须等于 targetValue |
+| `sortNo` | int? | 是 | 必须显式提供且大于等于 0；允许重复 |
 | `enabled` | boolean | 是 | 是否启用 |
 
 成功响应返回完整 `MotionTargetResponse`。
+
+服务端会 Trim `targetCode`、`targetName`，并将 `targetCode` 转为大写；同一 movable part 下不区分大小写。`enabled=false` 仍须通过全部字段与范围校验。Create、Update、Delete 仅允许 Draft、Ready；Published、Archived、Failed、Invalid 返回 `409 VERSION_STATUS_INVALID`。
 
 400 示例：
 

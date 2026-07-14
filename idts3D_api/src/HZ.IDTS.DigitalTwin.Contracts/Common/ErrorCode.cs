@@ -16,5 +16,7 @@ public static class ErrorCode
     public const string ModelStatsRequired = "MODEL_STATS_REQUIRED";
     public const string Conflict = "CONFLICT";
     public const string DuplicatePartCode = "DUPLICATE_PART_CODE";
+    public const string MovablePartNotFound = "MOVABLE_PART_NOT_FOUND";
+    public const string DuplicateTargetCode = "DUPLICATE_TARGET_CODE";
     public const string InternalError = "INTERNAL_ERROR";
 }

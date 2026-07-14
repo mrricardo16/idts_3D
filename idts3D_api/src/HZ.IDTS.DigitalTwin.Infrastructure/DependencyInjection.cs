@@ -1,8 +1,10 @@
 using HZ.IDTS.DigitalTwin.Application.ModelAssets;
 using HZ.IDTS.DigitalTwin.Application.MovableParts;
+using HZ.IDTS.DigitalTwin.Application.MotionTargets;
 using HZ.IDTS.DigitalTwin.Application.Storage;
 using HZ.IDTS.DigitalTwin.Infrastructure.ModelAssets;
 using HZ.IDTS.DigitalTwin.Infrastructure.MovableParts;
+using HZ.IDTS.DigitalTwin.Infrastructure.MotionTargets;
 using HZ.IDTS.DigitalTwin.Infrastructure.Persistence;
 using HZ.IDTS.DigitalTwin.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped<IModelAssetFileStorage, LocalModelAssetFileStorage>();
         services.AddScoped<IModelAssetRepository, ModelAssetRepository>();
         services.AddScoped<IMovablePartRepository, MovablePartRepository>();
+        services.AddScoped<IMotionTargetRepository, MotionTargetRepository>();
 
         return services;
     }
