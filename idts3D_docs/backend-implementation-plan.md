@@ -6,6 +6,10 @@ POC-3DT-01 不读写数据库、不新增 Entity、DbContext、Migration、Contr
 
 正式混合接入只能在 MVP-10A 解锁后，根据已审核的 Scene Resource Manifest 设计同步评估 model_asset / asset_version 与 scene_resource 或 scene_layer。不得用 device_instance 或 device_model_binding 表达静态厂区底座；完整 CAD/IFC 转换和 3D Tiles 生产切片仍不属于当前 MVP 或 MVP-15 的 Worker 范围。
 
+## MVP-10A-04 同步门禁（DOC-PLAN-07）
+
+只有 10A-01 已冻结来源、表/不建表、schemaVersion、旧 `tilesets` 和回滚后，10A-04 才能改后端。实施以“数据来源 → Entity/配置 → DTO → API 字段 → TypeScript → API Client → TwinScene”映射表同步 Service、Controller、Contracts、API 契约及（如需）DbContext/EF/Migration。Controller 不直连 DbContext；未冻结表/字段不得假定存在；Tiles 失败不得破坏 `devices` 的 GLB-only 路径。
+
 
 本文档定义 `idts3D_api` 的后端工程规划。文档设计阶段不创建真实工程；MVP-01 开始按任务卡执行。
 

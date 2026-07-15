@@ -2,7 +2,7 @@
 
 > 本总纲是当前唯一执行基线。它只定义任务边界和依赖，不授权业务代码、数据库、依赖安装、POC、构建、测试或 Git 写操作。
 
-> 实现状态校准：MVP-00～MVP-07 已完成；MVP-08 为 Partially Completed（实现和本地自动验证完成，真实 PostgreSQL/Swagger 验证未完成）。当前基线最近 CI 未通过 repository-policy，因此在该失败被独立处理并复核前，不进入下一实现任务；这不改变 POC/MVP-10A 的既有门禁。
+> 实现状态校准（DOC-PLAN-07 基线）：MVP-00～MVP-07 已完成；MVP-08 为 Partially Completed（实现和本地自动验证完成，真实 PostgreSQL/Swagger 验证未完成）。任务书给定当前 CI 为通过；这不改变 POC/MVP-10A 的既有门禁，也不替代真实 PostgreSQL/Swagger 验证。
 
 ## 1. MVP 目标与范围
 
@@ -73,3 +73,7 @@ MVP-09、MVP-10 可以与 POC 并行；单人默认优先执行 POC。POC 不阻
 ## 7. Codex 执行规则
 
 每次只执行一个明确任务。实施前读取当前任务卡和引用契约，输出影响范围、禁止范围、风险、验证与回滚，再等待用户对该实施任务的授权。任何任务发现跨端契约、数据库或架构债务时，只登记，不在无关任务中顺手修复。
+
+## 8. MVP-10A 任务书边界（DOC-PLAN-07）
+
+10A-01 冻结 `baseLayers + devices`、数据/版本/兼容决定；10A-02 只建图层骨架；10A-03 只用获批 POC 接入 Tiles/坐标；10A-04 才同步正式数据、Entity/DbContext/Migration（如冻结要求）、DTO/API/TS/API Client；10A-05 才用真实证据完成回退、性能和生命周期总验收。任一 TBD 或失败均不得跳卡或宣称混合场景完成。

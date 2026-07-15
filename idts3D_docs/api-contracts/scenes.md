@@ -53,6 +53,10 @@ Response Body：
 }
 ```
 
+## DOC-PLAN-07：正式混合契约演进门禁
+
+当前响应保持 `devices` 与 `tilesets: []` 兼容占位；本轮不改变路由、JSON、DTO 或 TypeScript。只有 10A-01 冻结并经用户审核后，10A-04 才可定义 `schemaVersion`、`baseLayers`、错误响应与旧 `tilesets` 策略并完成一对一映射。未冻结字段不得由客户端猜测；`baseLayers` 失败必须可辨识且不得阻断 `devices` GLB-only 回退。
+
 字段类型：
 
 | 字段 | 类型 | 说明 |

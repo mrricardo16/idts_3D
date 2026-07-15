@@ -143,6 +143,10 @@ MVP-12 执行路径：
 
 当前对象树来自 `TwinScene.refreshModelTree()` 对已加载模型的收集。
 
+## 7. MVP-10A 正式接入顺序（DOC-PLAN-07）
+
+10A-02 先将 `TwinScene` 组织为唯一 Renderer/Camera/Controls/Loop 下的 TilesLayer、DeviceLayer、AnnotationLayer、HelperLayer；10A-03 再用 POC 批准库和显式坐标接入；10A-04 才由集中 API Client 将冻结的 `baseLayers + devices` 输入图层。`baseLayers` 先加载、`devices` 后加载；Tiles 失败、取消或卸载必须隔离在 TilesLayer，GLB Object Tree、拾取、worldZ、告警和 fallback 保持 DeviceLayer 语义。字段与候选模块路径以 10A-01 冻结及实施前扫描为准。
+
 MVP-12 策略：
 
 1. 后端 object tree 可用时，优先展示后端 object tree。

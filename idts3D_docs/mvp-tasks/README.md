@@ -4,8 +4,8 @@
 
 ## 1. 状态与唯一门禁
 
-- 实现状态校准（DOC-PLAN-01）：MVP-00～MVP-07 已完成；MVP-08 为 Partially Completed（实现和本地自动验证完成，真实 PostgreSQL/Swagger 验证未完成）。当前基线最近 CI 失败于 repository-policy，不能把本地验证写为当前 CI 通过。
-- 当前下一实现入口为空：先在独立获授权任务中处理并复核 CI 失败；POC-3DT-01 仍需用户单独授权。
+- 实现状态校准（DOC-PLAN-07 基线）：MVP-00～MVP-07 已完成；MVP-08 为 Partially Completed（实现和本地自动验证完成，真实 PostgreSQL/Swagger 验证未完成）。任务书给定基线的当前 CI 为通过；这不替代真实 PostgreSQL/Swagger 验证，也不解除任何 POC/MVP-10A 门禁。
+- 当前下一实现入口仍需用户授权：POC-3DT-01 为 Ready for user execution approval；MVP-10A-01～05 仍为 Blocked。
 - MVP-00～MVP-08 保持原编号、既有交付和 GLB 基线。
 - POC-3DT-01 是正式 3D Tiles 与 GLB 混合接入的前置技术验证；它不阻塞 MVP-09、MVP-10 或无关纯后端工作。
 - 单人默认优先顺序是文档审核、POC、POC 结果审核、MVP-09、MVP-10、MVP-10A-01～05、MVP-11～MVP-16。
@@ -55,3 +55,7 @@ POC 材料：[测试计划](../poc/POC-3DT-01-test-plan.md)、[结果模板](../
 ## 5. 执行授权
 
 POC 文档状态为 Ready for user execution approval；这不是 Executing、Completed 或生产授权。每张实现任务卡仍须在实施时单独取得用户授权，并按项目规则输出影响范围、验证与回滚方案。
+
+## 6. DOC-PLAN-07 任务书完整性
+
+MVP-10A 总卡及 01～05 子卡已按独立授权、实施、验收和回滚重写，仍全部为 **Blocked**；POC-3DT-01 仍为 **Ready for user execution approval**。字段、表、坐标、库版本、样本和性能结论未获批准时必须为 TBD，并写明所需输入、责任任务和阻塞范围。

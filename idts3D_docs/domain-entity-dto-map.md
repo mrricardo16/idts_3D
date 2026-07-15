@@ -6,6 +6,16 @@
 
 正式混合场景只提出候选方向：model_asset / asset_version 管理资源身份和版本，scene_resource 或 scene_layer 管理静态底座资源及场景放置关系。表名、字段、关系、DTO 和 TypeScript 类型均为待审核设计，详见 scene-resource-manifest-design.md；本轮未新增任何实体、DbSet、Migration 或正式契约。
 
+## MVP-10A 映射状态（DOC-PLAN-07）
+
+| 领域 | 当前事实 | 10A-01 冻结 | 实施入口 |
+|---|---|---|---|
+| `devices` | SceneNode、DeviceInstance、DeviceModelBinding 服务 GLB | 保持动态设备边界 | 10A-04 同步消费 |
+| 资源身份/版本 | ModelAsset、AssetVersion 已存在 | 是否足以承载静态资源 | 10A-01 决定 |
+| 静态放置 | 无冻结 Entity/表 | 是否需要 `scene_resource` 或 `scene_layer` | 10A-04 才可实施 |
+
+候选静态资源表不是既有 DbSet，且不得让设备实体承载 `baseLayers`。
+
 
 本文档是数据库表、C# Entity、DbSet、DTO、API、TypeScript interface、前端消费位置的唯一映射基线。
 
