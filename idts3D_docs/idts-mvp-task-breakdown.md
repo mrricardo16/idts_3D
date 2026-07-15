@@ -2,6 +2,8 @@
 
 > 本总纲是当前唯一执行基线。它只定义任务边界和依赖，不授权业务代码、数据库、依赖安装、POC、构建、测试或 Git 写操作。
 
+> 实现状态校准：MVP-00～MVP-07 已完成；MVP-08 为 Partially Completed（实现和本地自动验证完成，真实 PostgreSQL/Swagger 验证未完成）。当前基线最近 CI 未通过 repository-policy，因此在该失败被独立处理并复核前，不进入下一实现任务；这不改变 POC/MVP-10A 的既有门禁。
+
 ## 1. MVP 目标与范围
 
 MVP 继续完成 GLB 动态设备的资产、Manifest、Object Tree、Movable Part、Motion Target、Edit / Monitor 与 worldZ 闭环。3D Tiles 负责大型静态厂区底座，GLB 负责动态设备和业务交互。

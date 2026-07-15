@@ -4,6 +4,8 @@
 
 ## 1. 状态与唯一门禁
 
+- 实现状态校准（DOC-PLAN-01）：MVP-00～MVP-07 已完成；MVP-08 为 Partially Completed（实现和本地自动验证完成，真实 PostgreSQL/Swagger 验证未完成）。当前基线最近 CI 失败于 repository-policy，不能把本地验证写为当前 CI 通过。
+- 当前下一实现入口为空：先在独立获授权任务中处理并复核 CI 失败；POC-3DT-01 仍需用户单独授权。
 - MVP-00～MVP-08 保持原编号、既有交付和 GLB 基线。
 - POC-3DT-01 是正式 3D Tiles 与 GLB 混合接入的前置技术验证；它不阻塞 MVP-09、MVP-10 或无关纯后端工作。
 - 单人默认优先顺序是文档审核、POC、POC 结果审核、MVP-09、MVP-10、MVP-10A-01～05、MVP-11～MVP-16。

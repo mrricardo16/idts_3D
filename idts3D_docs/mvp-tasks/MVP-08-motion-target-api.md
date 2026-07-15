@@ -2,12 +2,15 @@
 
 ## 实施状态
 
-- Implementation Status：Completed。
-- Automated Test Status：Completed（Application、Architecture、API Integration 测试）。
-- PostgreSQL Manual Smoke：Deferred，登记为 `MVP-08-VERIFY` 独立验证项。
-- Delivery Status：Ready after CI。
+- Task Status：Partially Completed（Implementation Complete / Verification Incomplete）。
+- 当前基线：`main` / `5a9a2c5339e11bd3c77072ce276a8a4940c09739`；实现提交为 `b0d277f335e76d5b0437747ed25c2282f88e0810`。
+- 实现证据：MotionTarget Entity、DbSet、Mapping、初始 Migration、DTO、Controller、Application Service、Repository、唯一/范围/版本状态 guard 及 OperationAudit 写入均存在。
+- 本地构建证据：2026-07-15，`dotnet build idts3D_api/HZ.IDTS.DigitalTwin.sln`，Exit Code 0，0 warning，0 error。
+- 本地测试证据：2026-07-15，`dotnet test idts3D_api/HZ.IDTS.DigitalTwin.sln --no-build`，Exit Code 0；Application 54、Architecture 8、API Integration 22，共 84 项通过。Motion Target 有 Service 与 TestServer/API 路由覆盖。
+- CI：工作流和 MVP-08 实现提交的 CI 运行存在且成功；但当前基线最近 CI `29313188014` 失败于 repository-policy，后端质量作业未启动，因此不能写为当前基线 CI 已通过。
+- PostgreSQL / Swagger Verification：未执行，登记为 `MVP-08-VERIFY` 独立验证项。
 
-`MVP-08-VERIFY` 待验证真实 PostgreSQL Draft CRUD、`target_code` 唯一索引冲突映射、`target_z` 与 `target_value` 落库一致性、create/update/delete 审计、Published 写保护，以及事务和行锁顺序。自动测试不等价于以上真实数据库事务、锁和约束验收。
+`MVP-08-VERIFY` 待验证真实 PostgreSQL Draft CRUD、`target_code` 唯一索引冲突映射、`target_z` 与 `target_value` 落库一致性、create/update/delete 审计、Published 写保护、Swagger 实例，以及事务和行锁顺序。自动测试不等价于以上真实数据库事务、锁和约束验收。
 
 ## 1. 任务目标
 

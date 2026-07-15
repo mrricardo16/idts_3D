@@ -5,7 +5,7 @@
 ## 目录结构
 
 - `idts3D_ui`：Vue3 + TypeScript + Three.js 前端工程，由原 `idts3ddemo` 技术验证 Demo 迁移而来。
-- `idts3D_api`：.NET 8 后端 API、Application、Contracts、Domain、Infrastructure 与 Worker 六项目 Solution；当前已完成 MVP-01 至 MVP-07 的后端基线。
+- `idts3D_api`：.NET 8 后端 API、Application、Contracts、Domain、Infrastructure 与 Worker 六项目 Solution；实现状态以本文件“当前实现状态”和 DOC-PLAN-01 校准报告为准。
 - `idts3D_docs`：项目方案、需求补充、MVP 总纲、API 契约、实体 DTO 映射、前后端集成计划、任务卡。
 
 ## 必读文档
@@ -22,11 +22,18 @@
 - `idts3D_docs/architecture/project-architecture-review-checklist.md`：任务架构复检清单。
 - `idts3D_docs/architecture/main-delivery-workflow.md`：main 直接交付流程。
 
-## 当前进度
+## 当前实现状态
 
-- 已实现：后端 MVP-01 至 MVP-07，包括 PostgreSQL EF Core、初始 Migration、GLB 上传、本地文件存储、manifest、object-tree、model-stats、资产版本生命周期和可动部件配置 API。
-- 部分实现：Worker 仅为空骨架；前端仍是静态数字孪生 Demo，使用静态 manifest、mock 和 localStorage。
-- 尚未实现：正式前端 API Client、前后端业务联调、Scene/Movable Part/Motion Target API、Worker 转换流水线、自动化测试和 CI。
+> 事实校准日期：2026-07-15；基线为 `main` 的 `5a9a2c5339e11bd3c77072ce276a8a4940c09739`。状态与证据详见 `idts3D_docs/reviews/DOC-PLAN-01-implementation-state-calibration-report.md`。本节不将代码存在、自动化测试、本地构建和 CI 运行互相替代。
+
+- 当前分支：`main`；本次校准开始时工作区仅有未跟踪的 DOC-PLAN-00 审计报告。
+- 已完成：MVP-00～MVP-07 的文档/后端基线。后端已具备 PostgreSQL EF Core、初始 Migration、GLB 上传与本地存储、Model Manifest、Object Tree/Model Stats、资产版本生命周期和 Movable Part CRUD。
+- 部分完成：MVP-08 的 Motion Target CRUD 已实现，且本地 Application、Architecture 与 API Integration 测试已于 2026-07-15 通过；真实 PostgreSQL/Swagger 手工验收、事务与行锁验证仍未完成，因此不标为完全验证完成。
+- 规划中或未开始：Scene/Device 业务 API、正式前端 API Client、前后端业务联调、Worker 转换流水线、浏览器 E2E、真实 WebGL 和 PostgreSQL 基础设施集成验证。
+- 本地构建：`dotnet build idts3D_api/HZ.IDTS.DigitalTwin.sln` 于 2026-07-15 退出码 0、0 warning、0 error；实际 SDK 为 8.0.100，与 `idts3D_api/global.json` 声明的版本一致。
+- 本地测试：`dotnet test idts3D_api/HZ.IDTS.DigitalTwin.sln --no-build` 于 2026-07-15 退出码 0；Application 54、Architecture 8、API Integration 22，共 84 项通过。该结果不覆盖真实 PostgreSQL、真实文件存储、浏览器 E2E 或真实 WebGL。
+- CI：`.github/workflows/ci.yml` 存在，包含后端 build/三类测试和前端 lint/type-check/unit/build。当前基线最近 CI 运行 `29313188014` 为失败：`repository-policy` 检出 `DOC-3DT-03-semantic-consistency-fix-report.md` 末尾多余空行，后端与前端质量作业未启动；不得写为“CI 通过”。
+- 当前下一入口：暂无实现任务入口。须先在独立获授权任务中处理并复核当前 CI 失败；POC-3DT-01 仍需用户单独授权，MVP-10A 继续 Blocked。
 
 ## 前端运行
 
