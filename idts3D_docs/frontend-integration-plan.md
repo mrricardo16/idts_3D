@@ -86,9 +86,9 @@ export async function getModelManifest(
 
 ```text
 TwinDemo.vue
--> src/api/scenes.ts:getSceneManifest()
--> src/api/modelAssets.ts:getModelManifest()
--> src/api/objectTree.ts:getObjectTree()
+-> MVP-11/10A-04 计划新增的 src/api/scenes.ts:getSceneManifest()
+-> MVP-11 计划新增的 src/api/modelAssets.ts:getModelManifest()
+-> MVP-11 计划新增的 src/api/objectTree.ts:getObjectTree()
 -> 转换为 TwinScene 可消费的数据
 -> TwinScene / LODModelLoader
 ```
@@ -122,7 +122,7 @@ TwinDemo.vue
 
 MVP-12 执行路径：
 
-1. `getSceneManifest(sceneId, { mode })`。
+1. MVP-10A-04 完成后调用冻结的 `getSceneManifest(sceneId, { mode })`；当前未检出该 Client。
 2. 读取 `devices[]`。
 3. 对每个 device 调用 `manifestUrl` 或 `getModelManifest(assetId, versionId)`。
 4. 将 device transform 和 model manifest 合并为 engine 输入。
@@ -170,7 +170,7 @@ MVP-13 中：
 
 MVP-14 中：
 
-1. monitor 模式调用 `getSceneManifest(...mode=monitor)`。
+1. MVP-10A-04 完成后，monitor 模式调用冻结的 `getSceneManifest(...mode=monitor)`；当前未检出该 Client。
 2. model manifest 必须是 Published。
 3. movable part 和 motion target 只读。
 4. UI 不显示保存入口。

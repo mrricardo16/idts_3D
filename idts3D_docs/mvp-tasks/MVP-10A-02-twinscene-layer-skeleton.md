@@ -33,7 +33,7 @@ Blocked。未获本卡用户授权不得实现。
 `src/views/TwinDemo.vue`、`src/engine/TwinScene.ts`、`RendererManager.ts`、`ControlsManager.ts`、`InteractionManager.ts`、`LODModelLoader.ts`、`ResourceDisposer.ts`。
 
 ## 11. 计划新增文件
-候选：`src/engine/layers/TilesLayer.ts`、`DeviceLayer.ts`、`AnnotationLayer.ts`、`HelperLayer.ts`、`CoordinateTransformer.ts`；路径、命名和是否新增须在实施前按当前目录确认。
+候选：`src/engine/layers/TilesLayer.ts`、`DeviceLayer.ts`、`AnnotationLayer.ts`、`HelperLayer.ts`、`CoordinateTransformer.ts`、`src/engine/ResourceManager.ts`。当前未检出 ResourceManager；它是本卡计划新增模块，路径、命名和是否新增须在实施前按当前目录确认。
 
 ## 12. 前端影响
 本卡同步修改前端引擎骨架；`TwinDemo.vue` 仅允许最小生命周期接线。保持现有 GLB fallback、Object Tree、拾取、worldZ、Camera/Controls 行为。
@@ -93,3 +93,19 @@ MVP-10A-03；需 POC 批准的库/坐标证据和用户单独授权。
 ```text
 请执行 MVP-10A-02。先核对 TwinScene 现有 Renderer/Camera/Controls/Loop、GLB 加载、拾取和释放链；只建立四层骨架及唯一所有权，不加载真实 Tiles、不改 API/数据库/GLB 业务语义。完成后回归 GLB 与页面重复进出，并等待下一卡授权。
 ```
+
+## 31. 实际构建、测试与回归入口
+
+前端 lockfile 为 `package-lock.json`；命令均以实际 `idts3D_ui/package.json` scripts 为准，实施时在 `idts3D_ui` 目录执行。
+
+| 验证类型 | 命令 / 入口 | 通过条件 | 失败处理 |
+|---|---|---|---|
+| Install | `npm ci` | lockfile 无变更且依赖安装完成 | 停止；不得改依赖或进入 10A-03 |
+| Lint | `npm run lint` | exit 0、0 warnings（脚本含 `--max-warnings=0`） | 停止并记录文件/规则 |
+| Type Check | `npm run type-check` | exit 0 | 停止并修复本卡类型边界 |
+| Unit Test | `npm run test:unit` | Vitest exit 0 | 停止；新增/修复本卡测试后重跑 |
+| Production Build | `npm run build` | `vue-tsc -b && vite build` exit 0 | 停止，不以 lint 替代 build |
+| 手工 GLB 回归 | `npm run dev` 后访问 `http://127.0.0.1:5173/`（默认 `TwinDemo`） | 现有 GLB/fallback、Object Tree、拾取、worldZ、Controls 可用 | 停止并回退本卡骨架 |
+| 生命周期回归 | 同页连续挂载/卸载或刷新 10 次，并切换现有模型加载流程 | Renderer、Camera、Controls、AnimationLoop 均只有一个，无残留监听 | 停止并恢复 GLB-only TwinScene |
+
+当前前端未检出 TwinScene Vitest 文件。本卡计划新增候选 `idts3D_ui/src/engine/__tests__/TwinScene.layer-skeleton.spec.ts`，覆盖单一 Renderer/Camera/Controls/Loop、挂载/卸载、场景切换、GLB 加载、GLB 拾取和 worldZ；最终路径在实施前核对。没有该测试或等价已存在测试，Unit Test 不得声称覆盖本卡边界。

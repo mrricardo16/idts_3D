@@ -79,9 +79,9 @@ Worker -> Infrastructure
 | DbContext | `DigitalTwinDbContext` |
 | Entity | `ModelAsset`, `AssetVersion`, `MovablePartBinding` |
 | DbSet | `ModelAssets`, `AssetVersions`, `MovablePartBindings` |
-| Controller | `ModelAssetsController`, `AssetVersionsController`, `ScenesController` |
-| Application Service | `ModelAssetService`, `AssetVersionService`, `SceneManifestService` |
-| Repository / Query | `ModelAssetRepository`, `SceneManifestQuery` |
+| Controller | 当前已检出 `ModelAssetsController`；Scene Manifest Controller 为 MVP-10A-01 冻结后由 MVP-10A-04 计划新增 |
+| Application Service | 当前已检出 `IModelManifestService` / `ModelManifestService`；Scene Manifest Service 为计划新增，不得假定名称 |
+| Repository / Query | 当前 `ModelAssetRepository`；Scene Manifest 查询能力由 MVP-10A-01 冻结数据来源和方案后决定 |
 | Request DTO | `CreateMovablePartRequest`, `GetModelManifestRequest` |
 | Response DTO | `MovablePartResponse`, `ModelManifestResponse` |
 | Error Code | `VERSION_STATUS_INVALID`, `DUPLICATE_PART_CODE` |

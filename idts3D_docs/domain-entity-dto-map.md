@@ -41,9 +41,9 @@
 | `model_conversion_job` | `ModelConversionJob` | `ModelConversionJobs` | `id` | `CreateConversionJobRequest` | `UpdateConversionJobStatusRequest` | `ConversionJobQueryRequest` | `ConversionJobResponse` | `ConversionJobDto` | conversion job query | upload, Worker status update | `src/api/conversionJobs.ts` |
 | `model_object_index` | `ModelObjectIndex` | `ModelObjectIndexes` | `id` | `SaveObjectTreeRequest` | `UpdateObjectIndexRequest` | `ObjectTreeQueryRequest` | `ObjectTreeResponse` | `ModelObjectNodeDto` | object tree, publish guard, movable part validation | save object tree | `TwinDemo.vue`, `TwinScene.ts` |
 | `asset_manifest` | `AssetManifest` | `AssetManifests` | `id` | `SaveAssetManifestRequest` | `UpdateAssetManifestRequest` | `ModelManifestQueryRequest` | `ModelManifestResponse` | `ModelManifestDto` | model manifest, model stats, publish guard | upload, save model stats, save manifest | `LODModelLoader.ts`, `TwinScene.ts` |
-| `scene_node` | `SceneNode` | `SceneNodes` | `id` | `CreateSceneNodeRequest` | `UpdateSceneNodeRequest` | `SceneQueryRequest` | `SceneNodeResponse` | `SceneNodeDto` | scene manifest | seed scene | `src/api/scenes.ts`, `TwinScene.ts` |
-| `device_instance` | `DeviceInstance` | `DeviceInstances` | `id` | `CreateDeviceInstanceRequest` | `UpdateDeviceInstanceRequest` | `DeviceInstanceQueryRequest` | `DeviceInstanceResponse` | `DeviceInstanceDto` | scene manifest | seed device | `TwinDemo.vue`, `TwinScene.ts` |
-| `device_model_binding` | `DeviceModelBinding` | `DeviceModelBindings` | `id` | `CreateDeviceModelBindingRequest` | `UpdateDeviceModelBindingRequest` | `DeviceModelBindingQueryRequest` | `DeviceModelBindingResponse` | `DeviceModelBindingDto` | scene manifest, publish guard | seed binding, publish, rollback | `src/api/scenes.ts` |
+| `scene_node` | `SceneNode` | `SceneNodes` | `id` | 计划 DTO，名称待 10A-01 冻结 | 计划 DTO，名称待 10A-01 冻结 | 计划查询 | 计划响应 | 计划 TS | Scene Manifest `devices` 候选来源 | 由 10A-04 方案决定 | 计划 `src/api/scenes.ts`、`TwinScene.ts` |
+| `device_instance` | `DeviceInstance` | `DeviceInstances` | `id` | 计划 DTO，名称待 10A-01 冻结 | 计划 DTO，名称待 10A-01 冻结 | 计划查询 | 计划响应 | 计划 TS | Scene Manifest `devices` 候选来源 | 由 10A-04 方案决定 | `TwinDemo.vue`、`TwinScene.ts` |
+| `device_model_binding` | `DeviceModelBinding` | `DeviceModelBindings` | `id` | 计划 DTO，名称待 10A-01 冻结 | 计划 DTO，名称待 10A-01 冻结 | 计划查询 | 计划响应 | 计划 TS | Scene Manifest `devices` 候选来源、publish guard | 由 10A-04 方案决定 | 计划 `src/api/scenes.ts` |
 | `movable_part_binding` | `MovablePartBinding` | `MovablePartBindings` | `id` | `CreateMovablePartRequest` | `UpdateMovablePartRequest` | `MovablePartQueryRequest` | `MovablePartResponse` | `MovablePartDto` | manifest, movable parts, publish guard | movable part CRUD | `TwinDemo.vue`, `TwinScene.ts` |
 | `motion_target` | `MotionTarget` | `MotionTargets` | `id` | `CreateMotionTargetRequest` | `UpdateMotionTargetRequest` | `MotionTargetQueryRequest` | `MotionTargetResponse` | `MotionTargetDto` | manifest, motion targets, publish guard | motion target CRUD | `TwinDemo.vue`, `TwinScene.ts` |
 | `operation_audit` | `OperationAudit` | `OperationAudits` | `id` | `CreateOperationAuditRequest` | 无 | `OperationAuditQueryRequest` | `OperationAuditResponse` | `OperationAuditDto` | audit query | upload, edit, publish, rollback, delete | 后台审计页面，MVP 可不做 UI |
@@ -70,7 +70,7 @@
 
 读取接口：upload 去重、model manifest、scene manifest。  
 写入接口：upload、publish、rollback。  
-前端消费：`ModelAssetDto`、`ModelManifestResponse`、`SceneManifestResponse`。
+前端当前可确认消费为 `ModelManifestResponse`；`SceneManifestResponse` 是 MVP-10A-01 冻结、10A-04 计划新增的候选，不是现有前端/后端类型。
 
 ### 3.2 `asset_version`
 

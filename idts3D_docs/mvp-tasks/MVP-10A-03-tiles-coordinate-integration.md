@@ -93,3 +93,11 @@ MVP-10A-04；需 10A-01 冻结的正式契约与用户单独授权。
 ```text
 请执行 MVP-10A-03。只用获批 POC 的 3D Tiles 库、版本和许可样本，在 TilesLayer 接入显式坐标变换和分层拾取；验证三点、GLB worldZ/交互和失败隔离。不得接 API、数据库或正式 Manifest，失败时必须关闭 TilesLayer 并保留 GLB。
 ```
+
+## 31. 实际验证、手工与性能入口
+
+在 `idts3D_ui` 执行实际 scripts：`npm run lint`、`npm run type-check`、`npm run test:unit`、`npm run build`；每项 exit 0 才可继续，任何一项失败即停止并不得进入 10A-04。计划新增候选测试为 `src/engine/__tests__/CoordinateTransformer.spec.ts`（缩放→旋转→平移、Y-up/Z-up、三点误差）和 `src/engine/__tests__/TilesLayer.lifecycle.spec.ts`（加载、取消、卸载、根/子瓦片/解析错误隔离）；必要时新增 `InteractionManager.tiles.spec.ts` 验证 GLB Raycaster 不接收 Tiles 节点。最终路径实施前核对，不得伪称当前已存在。
+
+手工入口是 `npm run dev` 后的 `http://127.0.0.1:5173/` 默认 `TwinDemo`；只加载 POC 冻结报告登记的阶段 A/B 许可样本，按报告的三个控制点记录源坐标、场景坐标和误差；通过当前 Object Tree 选择 GLB、通过既有 `TwinDemo` worldZ 操作触发移动。错误注入仅使用本卡计划新增的可控测试 source adapter 或 POC 批准的失效副本：根 URL 404、受控子瓦片失败、无效 tileset 内容；不得修改生产端点。证据输出到实施报告中登记的截图/录屏、HAR、控制台导出和原始采样路径。
+
+性能入口必须读取 `idts3D_docs/performance/3d-performance-budget.md` 与 `idts3D_docs/poc/POC-3DT-01-test-plan.md`。10A-03 只做接入阶段基线：记录环境、小型许可样本、纯 GLB 对照、稳定后 60 秒采样、FPS、1% Low、控制台错误、失败请求和证据路径；完整冷暖缓存、生命周期和放行结论只属于 10A-05。

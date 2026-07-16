@@ -58,7 +58,7 @@ POC-3DT-01 结果报告完整、用户批准 Go 或获批 Conditional Go，且 A
 
 ## 13. 后端影响
 
-本卡不修改后端。必须明确现有 `SceneManifestResponse`、候选 DTO、Application Service、Controller、Entity/DbContext 与 Migration 是“本卡明确不修改”还是“10A-04 同步修改”。
+本卡不修改后端。当前未检出 `SceneManifestResponse`、Scene Manifest Application Service 或 Controller；它们只能作为 10A-01 冻结后由 10A-04 计划新增的候选，最终名称不得在本卡前假定。现有 Model Manifest 链路不是 Scene Manifest 的同义替代。
 
 ## 14. 数据库影响
 
@@ -129,3 +129,31 @@ MVP-10A-02，仅在本卡冻结结果已审核且用户单独授权后进入。
 ```text
 请执行 MVP-10A-01。只冻结经过 POC 和用户审核支持的混合 Scene Manifest 决策；输出 JSON、字段字典、DTO/TS 草案、跨端映射、数据库/Migration 结论、兼容/回滚和 TBD 归属。不得实现代码、Migration 或猜字段；未决项必须停止并请求决定。
 ```
+
+## 31. 冻结产物、固定路径与模板
+
+本卡完成时必须实际修改或新增下列文档，不能只在任务输出中口头说明：
+
+| 路径 | 必须写入内容 |
+|---|---|
+| `idts3D_docs/design/scene-resource-manifest-design.md` | 审核后的 JSON、字段字典、`baseLayers`/`devices` 边界和未冻结项 |
+| `idts3D_docs/api-contracts/scenes.md` | 当前契约不变的声明、计划演进边界、冻结后的 API 版本/错误/兼容规则 |
+| `idts3D_docs/domain-entity-dto-map.md` | 资源来源、现有 Entity 与计划新增 Scene Manifest 链路的状态映射 |
+| `idts3D_docs/architecture/ADR-001-3dtiles-glb-hybrid-architecture.md` | 复用 Model Manifest 或新增 Scene Manifest 链路的获批架构决定及替代方案 |
+| `idts3D_docs/reviews/MVP-10A-01-contract-freeze-report.md` | 下列冻结报告模板的完整审核记录 |
+
+冻结报告模板必须包含：
+
+```text
+1. 冻结结论                 2. schemaVersion
+3. Scene Manifest JSON      4. 字段数据字典
+5. 后端 DTO                 6. TypeScript 类型
+7. API 端点                 8. Model Manifest 与 Scene Manifest 关系
+9. 数据来源                 10. 新表 / 复用表结论
+11. Migration 结论          12. 旧 tilesets 兼容
+13. 错误码                  14. 回滚
+15. 未冻结项                16. 用户批准人和日期
+17. 是否解锁 MVP-10A-02    18. 是否解锁 MVP-10A-04
+```
+
+没有该报告或用户批准时，10A-02、10A-03、10A-04 均不得实施；任何未冻结项必须列出所需输入、责任任务和阻塞范围。
