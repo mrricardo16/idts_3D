@@ -1,0 +1,36 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "POC-3DT-01 synthetic fixture; not a production lifter model"
+  },
+  "scene": 0,
+  "scenes": [{ "nodes": [0] }],
+  "nodes": [
+    { "name": "lifter-root", "children": [1, 2] },
+    { "name": "lifter-frame", "children": [3, 4, 5, 6, 7] },
+    { "name": "lifter-platform", "children": [8] },
+    { "name": "poc-frame-left-front", "mesh": 0, "translation": [-2.3, -1.6, 12], "scale": [0.25, 0.25, 24] },
+    { "name": "poc-frame-right-front", "mesh": 0, "translation": [2.3, -1.6, 12], "scale": [0.25, 0.25, 24] },
+    { "name": "poc-frame-left-back", "mesh": 0, "translation": [-2.3, 1.6, 12], "scale": [0.25, 0.25, 24] },
+    { "name": "poc-frame-right-back", "mesh": 0, "translation": [2.3, 1.6, 12], "scale": [0.25, 0.25, 24] },
+    { "name": "poc-frame-top", "mesh": 0, "translation": [0, 0, 24], "scale": [5, 3.5, 0.25] },
+    { "name": "poc-platform-deck", "mesh": 1, "translation": [0, 0, 0.18], "scale": [3.2, 2.2, 0.36] }
+  ],
+  "meshes": [
+    { "name": "poc-lifter-frame-mesh", "primitives": [{ "attributes": { "POSITION": 0 }, "indices": 1, "material": 0, "mode": 4 }] },
+    { "name": "poc-lifter-platform-mesh", "primitives": [{ "attributes": { "POSITION": 0 }, "indices": 1, "material": 1, "mode": 4 }] }
+  ],
+  "materials": [
+    { "name": "poc-lifter-frame-material", "pbrMetallicRoughness": { "baseColorFactor": [0.14, 0.22, 0.3, 1], "metallicFactor": 0.2, "roughnessFactor": 0.65 } },
+    { "name": "poc-lifter-platform-material", "pbrMetallicRoughness": { "baseColorFactor": [0.12, 0.55, 0.95, 1], "metallicFactor": 0.08, "roughnessFactor": 0.5 } }
+  ],
+  "buffers": [{ "byteLength": 168, "uri": "data:application/octet-stream;base64,AAAAvwAAAL8AAAC/AAAAPwAAAL8AAAC/AAAAPwAAAD8AAAC/AAAAvwAAAD8AAAC/AAAAvwAAAL8AAAA/AAAAPwAAAL8AAAA/AAAAPwAAAD8AAAA/AAAAvwAAAD8AAAA/AAACAAEAAAADAAIABAAFAAYABAAGAAcAAAABAAUAAAAFAAQAAQACAAYAAQAGAAUAAgADAAcAAgAHAAYAAwAAAAQAAwAEAAcA" }],
+  "bufferViews": [
+    { "buffer": 0, "byteOffset": 0, "byteLength": 96, "target": 34962 },
+    { "buffer": 0, "byteOffset": 96, "byteLength": 72, "target": 34963 }
+  ],
+  "accessors": [
+    { "bufferView": 0, "componentType": 5126, "count": 8, "type": "VEC3", "min": [-0.5, -0.5, -0.5], "max": [0.5, 0.5, 0.5] },
+    { "bufferView": 1, "componentType": 5123, "count": 36, "type": "SCALAR" }
+  ]
+}

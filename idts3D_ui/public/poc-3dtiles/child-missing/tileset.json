@@ -1,0 +1,28 @@
+{
+  "asset": {
+    "version": "1.0",
+    "gltfUpAxis": "Z"
+  },
+  "geometricError": 16,
+  "root": {
+    "boundingVolume": {
+      "box": [0, 0, 13.025, 3.25, 0, 0, 0, 3.75, 0, 0, 0, 13.225]
+    },
+    "geometricError": 8,
+    "refine": "ADD",
+    "content": {
+      "uri": "../minimal/minimal.gltf"
+    },
+    "children": [
+      {
+        "boundingVolume": {
+          "box": [0, -3.625, 13, 1.75, 0, 0, 0, 0.125, 0, 0, 0, 13]
+        },
+        "geometricError": 0,
+        "content": {
+          "uri": "/__poc_3dt__/missing/child/missing-child.gltf"
+        }
+      }
+    ]
+  }
+}

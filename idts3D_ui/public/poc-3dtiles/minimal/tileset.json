@@ -1,0 +1,17 @@
+{
+  "asset": {
+    "version": "1.0",
+    "gltfUpAxis": "Z"
+  },
+  "geometricError": 100,
+  "root": {
+    "boundingVolume": {
+      "box": [0, 0, 13.025, 3.25, 0, 0, 0, 3.75, 0, 0, 0, 13.225]
+    },
+    "geometricError": 0,
+    "refine": "ADD",
+    "content": {
+      "uri": "minimal.gltf"
+    }
+  }
+}

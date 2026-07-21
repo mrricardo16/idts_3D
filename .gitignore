@@ -61,5 +61,12 @@ idts3D_ui/source-models/*
 Thumbs.db
 ~$*
 
+# POC-3DT-01 generated tiles, Blender backups, and analysis outputs.
+tools/micro-tileset/output/
+tools/micro-tileset/**/__pycache__/
+tools/micro-tileset/**/*.blend1
+tools/micro-tileset/**/*.blend2
+tools/micro-tileset/**/*.blend@
+
 .idea/
 .vscode/
