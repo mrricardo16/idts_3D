@@ -12,6 +12,7 @@
     "test:unit:watch": "vitest",
     "test:e2e": "playwright test --project=chrome",
     "test:e2e:edge": "playwright test --project=edge",
+    "test:poc:performance:diagnosis": "npm run build && playwright test --config playwright.performance.config.ts",
     "export:model-structure": "node scripts/export-model-structure.mjs",
     "inspect:model": "node scripts/inspect-model.mjs",
     "model:inspect": "node scripts/inspect-model.mjs",

@@ -1,5 +1,5 @@
 import { TilesRenderer } from "3d-tiles-renderer";
-import { Group, Vector3 } from "three";
+import { Group, Mesh, Vector3 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { CameraManager } from "../engine/CameraManager";
 import { ControlsManager } from "../engine/ControlsManager";
@@ -24,6 +24,10 @@ import {
 import { setPocObjectWorldZ } from "./pocWorldZ";
 import { collectPocGlbNodeRecords } from "./pocGlbNodes";
 import { getPocCameraPreset, type PocCameraPresetName } from "./pocCameraPresets";
+import {
+  resolvePocPerformanceScenario,
+  type PocPerformanceScenarioConfig,
+} from "./pocPerformanceScenario";
 
 const syntheticPocLifterUrl = "/poc-3dtiles/poc-lifter/poc-lifter.gltf";
 
@@ -32,6 +36,30 @@ export interface PocTilesSceneCallbacks {
   onGlbStatusChange: (message: string) => void;
   onGlbSelectionChange: (name: string | undefined) => void;
   onDiagnosticsChange: (diagnostics: PocRuntimeDiagnostics) => void;
+}
+
+export interface PocPerformanceSnapshot {
+  scenario: PocPerformanceScenarioConfig["name"];
+  diagnostics: PocRuntimeDiagnostics;
+  renderer: {
+    calls: number;
+    triangles: number;
+    points: number;
+    lines: number;
+    geometries: number;
+    textures: number;
+  };
+  sceneObjects: number;
+  glbMeshes: number;
+  tileMeshes: number;
+  materialCount: number;
+  renderLoopStarts: number;
+  controlsUpdates: number;
+  diagnosticsPublishes: number;
+}
+
+export interface PocTilesSceneOptions {
+  performanceScenario?: PocPerformanceScenarioConfig;
 }
 
 export class PocTilesScene {
@@ -54,11 +82,18 @@ export class PocTilesScene {
   private loadStartedAt = 0;
   private frameCount = 0;
   private fpsSampleStartedAt = 0;
+  private lastDiagnosticsPublishedAt = 0;
+  private renderLoopStarts = 0;
+  private controlsUpdates = 0;
+  private diagnosticsPublishes = 0;
+  private readonly performanceScenario: PocPerformanceScenarioConfig;
 
   constructor(
     private readonly container: HTMLElement,
     private readonly callbacks: PocTilesSceneCallbacks,
+    options: PocTilesSceneOptions = {},
   ) {
+    this.performanceScenario = options.performanceScenario ?? resolvePocPerformanceScenario(null)!;
     this.cameraManager = new CameraManager(container);
     this.rendererManager = new RendererManager(container);
     this.controlsManager = new ControlsManager(
@@ -79,13 +114,21 @@ export class PocTilesScene {
 
   async init(): Promise<void> {
     this.publishDiagnostics();
-    await this.loadGlbLayer();
-    if (this.disposed) {
-      return;
+    if (this.performanceScenario.glb === "real") {
+      await this.loadGlbLayer();
+      if (this.disposed) {
+        return;
+      }
+    } else if (this.performanceScenario.glb === "synthetic") {
+      await this.loadSyntheticPocLifter();
+    } else {
+      this.callbacks.onGlbStatusChange("GLB 已按 POC 性能场景禁用。");
     }
 
     this.applyCameraPreset("factory-exterior");
-    this.loadTiles(defaultPocTilesConfig.tilesetUrl);
+    if (this.performanceScenario.loadTiles) {
+      this.loadTiles(defaultPocTilesConfig.tilesetUrl);
+    }
     this.startRenderLoop();
   }
 
@@ -155,6 +198,46 @@ export class PocTilesScene {
       networkErrors: [...this.diagnostics.networkErrors],
       parseErrors: [...this.diagnostics.parseErrors],
       lifecycle: [...this.diagnostics.lifecycle],
+    };
+  }
+
+  getPerformanceSnapshot(): PocPerformanceSnapshot {
+    const materialIds = new Set<string>();
+    const countMeshes = (root: Group | undefined): number => {
+      let meshes = 0;
+      root?.traverse((object) => {
+        if (object instanceof Mesh) {
+          meshes += 1;
+          const materials = Array.isArray(object.material) ? object.material : [object.material];
+          materials.forEach((material) => materialIds.add(material.uuid));
+        }
+      });
+      return meshes;
+    };
+    let sceneObjects = 0;
+    this.sceneManager.scene.traverse(() => {
+      sceneObjects += 1;
+    });
+    const info = this.rendererManager.renderer.info;
+
+    return {
+      scenario: this.performanceScenario.name,
+      diagnostics: this.getDiagnostics(),
+      renderer: {
+        calls: info.render.calls,
+        triangles: info.render.triangles,
+        points: info.render.points,
+        lines: info.render.lines,
+        geometries: info.memory.geometries,
+        textures: info.memory.textures,
+      },
+      sceneObjects,
+      glbMeshes: countMeshes(this.glbRoot),
+      tileMeshes: countMeshes(this.tiles?.group),
+      materialCount: materialIds.size,
+      renderLoopStarts: this.renderLoopStarts,
+      controlsUpdates: this.controlsUpdates,
+      diagnosticsPublishes: this.diagnosticsPublishes,
     };
   }
 
@@ -328,6 +411,7 @@ export class PocTilesScene {
     }
 
     this.fpsSampleStartedAt = performance.now();
+    this.renderLoopStarts += 1;
     this.updateDiagnostics({ animationLoopActive: true });
     const render = (): void => {
       this.animationFrameId = 0;
@@ -336,6 +420,7 @@ export class PocTilesScene {
       }
 
       this.controlsManager.update();
+      this.controlsUpdates += 1;
       this.cameraManager.camera.updateMatrixWorld();
       this.tiles?.update();
       this.rendererManager.render(this.sceneManager.scene, this.cameraManager.camera);
@@ -374,10 +459,15 @@ export class PocTilesScene {
 
   private updateDiagnostics(values: Partial<PocRuntimeDiagnostics>): void {
     this.diagnostics = { ...this.diagnostics, ...values };
-    this.publishDiagnostics();
+    const now = performance.now();
+    if (now - this.lastDiagnosticsPublishedAt >= this.performanceScenario.diagnosticsPublishIntervalMs) {
+      this.publishDiagnostics();
+    }
   }
 
   private publishDiagnostics(): void {
+    this.lastDiagnosticsPublishedAt = performance.now();
+    this.diagnosticsPublishes += 1;
     this.callbacks.onDiagnosticsChange(this.getDiagnostics());
   }
 }

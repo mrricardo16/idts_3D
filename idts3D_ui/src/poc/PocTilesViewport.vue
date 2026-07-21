@@ -1,9 +1,22 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { PocTilesScene } from "./PocTilesScene";
+import { PocTilesScene, type PocPerformanceSnapshot } from "./PocTilesScene";
 import type { PocCameraPresetName } from "./pocCameraPresets";
 import type { PocLifecycleRecord, PocRuntimeDiagnostics } from "./pocDiagnostics";
+import type { PocPerformanceScenarioConfig } from "./pocPerformanceScenario";
 import type { PocTilesState } from "./pocTilesRuntime";
+
+declare global {
+  interface Window {
+    __idtsPocPerformanceProbe?: {
+      getSnapshot: () => PocPerformanceSnapshot | undefined;
+    };
+  }
+}
+
+const props = defineProps<{
+  performanceScenario?: PocPerformanceScenarioConfig;
+}>();
 
 const emit = defineEmits<{
   tilesState: [state: PocTilesState];
@@ -36,7 +49,12 @@ onMounted(async () => {
     },
     onGlbSelectionChange: (name) => emit("glbSelection", name),
     onDiagnosticsChange: (diagnostics) => emit("diagnostics", diagnostics),
-  });
+  }, { performanceScenario: props.performanceScenario });
+  if (new URLSearchParams(window.location.search).has("pocPerfProbe")) {
+    window.__idtsPocPerformanceProbe = {
+      getSnapshot: () => pocScene?.getPerformanceSnapshot(),
+    };
+  }
   await pocScene.init();
 });
 
@@ -56,6 +74,7 @@ onBeforeUnmount(() => {
     errors: (diagnostics?.networkErrors.length ?? 0) + (diagnostics?.parseErrors.length ?? 0),
     memoryMb: diagnostics?.memoryMb ?? null,
   });
+  delete window.__idtsPocPerformanceProbe;
   pocScene = undefined;
 });
 

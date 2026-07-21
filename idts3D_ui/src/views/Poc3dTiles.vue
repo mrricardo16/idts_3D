@@ -10,6 +10,7 @@ import {
 import type { PocTilesState } from "../poc/pocTilesRuntime";
 import { createPocReadyGate, pocLifecycleRoundTimeoutMs } from "../poc/pocLifecycle";
 import type { PocCameraPresetName } from "../poc/pocCameraPresets";
+import { resolvePocPerformanceScenario } from "../poc/pocPerformanceScenario";
 
 const sceneHost = ref<InstanceType<typeof PocTilesViewport>>();
 const sceneMounted = ref(true);
@@ -22,6 +23,9 @@ const lifecycleBusy = ref(false);
 const lifecycleError = ref<string>();
 const cameraPreset = ref<string>("厂房外观（初始）");
 const readyGate = createPocReadyGate();
+const performanceScenario = resolvePocPerformanceScenario(
+  new URLSearchParams(window.location.search).get("pocPerfScenario"),
+) ?? undefined;
 
 function onTilesStateChange(state: PocTilesState): void {
   tilesState.value = state;
@@ -110,6 +114,7 @@ function exportEvidence(): void {
       <PocTilesViewport
         v-if="sceneMounted"
         ref="sceneHost"
+        :performance-scenario="performanceScenario"
         @tiles-state="onTilesStateChange"
         @glb-status="glbStatus = $event"
         @glb-selection="selectedGlbObject = $event"
