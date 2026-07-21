@@ -8,7 +8,8 @@ import {
   type PocRuntimeDiagnostics,
 } from "../poc/pocDiagnostics";
 import type { PocTilesState } from "../poc/pocTilesRuntime";
-import { createPocReadyGate } from "../poc/pocLifecycle";
+import { createPocReadyGate, pocLifecycleRoundTimeoutMs } from "../poc/pocLifecycle";
+import type { PocCameraPresetName } from "../poc/pocCameraPresets";
 
 const sceneHost = ref<InstanceType<typeof PocTilesViewport>>();
 const sceneMounted = ref(true);
@@ -19,6 +20,7 @@ const diagnostics = ref<PocRuntimeDiagnostics>(createPocRuntimeDiagnostics());
 const lifecycle = ref<PocLifecycleRecord[]>([]);
 const lifecycleBusy = ref(false);
 const lifecycleError = ref<string>();
+const cameraPreset = ref<string>("厂房外观（初始）");
 const readyGate = createPocReadyGate();
 
 function onTilesStateChange(state: PocTilesState): void {
@@ -51,9 +53,9 @@ async function runNextLifecycleRound(): Promise<boolean> {
   await new Promise((resolve) => window.setTimeout(resolve, 250));
   sceneMounted.value = true;
   await nextTick();
-  const reachedReady = await readyGate.waitForReady(30_000);
+  const reachedReady = await readyGate.waitForReady(pocLifecycleRoundTimeoutMs);
   if (!reachedReady) {
-    lifecycleError.value = "本轮未在 30 秒内达到 Tiles: ready，已停止后续生命周期轮次。";
+    lifecycleError.value = "本轮未在 90 秒内达到 Tiles: ready，已停止后续生命周期轮次。";
   }
   lifecycleBusy.value = false;
   return reachedReady;
@@ -71,6 +73,12 @@ async function runTenLifecycleRounds(): Promise<void> {
 
 function setSyntheticWorldZ(target: number): void {
   sceneHost.value?.setSyntheticPlatformWorldZ(target);
+}
+
+function applyCameraPreset(name: PocCameraPresetName, label: string): void {
+  if (sceneHost.value?.applyCameraPreset(name)) {
+    cameraPreset.value = label;
+  }
 }
 
 function exportEvidence(): void {
@@ -118,6 +126,12 @@ function exportEvidence(): void {
         <button type="button" @click="sceneHost?.loadChildFailureFixture()">注入子资源失败</button>
         <button type="button" @click="sceneHost?.loadInvalidJsonFixture()">注入 Tileset JSON 解析错误</button>
         <button type="button" @click="sceneHost?.loadSyntheticPocLifter()">加载合成 POC worldZ 夹具</button>
+        <div class="poc-button-row" aria-label="POC 相机预设">
+          <button type="button" @click="applyCameraPreset('factory-exterior', '厂房外观')">厂房外观视角</button>
+          <button type="button" @click="applyCameraPreset('factory-high-door', '高门进入')">高门进入视角</button>
+          <button type="button" @click="applyCameraPreset('factory-interior', '厂房内部')">厂房内部视角</button>
+        </div>
+        <p>相机预设：{{ cameraPreset }}</p>
         <div class="poc-button-row" aria-label="合成夹具 worldZ 控制">
           <button type="button" @click="setSyntheticWorldZ(0)">worldZ 低位 0</button>
           <button type="button" @click="setSyntheticWorldZ(6)">worldZ 中位 6</button>

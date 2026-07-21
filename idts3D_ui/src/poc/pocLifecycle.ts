@@ -1,5 +1,7 @@
 import type { PocTilesPhase } from "./pocTilesRuntime";
 
+export const pocLifecycleRoundTimeoutMs = 90_000;
+
 export interface PocReadyGate {
   notify: (phase: PocTilesPhase) => void;
   reset: () => void;

@@ -1,4 +1,4 @@
-import type { Object3D, PerspectiveCamera } from "three";
+import type { Object3D, PerspectiveCamera, Vector3 } from "three";
 import { FreeLookControls } from "./FreeLookControls";
 import type { CameraControlDebugState } from "../types/twin";
 
@@ -57,6 +57,10 @@ export class ControlsManager {
 
   resetView(): void {
     this.freeLookControls.resetView();
+  }
+
+  setView(position: Vector3, target: Vector3): void {
+    this.freeLookControls.setView(position, target);
   }
 
   needsContinuousRender(): boolean {

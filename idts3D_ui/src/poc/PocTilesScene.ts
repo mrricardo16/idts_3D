@@ -1,5 +1,5 @@
 import { TilesRenderer } from "3d-tiles-renderer";
-import { Group } from "three";
+import { Group, Vector3 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { CameraManager } from "../engine/CameraManager";
 import { ControlsManager } from "../engine/ControlsManager";
@@ -23,6 +23,7 @@ import {
 } from "./pocTilesRuntime";
 import { setPocObjectWorldZ } from "./pocWorldZ";
 import { collectPocGlbNodeRecords } from "./pocGlbNodes";
+import { getPocCameraPreset, type PocCameraPresetName } from "./pocCameraPresets";
 
 const syntheticPocLifterUrl = "/poc-3dtiles/poc-lifter/poc-lifter.gltf";
 
@@ -83,6 +84,7 @@ export class PocTilesScene {
       return;
     }
 
+    this.applyCameraPreset("factory-exterior");
     this.loadTiles(defaultPocTilesConfig.tilesetUrl);
     this.startRenderLoop();
   }
@@ -136,6 +138,15 @@ export class PocTilesScene {
     const actualZ = setPocObjectWorldZ(platform, targetZ);
     this.updateDiagnostics({ worldZ: actualZ });
     return actualZ;
+  }
+
+  applyCameraPreset(name: PocCameraPresetName): PocCameraPresetName {
+    const preset = getPocCameraPreset(name);
+    this.controlsManager.setView(
+      new Vector3(...preset.position),
+      new Vector3(...preset.target),
+    );
+    return name;
   }
 
   getDiagnostics(): PocRuntimeDiagnostics {

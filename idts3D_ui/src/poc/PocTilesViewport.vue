@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { PocTilesScene } from "./PocTilesScene";
+import type { PocCameraPresetName } from "./pocCameraPresets";
 import type { PocLifecycleRecord, PocRuntimeDiagnostics } from "./pocDiagnostics";
 import type { PocTilesState } from "./pocTilesRuntime";
 
@@ -65,6 +66,7 @@ defineExpose({
   loadInvalidJsonFixture: () => pocScene?.loadInvalidJsonFixture(),
   loadSyntheticPocLifter: () => pocScene?.loadSyntheticPocLifter(),
   setSyntheticPlatformWorldZ: (targetZ: number) => pocScene?.setSyntheticPlatformWorldZ(targetZ),
+  applyCameraPreset: (name: PocCameraPresetName) => pocScene?.applyCameraPreset(name),
 });
 </script>
 

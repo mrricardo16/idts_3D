@@ -10,6 +10,8 @@
     "type-check": "vue-tsc -b",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
+    "test:e2e": "playwright test --project=chrome",
+    "test:e2e:edge": "playwright test --project=edge",
     "export:model-structure": "node scripts/export-model-structure.mjs",
     "inspect:model": "node scripts/inspect-model.mjs",
     "model:inspect": "node scripts/inspect-model.mjs",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "^1.61.1",
     "@types/three": "0.177.0",
     "@vitejs/plugin-vue": "5.2.4",
     "@vue/test-utils": "2.4.11",

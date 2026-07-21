@@ -148,6 +148,14 @@ export class FreeLookControls {
     this.onChange();
   }
 
+  setView(position: Vector3, target: Vector3): void {
+    this.focusPoint.copy(target);
+    this.camera.position.copy(position);
+    this.lookAt(target);
+    this.camera.updateProjectionMatrix();
+    this.onChange();
+  }
+
   dispose(): void {
     this.domElement.removeEventListener("pointerdown", this.handlePointerDown);
     this.domElement.removeEventListener("pointermove", this.handlePointerMove);
