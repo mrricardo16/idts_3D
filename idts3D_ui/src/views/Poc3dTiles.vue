@@ -11,6 +11,11 @@ import type { PocTilesState } from "../poc/pocTilesRuntime";
 import { createPocReadyGate, pocLifecycleRoundTimeoutMs } from "../poc/pocLifecycle";
 import type { PocCameraPresetName } from "../poc/pocCameraPresets";
 import { resolvePocPerformanceScenario } from "../poc/pocPerformanceScenario";
+import {
+  createPocCachePageState,
+  resolvePocCacheMode,
+  type PocCachePageState,
+} from "../poc/pocCacheRuntime";
 
 const sceneHost = ref<InstanceType<typeof PocTilesViewport>>();
 const sceneMounted = ref(true);
@@ -26,6 +31,9 @@ const readyGate = createPocReadyGate();
 const performanceScenario = resolvePocPerformanceScenario(
   new URLSearchParams(window.location.search).get("pocPerfScenario"),
 ) ?? undefined;
+const cacheState = ref<PocCachePageState>(createPocCachePageState(
+  resolvePocCacheMode(new URLSearchParams(window.location.search).get("pocCacheMode")),
+));
 
 function onTilesStateChange(state: PocTilesState): void {
   tilesState.value = state;
@@ -34,6 +42,12 @@ function onTilesStateChange(state: PocTilesState): void {
 
 function onDiagnosticsChange(next: PocRuntimeDiagnostics): void {
   diagnostics.value = { ...next, lifecycle: [...lifecycle.value] };
+}
+
+function selectCacheMode(mode: PocCachePageState["mode"]): void {
+  const url = new URL(window.location.href);
+  url.searchParams.set("pocCacheMode", mode);
+  window.location.assign(url.toString());
 }
 
 function onDisposed(record: Omit<PocLifecycleRecord, "round">): void {
@@ -118,6 +132,7 @@ function exportEvidence(): void {
         @tiles-state="onTilesStateChange"
         @glb-status="glbStatus = $event"
         @glb-selection="selectedGlbObject = $event"
+        @cache-state="cacheState = $event"
         @diagnostics="onDiagnosticsChange"
         @disposed="onDisposed"
       />
@@ -125,6 +140,11 @@ function exportEvidence(): void {
       <aside class="poc-panel">
         <p>{{ glbStatus }}</p>
         <p>GLB 拾取：{{ selectedGlbObject ?? "未选择" }}</p>
+        <p>当前资产模式：{{ cacheState.mode }}</p>
+        <div class="poc-button-row" aria-label="POC 缓存模式">
+          <button type="button" @click="selectCacheMode('baseline')">使用 baseline 原始模型</button>
+          <button type="button" @click="selectCacheMode('versioned-cache')">使用 versioned-cache 模型</button>
+        </div>
         <p v-if="tilesState.error" class="poc-error">{{ tilesState.error }}</p>
         <button type="button" @click="sceneHost?.reloadLocalFixture()">加载本地最小 Tileset</button>
         <button type="button" @click="sceneHost?.loadFailureFixture()">注入严格 HTTP 404</button>
@@ -167,6 +187,15 @@ function exportEvidence(): void {
         <div><dt>GLB 节点 / 明确可动节点</dt><dd>{{ diagnostics.glbNodes.length }} / {{ diagnostics.glbNodes.filter((node) => node.isExplicitMovablePart).map((node) => node.name).join(", ") || "无" }}</dd></div>
         <div><dt>网络 / 解析错误</dt><dd>{{ diagnostics.networkErrors.length }} / {{ diagnostics.parseErrors.length }}</dd></div>
         <div><dt>生命周期 / 最近 ready / 加载耗时</dt><dd>{{ lifecycle.length }} / {{ diagnostics.readyTime ?? "未就绪" }} / {{ diagnostics.loadDurationMs?.toFixed(1) ?? "未测量" }} ms</dd></div>
+      </dl>
+    </section>
+
+    <section class="poc-diagnostics" aria-label="POC 缓存诊断">
+      <h2>POC 缓存诊断</h2>
+      <dl>
+        <div><dt>模式 / GLB URL</dt><dd>{{ cacheState.mode }} · {{ cacheState.glbUrl }}</dd></div>
+        <div><dt>SHA-256 / Cache-Control</dt><dd>{{ cacheState.sha256 ?? "baseline 无内容哈希 URL" }} · {{ cacheState.cacheControl }}</dd></div>
+        <div><dt>页面传输 / 缓存命中</dt><dd>{{ cacheState.actualTransferBytes ?? "由 CDP 报告记录" }} · {{ cacheState.cacheHitType }}</dd></div>
       </dl>
     </section>
   </main>

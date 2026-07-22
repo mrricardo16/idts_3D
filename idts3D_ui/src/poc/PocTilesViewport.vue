@@ -4,6 +4,7 @@ import { PocTilesScene, type PocPerformanceSnapshot } from "./PocTilesScene";
 import type { PocCameraPresetName } from "./pocCameraPresets";
 import type { PocLifecycleRecord, PocRuntimeDiagnostics } from "./pocDiagnostics";
 import type { PocPerformanceScenarioConfig } from "./pocPerformanceScenario";
+import type { PocCachePageState } from "./pocCacheRuntime";
 import type { PocTilesState } from "./pocTilesRuntime";
 
 declare global {
@@ -22,6 +23,7 @@ const emit = defineEmits<{
   tilesState: [state: PocTilesState];
   glbStatus: [message: string];
   glbSelection: [name: string | undefined];
+  cacheState: [state: PocCachePageState];
   diagnostics: [diagnostics: PocRuntimeDiagnostics];
   disposed: [record: Omit<PocLifecycleRecord, "round">];
 }>();
@@ -48,6 +50,7 @@ onMounted(async () => {
       emit("glbStatus", message);
     },
     onGlbSelectionChange: (name) => emit("glbSelection", name),
+    onCacheStateChange: (state) => emit("cacheState", state),
     onDiagnosticsChange: (diagnostics) => emit("diagnostics", diagnostics),
   }, { performanceScenario: props.performanceScenario });
   if (new URLSearchParams(window.location.search).has("pocPerfProbe")) {

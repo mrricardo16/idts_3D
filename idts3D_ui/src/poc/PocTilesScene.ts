@@ -6,6 +6,7 @@ import { ControlsManager } from "../engine/ControlsManager";
 import { FallbackFactory } from "../engine/FallbackFactory";
 import { InteractionManager } from "../engine/InteractionManager";
 import { LODModelLoader } from "../engine/LODModelLoader";
+import { ModelTransformApplier } from "../engine/ModelTransformApplier";
 import { RendererManager } from "../engine/RendererManager";
 import { ResourceDisposer } from "../engine/ResourceDisposer";
 import { SceneManager } from "../engine/SceneManager";
@@ -28,19 +29,36 @@ import {
   resolvePocPerformanceScenario,
   type PocPerformanceScenarioConfig,
 } from "./pocPerformanceScenario";
+import {
+  createPocCachePageState,
+  loadPocCacheManifest,
+  resolvePocCacheMode,
+  type PocCachePageState,
+} from "./pocCacheRuntime";
+import type { ModelTransformSettings } from "../types/twin";
 
 const syntheticPocLifterUrl = "/poc-3dtiles/poc-lifter/poc-lifter.gltf";
+const pocLifterTransform: ModelTransformSettings = {
+  rotationDeg: { x: 180, y: 0, z: 0 },
+  position: { x: 0, y: 0, z: 0 },
+  scale: { x: 1, y: 1, z: 1 },
+  flip: { x: false, y: false, z: false },
+  autoCenter: true,
+  groundToZero: true,
+};
 
 export interface PocTilesSceneCallbacks {
   onTilesStateChange: (state: PocTilesState) => void;
   onGlbStatusChange: (message: string) => void;
   onGlbSelectionChange: (name: string | undefined) => void;
+  onCacheStateChange: (state: PocCachePageState) => void;
   onDiagnosticsChange: (diagnostics: PocRuntimeDiagnostics) => void;
 }
 
 export interface PocPerformanceSnapshot {
   scenario: PocPerformanceScenarioConfig["name"];
   diagnostics: PocRuntimeDiagnostics;
+  cache: PocCachePageState;
   renderer: {
     calls: number;
     triangles: number;
@@ -69,6 +87,8 @@ export class PocTilesScene {
   private readonly controlsManager: ControlsManager;
   private readonly modelLoader = new LODModelLoader();
   private readonly syntheticPocLoader = new GLTFLoader();
+  private readonly versionedPocLoader = new GLTFLoader();
+  private readonly transformApplier = new ModelTransformApplier();
   private readonly statusManager = new StatusManager();
   private readonly fallbackFactory = new FallbackFactory();
   private interactionManager?: InteractionManager;
@@ -87,6 +107,7 @@ export class PocTilesScene {
   private controlsUpdates = 0;
   private diagnosticsPublishes = 0;
   private readonly performanceScenario: PocPerformanceScenarioConfig;
+  private cacheState: PocCachePageState;
 
   constructor(
     private readonly container: HTMLElement,
@@ -94,6 +115,9 @@ export class PocTilesScene {
     options: PocTilesSceneOptions = {},
   ) {
     this.performanceScenario = options.performanceScenario ?? resolvePocPerformanceScenario(null)!;
+    this.cacheState = createPocCachePageState(
+      resolvePocCacheMode(new URLSearchParams(window.location.search).get("pocCacheMode")),
+    );
     this.cameraManager = new CameraManager(container);
     this.rendererManager = new RendererManager(container);
     this.controlsManager = new ControlsManager(
@@ -113,6 +137,7 @@ export class PocTilesScene {
   }
 
   async init(): Promise<void> {
+    this.callbacks.onCacheStateChange(this.cacheState);
     this.publishDiagnostics();
     if (this.performanceScenario.glb === "real") {
       await this.loadGlbLayer();
@@ -223,6 +248,7 @@ export class PocTilesScene {
     return {
       scenario: this.performanceScenario.name,
       diagnostics: this.getDiagnostics(),
+      cache: { ...this.cacheState },
       renderer: {
         calls: info.render.calls,
         triangles: info.render.triangles,
@@ -280,6 +306,11 @@ export class PocTilesScene {
   }
 
   private async loadGlbLayer(): Promise<void> {
+    if (this.cacheState.mode === "versioned-cache") {
+      await this.loadVersionedCacheGlbLayer();
+      return;
+    }
+
     const devices = this.statusManager.getDevices();
     const loaded = await this.modelLoader.loadDefault(devices);
     if (this.disposed) {
@@ -297,6 +328,29 @@ export class PocTilesScene {
         ? `GLB 已加载：${loaded.url ?? "未记录路径"}`
         : `GLB 加载失败，已使用当前工程几何体 fallback：${loaded.message}`,
     );
+  }
+
+  private async loadVersionedCacheGlbLayer(): Promise<void> {
+    try {
+      const manifest = await loadPocCacheManifest();
+      this.cacheState = createPocCachePageState("versioned-cache", manifest);
+      this.callbacks.onCacheStateChange(this.cacheState);
+      const loaded = await this.versionedPocLoader.loadAsync(manifest.versionedUrl);
+      if (this.disposed) {
+        ResourceDisposer.disposeObject3D(loaded.scene);
+        return;
+      }
+
+      loaded.scene.name = "lifter-main";
+      this.transformApplier.apply(loaded.scene, pocLifterTransform);
+      this.attachGlbRoot(
+        loaded.scene,
+        manifest.versionedUrl,
+        `GLB 已加载：${manifest.versionedUrl}（versioned-cache）`,
+      );
+    } catch (error) {
+      this.callbacks.onGlbStatusChange(`versioned-cache GLB 加载失败：${String(error)}`);
+    }
   }
 
   private attachGlbRoot(root: Group, url: string, message: string): void {

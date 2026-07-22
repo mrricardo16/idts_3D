@@ -13,6 +13,7 @@
     "test:e2e": "playwright test --project=chrome",
     "test:e2e:edge": "playwright test --project=edge",
     "test:poc:performance:diagnosis": "npm run build && playwright test --config playwright.performance.config.ts",
+    "test:poc:perf-fix-01": "npm run build && playwright test --config playwright.cache.config.ts",
     "export:model-structure": "node scripts/export-model-structure.mjs",
     "inspect:model": "node scripts/inspect-model.mjs",
     "model:inspect": "node scripts/inspect-model.mjs",

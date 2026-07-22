@@ -1,6 +1,11 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import { resolve } from "node:path";
 import vue from "@vitejs/plugin-vue";
+import {
+  createPocCacheMiddleware,
+  createPocVersionedAsset,
+  type PocCacheMiddleware,
+} from "./pocCacheMiddleware";
 import { createPocStrict404Middleware } from "./src/poc/pocStrict404Middleware";
 
 const pocStrict404Middleware = createPocStrict404Middleware();
@@ -15,8 +20,55 @@ const pocStrict404Plugin = {
   },
 };
 
+let pocCacheMiddleware: PocCacheMiddleware | undefined;
+
+const pocCachePlugin: Plugin = {
+  name: "poc-versioned-model-cache",
+  async configResolved() {
+    const [lifter, v1, v2] = await Promise.all([
+      createPocVersionedAsset({
+        asset: "lifter",
+        sourcePath: resolve(__dirname, "public/models/lifter.glb"),
+        contentType: "model/gltf-binary",
+      }),
+      createPocVersionedAsset({
+        asset: "lifter",
+        sourcePath: resolve(__dirname, "public/poc-3dtiles/minimal/minimal.gltf"),
+        contentType: "model/gltf+json",
+      }),
+      createPocVersionedAsset({
+        asset: "lifter",
+        sourcePath: resolve(__dirname, "public/poc-3dtiles/poc-lifter/poc-lifter.gltf"),
+        contentType: "model/gltf+json",
+      }),
+    ]);
+    pocCacheMiddleware = createPocCacheMiddleware({
+      assets: [lifter, v1, v2],
+      testVersionManifests: { v1: v1.manifest, v2: v2.manifest },
+    });
+  },
+  configureServer(server) {
+    server.middlewares.use((request, response, next) => {
+      if (!pocCacheMiddleware) {
+        next();
+        return;
+      }
+      pocCacheMiddleware(request, response, next);
+    });
+  },
+  configurePreviewServer(server) {
+    server.middlewares.use((request, response, next) => {
+      if (!pocCacheMiddleware) {
+        next();
+        return;
+      }
+      pocCacheMiddleware(request, response, next);
+    });
+  },
+};
+
 export default defineConfig({
-  plugins: [vue(), pocStrict404Plugin],
+  plugins: [vue(), pocStrict404Plugin, pocCachePlugin],
   build: {
     rollupOptions: {
       input: {

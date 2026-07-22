@@ -1,0 +1,358 @@
+{
+  "generatedAt": "2026-07-22T02:56:03.635Z",
+  "servers": {
+    "vite-development": {
+      "cold": [
+        [
+          {
+            "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ]
+      ],
+      "warm": [
+        [
+          {
+            "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ]
+      ],
+      "coldTransfers": [
+        293193017,
+        293193017,
+        293193017
+      ],
+      "warmTransfers": [
+        293193017,
+        293193017,
+        293193017
+      ],
+      "coldAverage": 293193017,
+      "warmAverage": 293193017,
+      "meetsWarmThreshold": false,
+      "pageRegression": {
+        "cold": [
+          {
+            "consoleErrors": [],
+            "ignoredConsoleErrors": [],
+            "pageErrors": [],
+            "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+          },
+          {
+            "consoleErrors": [],
+            "ignoredConsoleErrors": [],
+            "pageErrors": [],
+            "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+          },
+          {
+            "consoleErrors": [],
+            "ignoredConsoleErrors": [],
+            "pageErrors": [],
+            "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+          }
+        ],
+        "warm": {
+          "consoleErrors": [],
+          "ignoredConsoleErrors": [],
+          "pageErrors": [],
+          "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+        }
+      }
+    },
+    "vite-preview": {
+      "cold": [
+        [
+          {
+            "url": "http://127.0.0.1:5185/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5185/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5185/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ]
+      ],
+      "warm": [
+        [
+          {
+            "url": "http://127.0.0.1:5185/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5185/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ],
+        [
+          {
+            "url": "http://127.0.0.1:5185/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb",
+            "requestCacheControl": null,
+            "requestPragma": null,
+            "status": 200,
+            "cacheControl": "public, max-age=31536000, immutable",
+            "etag": "\"b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2\"",
+            "contentLength": "293192660",
+            "fromDiskCache": false,
+            "servedFromCache": false,
+            "encodedDataLength": 293193017,
+            "failure": null
+          }
+        ]
+      ],
+      "coldTransfers": [
+        293193017,
+        293193017,
+        293193017
+      ],
+      "warmTransfers": [
+        293193017,
+        293193017,
+        293193017
+      ],
+      "coldAverage": 293193017,
+      "warmAverage": 293193017,
+      "meetsWarmThreshold": false,
+      "pageRegression": {
+        "cold": [
+          {
+            "consoleErrors": [],
+            "ignoredConsoleErrors": [],
+            "pageErrors": [],
+            "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+          },
+          {
+            "consoleErrors": [],
+            "ignoredConsoleErrors": [],
+            "pageErrors": [],
+            "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+          },
+          {
+            "consoleErrors": [],
+            "ignoredConsoleErrors": [],
+            "pageErrors": [],
+            "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+          }
+        ],
+        "warm": {
+          "consoleErrors": [],
+          "ignoredConsoleErrors": [],
+          "pageErrors": [],
+          "canvasRenderer": "/__poc_cache__/models/lifter/b91bde3f0d7ffc6a484b2eab2588774d3301bbce6e32c4fc084f3eef1fb48bd2/lifter.glb · 1 / 1"
+        }
+      }
+    }
+  },
+  "versionInvalidation": {
+    "v1": {
+      "manifest": {
+        "asset": "lifter",
+        "sha256": "1e17fc81f44958a4248564621e6ca171c94d46d44ae958c8382971dff5271345",
+        "versionedUrl": "/__poc_cache__/models/lifter/1e17fc81f44958a4248564621e6ca171c94d46d44ae958c8382971dff5271345/minimal.gltf",
+        "contentLength": 2556,
+        "cachePolicy": "immutable"
+      },
+      "response": {
+        "status": 200,
+        "byteLength": 2556
+      },
+      "requests": [
+        {
+          "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/1e17fc81f44958a4248564621e6ca171c94d46d44ae958c8382971dff5271345/minimal.gltf",
+          "requestCacheControl": null,
+          "requestPragma": null,
+          "status": 200,
+          "cacheControl": "public, max-age=31536000, immutable",
+          "etag": "\"1e17fc81f44958a4248564621e6ca171c94d46d44ae958c8382971dff5271345\"",
+          "contentLength": "2556",
+          "fromDiskCache": false,
+          "servedFromCache": false,
+          "encodedDataLength": 2906,
+          "failure": null
+        }
+      ]
+    },
+    "v1Warm": {
+      "response": {
+        "status": 200,
+        "byteLength": 2556
+      },
+      "requests": [
+        {
+          "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/1e17fc81f44958a4248564621e6ca171c94d46d44ae958c8382971dff5271345/minimal.gltf",
+          "requestCacheControl": null,
+          "requestPragma": null,
+          "status": 200,
+          "cacheControl": "public, max-age=31536000, immutable",
+          "etag": "\"1e17fc81f44958a4248564621e6ca171c94d46d44ae958c8382971dff5271345\"",
+          "contentLength": "2556",
+          "fromDiskCache": true,
+          "servedFromCache": false,
+          "encodedDataLength": 0,
+          "failure": null
+        }
+      ]
+    },
+    "v2": {
+      "manifest": {
+        "asset": "lifter",
+        "sha256": "a36d5c655ec8a10a00785812985df76faf567a9d6d6ecad004ec0ee9a9a3f1c7",
+        "versionedUrl": "/__poc_cache__/models/lifter/a36d5c655ec8a10a00785812985df76faf567a9d6d6ecad004ec0ee9a9a3f1c7/poc-lifter.gltf",
+        "contentLength": 2334,
+        "cachePolicy": "immutable"
+      },
+      "response": {
+        "status": 200,
+        "byteLength": 2334
+      },
+      "requests": [
+        {
+          "url": "http://127.0.0.1:5184/__poc_cache__/models/lifter/a36d5c655ec8a10a00785812985df76faf567a9d6d6ecad004ec0ee9a9a3f1c7/poc-lifter.gltf",
+          "requestCacheControl": null,
+          "requestPragma": null,
+          "status": 200,
+          "cacheControl": "public, max-age=31536000, immutable",
+          "etag": "\"a36d5c655ec8a10a00785812985df76faf567a9d6d6ecad004ec0ee9a9a3f1c7\"",
+          "contentLength": "2334",
+          "fromDiskCache": false,
+          "servedFromCache": false,
+          "encodedDataLength": 2684,
+          "failure": null
+        }
+      ]
+    }
+  }
+}
